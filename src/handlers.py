@@ -696,7 +696,7 @@ class CategoriesHandler(JsonRestHandler):
         #category = list(model.Category.all().order('-start').run())
         category = list(model.Category.all().run())
         if not category:
-            default_theme = model.Category(display_name="Zoo")
+            default_theme = model.Category(display_name="Museum")
             #default_theme.start = default_theme.created
             default_theme.put()
             category = [default_theme]
