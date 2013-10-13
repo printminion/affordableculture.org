@@ -65,6 +65,8 @@ class Jsonifiable:
             value = getattr(self, p)
             if isinstance(value, datetime.datetime):
                 value = value.strftime('%s%f')[:-3]
+            elif isinstance(value, db.GeoPt):
+                value = {'lat': value.lat, 'lon': value.lon}
             result[Jsonifiable.transform_to_camelcase(p)] = value
         return result
 
@@ -124,15 +126,43 @@ class Attraction(db.Model, Jsonifiable):
     attraction_content_url = None
     num_votes = None
     voted = False
+    approved = False
+
+    country = db.StringProperty()
+    city = db.StringProperty()
+    name = db.StringProperty()
+    # Group affiliation
+    #category = db.ListProperty(db.Key)
+    categories = db.ListProperty(str, indexed=False, default=[])
+
+
+    address = db.PostalAddressProperty()
+    latlong = db.GeoPtProperty()
+    free_time = db.StringProperty()
+    donation = db.StringProperty()
+    website = db.LinkProperty()
+    source = db.LinkProperty()
+    email = db.EmailProperty()
 
     owner_user_id = db.IntegerProperty()
     owner_display_name = db.StringProperty()
     owner_profile_url = db.StringProperty()
     owner_profile_photo = db.StringProperty()
-    theme_id = db.IntegerProperty()
-    theme_display_name = db.StringProperty()
+    #theme_id = db.IntegerProperty()
+    #theme_display_name = db.StringProperty()
     image_blob_key = blobstore.BlobReferenceProperty()
     created = db.DateTimeProperty(auto_now_add=True)
+
+    url_wikipedia = db.LinkProperty()
+    url_gpl = db.LinkProperty()
+    url_tripadvisor = db.LinkProperty()
+    url_yelp = db.LinkProperty()
+    url_facebook = db.LinkProperty()
+    url_twitter = db.LinkProperty()
+    url_youtube = db.LinkProperty()
+    url_instagram = db.LinkProperty()
+    url_android = db.LinkProperty()
+    url_ios = db.LinkProperty()
 
     def __init__(self, *args, **kwargs):
         db.Model.__init__(self, *args, **kwargs)
@@ -177,14 +207,17 @@ class Category(db.Model, Jsonifiable):
     created = db.DateTimeProperty(auto_now_add=True)
     #start = db.DateTimeProperty()
     #preview_photo_id = db.IntegerProperty()
+    @property
+    def members(self):
+        return Category.gql("WHERE category = :1", self.key())
 
-    @staticmethod
-    def get_current_theme():
-        """Query the current theme based on the date."""
-        today = db.datetime.date.today()
-        start = db.datetime.datetime(today.year, today.month, today.day, 0, 0, 0)
-        end = db.datetime.datetime(today.year, today.month, today.day, 23, 59, 59)
-        return Category.all().filter('start >=', start).filter('start <', end).order('-start').get()
+    # @staticmethod
+    # def get_current_theme():
+    #     """Query the current theme based on the date."""
+    #     today = db.datetime.date.today()
+    #     start = db.datetime.datetime(today.year, today.month, today.day, 0, 0, 0)
+    #     end = db.datetime.datetime(today.year, today.month, today.day, 23, 59, 59)
+    #     return Category.all().filter('start >=', start).filter('start <', end).order('-start').get()
 
 
 class User(db.Model, Jsonifiable):

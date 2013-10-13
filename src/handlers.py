@@ -25,8 +25,12 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 from webapp2_extras import sessions
 
-jinja_environment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+from google.appengine.api import users
+
+JINJA_ENV = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(
+        os.path.join(os.path.dirname(__file__), 'templates')),
+    extensions=['jinja2.ext.autoescape'])
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
@@ -433,8 +437,11 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
     This handler provides the /api/photos endpoint, and exposes the following
     operations:
       GET /api/attractions
+
       GET /api/attractions?attractionId=1234
       GET /api/attractions?categoryId=1234
+      GET /api/attractions?ll=48.719493,9.261718&z=12
+
       GET /api/attractions?userId=me
       GET /api/attractions?categoryId=1234&userId=me
       GET /api/attractions?categoryId=1234&userId=me&friends=true
@@ -443,12 +450,12 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
     """
 
     def get(self):
-        """Exposed as `GET /api/photos`.
+        """Exposed as `GET /api/attractions`.
 
         Accepts the following request parameters.
 
         'attractionId': id of the requested photo. Will return a single Photo.
-        'themeId': id of a theme. Will return the collection of photos for the
+        'categoryId': id of a theme. Will return the collection of photos for the
                    specified theme.
          'userId': id of the owner of the photo. Will return the collection of
                    photos for that user. The keyword 'me' can be used and will be
@@ -483,14 +490,18 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
         request)
         """
         try:
-            photo_id = self.request.get('attractionId')
-            theme_id = self.request.get('themeId')
+            attraction_id = self.request.get('attractionId')
+            category_id = self.request.get('categoryId')
+            latlong = self.request.get('ll')
+            zoom = self.request.get('z')
+            search_query = self.request.get('q')
+
             user_id = self.request.get('userId')
             show_friends = bool(self.request.get('friends'))
             query = model.Attraction.all()
-            if photo_id:
-                photo = model.Attraction.get_by_id(long(photo_id))
-                self.send_success(photo)
+            if attraction_id:
+                attraction = model.Attraction.get_by_id(long(attraction_id))
+                self.send_success(attraction)
                 return
             else:
                 if user_id:
@@ -509,10 +520,10 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                     else:
                         query = query.filter('owner_user_id =', user.key().id())
 
-            if theme_id:
-                query = query.filter('theme_id =', long(theme_id))
+            if category_id:
+                query = query.filter('category_id =', long(category_id))
 
-            photos = list(query.run())
+            attractions = list(query.run())
 
             if self.session.get(self.CURRENT_USER_SESSION_KEY) is not None:
                 if not user_id:
@@ -523,17 +534,17 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                 photo_votes = []
                 for vote in votes:
                     photo_votes.append(vote.photo_id)
-                for photo in photos:
-                    photo.voted = photo.key().id() in photo_votes
+                for attraction in attractions:
+                    attraction.voted = attraction.key().id() in photo_votes
 
-            self.send_success(photos, jsonkind='photohunt#photos')
+            self.send_success(attractions, jsonkind='affcult#attractions')
         except TypeError as te:
             self.send_error(404, "Resource not found")
         except UserNotAuthorizedException as e:
             self.send_error(401, e.msg)
 
     def post(self):
-        """Exposed as `POST /api/photos`.
+        """Exposed as `POST /api/attractions`.
 
         Takes the following payload in the request body.  Payload represents a
         Photo that should be created.
@@ -581,34 +592,59 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
              100 seconds, get a new token and retry)
         500: 'Error while writing app activity: ' + error from client library.
         """
+
+        logging.debug('/api/...')
+
         try:
             user = self.get_user_from_session()
-            current_theme = model.Category.get_current_theme()
-            if current_theme:
-                uploads = self.get_uploads('image')
-                blob_info = uploads[0]
-                photo = model.Attraction(owner_user_id=user.key().id(),
-                                    owner_display_name=user.google_display_name,
-                                    owner_profile_photo=user.google_public_profile_photo_url,
-                                    owner_profile_url=user.google_public_profile_url,
-                                    theme_id=current_theme.key().id(),
-                                    theme_display_name=current_theme.display_name,
-                                    created=datetime.datetime.now(),
-                                    num_votes=0,
-                                    image_blob_key=blob_info.key())
-                photo.put()
+            logging.debug('debug')
+            #current_theme = model.Category.get_current_theme()
+
+
+            current_category = model.Category.all().filter('display_name =', self.request.get('category')).get()
+            if current_category is None:
+                current_category = model.Category(display_name=self.request.get('category')).put()
+
+
+            if current_category:
+                #uploads = self.get_uploads('image')
+                #blob_info = uploads[0]
+                attraction = model.Attraction(owner_user_id=user.key().id(),
+                                        owner_display_name=user.google_display_name,
+                                        owner_profile_photo=user.google_public_profile_photo_url,
+                                        owner_profile_url=user.google_public_profile_url,
+                                        #theme_id=current_theme.key().id(),
+                                        categories=[current_category.display_name],
+                                        theme_display_name=current_category.display_name,
+                                        created=datetime.datetime.now(),
+                                        num_votes=0,
+                                        #image_blob_key=blob_info.key()
+                                        country = self.request.get('country'),
+                                        city = self.request.get('city'),
+                                        name = self.request.get('name'),
+                                        # Group affiliation
+                                        #category = self.request.get('category'),
+                                        address = self.request.get('address'),
+                                        latlong = self.request.get('latlong'),
+                                        free_time = self.request.get('free_time'),
+                                        donation = self.request.get('donation'),
+                                        website = self.request.get('website'),
+                                        source = self.request.get('source'),
+                                        email = self.request.get('email')
+                )
+                attraction.put()
                 try:
-                    result = self.add_photo_to_google_plus_activity(user, photo)
+                    result = self.add_attraction_to_google_plus_activity(user, attraction)
                 except apiclient.errors.HttpError as e:
                     logging.error("Error while writing app activity: %s", str(e))
-                self.send_success(photo)
+                self.send_success(attraction)
             else:
-                self.send_error(404, 'No current theme.')
+                self.send_error(404, 'No current category.')
         except UserNotAuthorizedException as e:
             self.send_error(401, e.msg)
 
     def delete(self):
-        """Exposed as `DELETE /api/photos`.
+        """Exposed as `DELETE /api/attractions`.
 
         Accepts the following request parameters.
 
@@ -620,8 +656,9 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
         Issues the following errors along with corresponding HTTP response codes:
         401: 'Unauthorized request' (if certain parameters are present in the
              request)
-        404: 'Photo with given ID does not exist.'
+        404: 'Attraction with given ID does not exist.'
         """
+        #TODO: Add test for admin
         try:
             user = self.get_user_from_session()
             photo_id = self.request.get('attractionId')
@@ -643,7 +680,7 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
         except UserNotAuthorizedException as e:
             self.send_error(401, e.msg)
 
-    def add_photo_to_google_plus_activity(self, user, attraction):
+    def add_attraction_to_google_plus_activity(self, user, attraction):
         """Creates an app activity in Google indicating that the given User has
         uploaded the given Photo.
 
@@ -696,10 +733,10 @@ class CategoriesHandler(JsonRestHandler):
         #category = list(model.Category.all().order('-start').run())
         category = list(model.Category.all().run())
         if not category:
-            default_theme = model.Category(display_name="Museum")
+            default_category = model.Category(display_name="Museum")
             #default_theme.start = default_theme.created
-            default_theme.put()
-            category = [default_theme]
+            default_category.put()
+            category = [default_category]
         self.send_success(category, jsonkind="affcult#category")
 
 
@@ -715,7 +752,7 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
         try:
             photo_id = self.request.get('attractionId')
             self.response.headers['Content-Type'] = 'text/html'
-            template = jinja_environment.get_template('templates' + self.request.path)
+            template = JINJA_ENV.get_template('templates' + self.request.path)
             if photo_id:
                 photo = model.Attraction.get_by_id(long(photo_id))
                 self.response.out.write(template.render({
@@ -751,11 +788,40 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
             self.send_error(404, "Resource not found")
 
 
+class MainHandler(webapp2.RequestHandler):
+    """A handler for showing an HTML form."""
+
+    def get(self):
+        """Render an HTML form for creating Memes."""
+        template = JINJA_ENV.get_template('add_attraction.html')
+        nickname, link_url, link_text = get_login_logout_context(
+            self.request.uri)
+        context = {
+            'nickname': nickname,
+            'link_text': link_text,
+            'link_url': link_url
+        }
+        self.response.out.write(template.render(context))
+
+def get_login_logout_context(target_url):
+    """Returns nickname, link url and link text for the common_header.html."""
+    user = users.get_current_user()
+    if user:
+        nickname = user.nickname()
+        link_text = 'Logout'
+        link_url = users.create_logout_url(target_url)
+    else:
+        nickname = 'Anonymous user'
+        link_text = 'Login'
+        link_url = users.create_login_url(target_url)
+    return nickname, link_url, link_text
+
 routes = [
     ('/api/connect', ConnectHandler),
     ('/api/disconnect', DisconnectHandler),
     ('/api/categories', CategoriesHandler),
     ('/api/attractions', AttractionsHandler),
+    ('/admin/attractions/add', MainHandler),
     ('/photo.html', SchemaHandler)
 ]
 config = {}
