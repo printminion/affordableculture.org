@@ -126,7 +126,7 @@ class Attraction(db.Model, Jsonifiable):
     attraction_content_url = None
     num_votes = None
     voted = False
-    approved = False
+    approved = db.BooleanProperty(default=False)
 
     country = db.StringProperty()
     city = db.StringProperty()
@@ -179,8 +179,8 @@ class Attraction(db.Model, Jsonifiable):
             self.thumbnail_url = self.get_image_url(self.DEFAULT_THUMBNAIL_SIZE)
         if self.is_saved():
             key = self.key()
-            self.num_votes = Vote.all().filter("attraction_id =", key.id()).count()
-            template = '%s/index.html?attractionId=%s%s'
+            self.num_votes = VoteWantToGo.all().filter("attraction_id =", key.id()).count()
+            template = '%s/add_attraction_new.html?attractionId=%s%s'
             self.vote_cta_url = template % (
                 handlers.get_base_url(), key.id(), '&action=VOTE')
             template = '%s/attraction.html?attractionId=%s'
@@ -203,7 +203,7 @@ class Attraction(db.Model, Jsonifiable):
 class Category(db.Model, Jsonifiable):
     """Represents a affcult theme."""
     jsonkind = 'affcult#category'
-    display_name = db.StringProperty()
+    name = db.StringProperty()
     created = db.DateTimeProperty(auto_now_add=True)
     #start = db.DateTimeProperty()
     #preview_photo_id = db.IntegerProperty()
@@ -244,12 +244,17 @@ class User(db.Model, Jsonifiable):
                        edges])
 
 
-class Vote(db.Model, Jsonifiable):
+class VoteWantToGo(db.Model, Jsonifiable):
     """Represents a vote case by a affcult user."""
-    jsonkind = 'affcult#vote'
+    jsonkind = 'affcult#votewanttogo'
     owner_user_id = db.IntegerProperty()
     attraction_id = db.IntegerProperty()
 
+class VoteBeenHere(db.Model, Jsonifiable):
+    """Represents a vote case by a affcult user."""
+    jsonkind = 'affcult#votebeenhere'
+    owner_user_id = db.IntegerProperty()
+    attraction_id = db.IntegerProperty()
 
 class Message(Jsonifiable):
     """Standard JSON type used to return success/error messages."""

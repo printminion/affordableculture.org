@@ -30,13 +30,31 @@
         data-width="wide">
     </button>
 
+    <h2>Authentication Logs</h2>
+    <pre id="authResult"></pre>
+
+    <div id="profile"></div>
+
+
 
 <form action="/api/attractions" method="post">
 
     <label for="country">country</label> <input name="country" value="Australia" id="country">
     <label for="city">city</label> <input name="city" value="Sydney" id="city">
     <label for="name">name</label> <input name="name" value="Nicholson Museum" id="name">
-    <label for="category">category</label> <input name="category" value="Museum" id="category">
+    <label for="category">category</label>
+    <select name="category" id="category">
+        <option value="unknown">unknown</option>
+        <option value="Museum">Museum</option>
+        <option value="Memorial">Memorial</option>
+        <option value="Zoo">Zoo</option>
+        <option value="Botanical garden">Botanical garden</option>
+        <option value="Park">Park</option>
+        <option value="Church">Church</option>
+        <option value="Factory">Factory</option>
+        <option value="Library">Library</option>
+    </select>
+
     <label for="address">address</label> <input name="address" value="University of Sydney, Manning Rd, Camperdown, Sydney, New South Wales (NSW) 2050, Australia" id="address">
     <label for="latlong">latlong</label> <input name="latlong" value="-33.886395,151.188784" id="latlong">
     <label for="free_time">free_time</label> <input name="free_time" value="" id="free_time">
@@ -74,10 +92,15 @@ function onSignInCallback(authResult) {
         contentType: "application/json",
         data: JSON.stringify(authResult),
         dataType: 'json',
-        success: function(nullResponse) {
+        success: function(authResult) {
           // Do something now that user is disconnected
           // The response is always undefined.
-            console.log(nullResponse);
+            console.log('success', authResult);
+
+           $('#authResult').html('Auth Result:<br/>');
+          for (var field in authResult) {
+            $('#authResult').append(' ' + field + ': ' + authResult[field] + '<br/>');
+          }
         },
         error: function(e) {
           // Handle the error
@@ -120,6 +143,34 @@ function onSignInCallback(authResult) {
     }
   });
 }
+
+
+
+  /**
+     * Retrieves and renders the authenticated user's Google+ profile.
+     */
+    function renderProfile() {
+      var request = gapi.client.plus.people.get( {'userId' : 'me'} );
+      request.execute( function(profile) {
+          $('#profile').empty();
+          if (profile.error) {
+            $('#profile').append(profile.error);
+            return;
+          }
+          helper.connectServer(profile.id);
+          $('#profile').append(
+              $('<p><img src=\"' + profile.image.url + '\"></p>'));
+          $('#profile').append(
+              $('<p>Hello ' + profile.displayName + '!<br />Tagline: ' +
+              profile.tagline + '<br />About: ' + profile.aboutMe + '</p>'));
+          if (profile.cover && profile.coverPhoto) {
+            $('#profile').append(
+                $('<p><img src=\"' + profile.cover.coverPhoto.url + '\"></p>'));
+          }
+        });
+      $('#authOps').show('slow');
+      $('#gConnect').hide();
+    }
 // Could trigger the disconnect on a button click
 $('#revokeButton').click(disconnectUser);
 </script>

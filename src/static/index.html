@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:ng="http://angularjs.org">
 <!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
@@ -7,21 +7,31 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
   <meta charset="utf-8" />
-  <title>...</title>
+  <title>Affordable Culture</title>
   <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css"/>
-  <link rel="stylesheet" href="stylesheets/ac.css"/>
+  <link rel="stylesheet" href="stylesheets/photohunt.css"/>
   <link rel="stylesheet" href="stylesheets/gh-buttons.css"/>
   <!-- IE Fix for HTML5 Tags -->
   <!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+  <script src="js/jquery.filedrop.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/controllers.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/directives.js"></script>
   <script type='text/javascript'>
-
+  function startApp() {
+    console.log('start');
+    angular.bootstrap(document, ['photoHunt']);
+  }
   </script>
 </head>
-<body>
+<body ng-controller="PhotoHuntCtrl" ng-cloak>
 <div id="container">
 
     <header>
@@ -119,7 +129,7 @@
       </ul>
     </div>
     <div ng-show="friends">
-      <h3>Friends using PhotoHunt</h4>
+      <h3>Friends using PhotoHunt</h3>
       <ul id="friendList">
         <li ng-repeat="friend in friends | orderBy:'displayName'">
           <a href="{{friend.googlePublicProfileUrl}}"><img ng-src="{{friend.googlePublicProfilePhotoUrl|profilePicture:50}}"

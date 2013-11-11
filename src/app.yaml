@@ -1,8 +1,12 @@
 application: affordable-culture
-version: 1
+version: 12
 runtime: python27
 api_version: 1
 threadsafe: true
+
+builtins:
+- deferred: on
+- appstats: on
 
 libraries:
 - name: jinja2
@@ -27,6 +31,10 @@ handlers:
 
 - url: /stylesheets
   static_dir: static/stylesheets
+
+- url: /add_attraction_new.html
+  static_files: static/add_attraction_new.html
+  upload: static/add_attraction_new.html
 
 - url: /index.html
   static_files: static/index.html

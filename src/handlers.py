@@ -24,6 +24,7 @@ import oauth2client
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 from webapp2_extras import sessions
+from google.appengine.ext import deferred
 
 from google.appengine.api import users
 
@@ -33,7 +34,7 @@ JINJA_ENV = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'])
 
 CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+    open('%s/client_secrets.json' % os.path.dirname(__file__), 'r').read())['web']['client_id']
 
 SCOPES = [
     'https://www.googleapis.com/auth/plus.login'
@@ -72,7 +73,7 @@ class SessionEnabledHandler(webapp2.RequestHandler):
         return self.session_store.get_session()
 
     def get_user_from_session(self):
-        """Convenience method for retrieving the users crendentials from an
+        """Convenience method for retrieving the users credentials from an
         authenticated session.
         """
         google_user_id = self.session.get(self.CURRENT_USER_SESSION_KEY)
@@ -376,7 +377,7 @@ class DisconnectHandler(JsonRestHandler, SessionEnabledHandler):
         Essentially this operation disconnects a user from the app, but keeps
         their app activities alive in Google.  The same user can later come back
         to the app, sign-in, re-consent, and resume using the app.
-        throws RevokeException error occured while making request.
+        throws RevokeException error occurred while making request.
         """
         url = TOKEN_REVOKE_ENDPOINT % credentials.access_token
         http = httplib2.Http()
@@ -413,7 +414,7 @@ class DisconnectHandler(JsonRestHandler, SessionEnabledHandler):
 
             del (self.session[self.CURRENT_USER_SESSION_KEY])
             user_id = user.key().id()
-            db.delete(model.Vote.all().filter("owner_user_id =", user_id).run())
+            db.delete(model.VoteWantToGo.all().filter("owner_user_id =", user_id).run())
             db.delete(model.Attraction.all().filter("owner_user_id =", user_id).run())
             db.delete(model.DirectedUserToUserEdge.all().filter(
                 "owner_user_id =", user_id).run())
@@ -499,37 +500,50 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
             user_id = self.request.get('userId')
             show_friends = bool(self.request.get('friends'))
             query = model.Attraction.all()
+            #get by attractions id
             if attraction_id:
                 attraction = model.Attraction.get_by_id(long(attraction_id))
-                self.send_success(attraction)
-                return
-            else:
-                if user_id:
-                    if user_id == 'me':
-                        user = self.get_user_from_session()
-                    else:
-                        user = model.User.get_by_id(long(user_id))
-                    if show_friends:
-                        user = self.get_user_from_session()
-                        friends = user.get_friends()
-                        if len(friends) > 0:
-                            query = query.filter('owner_user_id in', friends[0:30])
-                        else:
-                            self.send_success([])
-                            return
-                    else:
-                        query = query.filter('owner_user_id =', user.key().id())
 
+                if attraction.approved:
+                    self.send_success(attraction)
+                else:
+                    self.send_error(404, 'location is not approved')
+                return
+
+            if latlong:
+
+                latlong = self.request.get('ll')
+                zoom = self.request.get('z')
+
+            #get by attractions id
+            if user_id:
+                if user_id == 'me':
+                    user = self.get_user_from_session()
+                else:
+                    user = model.User.get_by_id(long(user_id))
+                if show_friends:
+                    user = self.get_user_from_session()
+                    friends = user.get_friends()
+                    if len(friends) > 0:
+                        query = query.filter('owner_user_id in', friends[0:30])
+                    else:
+                        self.send_success([])
+                        return
+                else:
+                    query = query.filter('owner_user_id =', user.key().id())
+
+            #get by category id
             if category_id:
                 query = query.filter('category_id =', long(category_id))
 
             attractions = list(query.run())
 
+            user = None
             if self.session.get(self.CURRENT_USER_SESSION_KEY) is not None:
                 if not user_id:
                     user = self.get_user_from_session()
 
-                votes = model.Vote.all().filter(
+                votes = model.VoteWantToGo.all().filter(
                     "owner_user_id =", user.key().id()).run()
                 photo_votes = []
                 for vote in votes:
@@ -593,18 +607,16 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
         500: 'Error while writing app activity: ' + error from client library.
         """
 
-        logging.debug('/api/...')
+        logging.debug('/api/attractions')
 
         try:
             user = self.get_user_from_session()
             logging.debug('debug')
             #current_theme = model.Category.get_current_theme()
 
-
-            current_category = model.Category.all().filter('display_name =', self.request.get('category')).get()
+            current_category = model.Category.all().filter('name =', self.request.get('category')).get()
             if current_category is None:
-                current_category = model.Category(display_name=self.request.get('category')).put()
-
+                current_category = model.Category(name=self.request.get('category')).put()
 
             if current_category:
                 #uploads = self.get_uploads('image')
@@ -614,27 +626,30 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                                         owner_profile_photo=user.google_public_profile_photo_url,
                                         owner_profile_url=user.google_public_profile_url,
                                         #theme_id=current_theme.key().id(),
-                                        categories=[current_category.display_name],
-                                        theme_display_name=current_category.display_name,
+                                        categories=[current_category.name],
+                                        theme_display_name=current_category.name,
                                         created=datetime.datetime.now(),
                                         num_votes=0,
                                         #image_blob_key=blob_info.key()
-                                        country = self.request.get('country'),
-                                        city = self.request.get('city'),
-                                        name = self.request.get('name'),
+                                        country=self.request.get('country'),
+                                        city=self.request.get('city'),
+                                        name=self.request.get('name'),
                                         # Group affiliation
                                         #category = self.request.get('category'),
-                                        address = self.request.get('address'),
-                                        latlong = self.request.get('latlong'),
-                                        free_time = self.request.get('free_time'),
-                                        donation = self.request.get('donation'),
-                                        website = self.request.get('website'),
-                                        source = self.request.get('source'),
-                                        email = self.request.get('email')
+                                        address=self.request.get('address'),
+                                        latlong=self.request.get('latlong'),
+                                        free_time=self.request.get('free_time'),
+                                        donation=self.request.get('donation'),
+                                        website=self.request.get('website'),
+                                        source=self.request.get('source'),
+                                        email=self.request.get('email')
                 )
                 attraction.put()
+                logging.debug('redirect:/api/attractions?attractionId=')
                 try:
                     result = self.add_attraction_to_google_plus_activity(user, attraction)
+                    logging.debug('redirect:/api/attractions?attractionId=%s' % result.id)
+                    self.redirect('/api/attractions?attractionId=%s' % result.id)
                 except apiclient.errors.HttpError as e:
                     logging.error("Error while writing app activity: %s", str(e))
                 self.send_success(attraction)
@@ -666,7 +681,7 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                 attraction = model.Attraction.get_by_id(long(photo_id))
                 if attraction.owner_user_id != user.key().id():
                     raise UserNotAuthorizedException
-                attractionVotes = model.Vote.all().filter(
+                attractionVotes = model.VoteWantToGo.all().filter(
                     "attraction_id =", attraction.key().id()).run()
                 db.delete(attraction)
                 db.delete(attractionVotes)
@@ -701,6 +716,162 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                                      body=activity).execute()
 
 
+class InitHandler(JsonRestHandler, SessionEnabledHandler,
+                    blobstore_handlers.BlobstoreUploadHandler):
+    """Provides an API for working with Themes.
+
+    This handler provides the /api/themes end-point, and exposes the following
+    operations:
+      GET /api/categories
+    """
+
+    def get(self):
+        """Exposed as `GET /api/categories`.
+
+        When requested, if no theme exists for the current day, then a theme with
+        the name of 'Beautiful' is created for today.  This leads to multiple
+        themes with the name 'Beautiful' if you use the app over multiple days
+        without changing this logic.  This behavior is purposeful so that the app
+        is easier to get up and running.
+
+        Returns the following JSON response representing a list of Themes.
+
+        [
+          {
+            'id':0,
+            'displayName':'',
+            'created':0,
+            'start':0
+          },
+          ...
+        ]
+        """
+        user = self.get_user_from_session()
+        deferred.defer(initAttractions, user=user)
+        self.send_success({'result': 'success'})
+
+    def initCategories(self):
+        #category = list(model.Category.all().order('-start').run())
+
+        categories = 'unknown,Museum,Memorial,Zoo,Botanical garden,Park,Church,Factory,Library'.split(',')
+        default_category = {}
+
+        for category in categories:
+            print category
+            q = db.Query(model.Category)
+            q.filter("category=", category)
+            category_db = q.fetch(1)
+            print category_db
+            if not category_db:
+                default_category = model.Category(name=category)
+                #default_theme.start = default_theme.created
+                default_category.put()
+
+        self.send_success(default_category, jsonkind="affcult#category")
+
+
+def initAttractions(user):
+
+    attractions = [{
+            "country": "Australia",
+            "city": "Sydney",
+            "name": "Rocks Discovery Museum",
+            "category": "Museum",
+            "address": "The Rocks, 2-8 Kendall Ln, Sydney, New South Wales (NSW) 2000, Australia",
+            "latlng": "-33.85909,151.208345",
+            "website": "http://www.therocks.com/things-to-do/the-rocks-discovery-museum.aspx",
+            "source": "http://www.therocks.com/things-to-do/the-rocks-discovery-museum.aspx",
+            "googlepluslocal": "https://plus.google.com/111631762247805094518/about",
+            "tripadvisor": "http://www.tripadvisor.com/Attraction_Review-g255060-d618987-Reviews-The_Rocks_Discovery_Museum-Sydney_New_South_Wales.html",
+            "yelp": "http://www.yelp.com/biz/the-rocks-discovery-museum-the-rocks"
+                    }]
+
+    url = 'https://script.google.com/macros/s/AKfycbyqNWGDg6DlSHt2f-5ZVTFzsjGHQNdh60t0Wyi8Y5iVh3D9JC8/exec'
+
+    result = urlfetch.fetch(url)
+    if result.status_code == 200:
+        attractions = json.loads(result.content)
+
+    #user = self.get_user_from_session()
+
+    validated_categories = []
+    approved = False
+    for attraction in attractions:
+
+        if not 'category' in attraction:
+            logging.critical('Missing category')
+            continue
+        categories = attraction['category'].split(',')
+
+        for category in categories:
+            if category in validated_categories:
+                break
+
+            try:
+                current_category = model.Category.all().filter('name =', category).get()
+                if current_category is None:
+                    current_category = model.Category(name=category).put()
+
+                validated_categories.append(category)
+            except:
+                logging.critical('Missing category:%s' % attraction)
+                continue
+
+        if not 'address' in attraction:
+            logging.critical('Missing address')
+            continue
+
+        if not 'source' in attraction:
+            logging.critical('Missing source')
+            continue
+
+        if not 'latlng' in attraction:
+            logging.critical('Missing address')
+            continue
+
+        if not 'free_time' in attraction:
+            attraction['free_time'] = None
+        if not 'donation' in attraction:
+            attraction['donation'] = None
+        if not 'email' in attraction:
+            attraction['email'] = None
+        if not 'free_time' in attraction:
+            attraction['free_time'] = None
+
+        approved = True
+
+        if current_category:
+            #uploads = self.get_uploads('image')
+            #blob_info = uploads[0]
+            attraction = model.Attraction(owner_user_id=user.key().id(),
+                                    owner_display_name=user.google_display_name,
+                                    owner_profile_photo=user.google_public_profile_photo_url,
+                                    owner_profile_url=user.google_public_profile_url,
+                                    #theme_id=current_theme.key().id(),
+                                    categories=categories,
+                                    theme_display_name=current_category.name,
+                                    created=datetime.datetime.now(),
+                                    approved=approved,
+                                    num_votes=0,
+                                    #image_blob_key=blob_info.key()
+                                    country=attraction['country'],
+                                    city=attraction['city'],
+                                    name=attraction['name'],
+                                    # Group affiliation
+                                    #category = attraction['category'),
+                                    address=attraction['address'],
+                                    latlong=attraction['latlng'],
+                                    free_time=attraction['free_time'],
+                                    donation=attraction['donation'],
+                                    website=attraction['website'],
+                                    source=attraction['source'],
+                                    email=attraction['email']
+            )
+            attraction.put()
+            logging.debug('redirect:/api/attractions?attractionId=')
+
+
+
 class CategoriesHandler(JsonRestHandler):
     """Provides an API for working with Themes.
 
@@ -731,13 +902,19 @@ class CategoriesHandler(JsonRestHandler):
         ]
         """
         #category = list(model.Category.all().order('-start').run())
-        category = list(model.Category.all().run())
-        if not category:
-            default_category = model.Category(display_name="Museum")
+        #categories = list(model.Category.all().run(projection='name'))
+        #categories = list(db.Query(model.Category, projection=('ID', 'name')).run())
+        #categories = list(db.Query(model.Category, projection='name').run())
+        q = db.Query(model.Category)
+        q.order('created')
+        categories = q.fetch(100, projection=('name',))
+
+        if not categories:
+            default_category = model.Category(name="Museum")
             #default_theme.start = default_theme.created
             default_category.put()
-            category = [default_category]
-        self.send_success(category, jsonkind="affcult#category")
+            categories = [default_category]
+        self.send_success(categories, jsonkind="affcult#category")
 
 
 class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
@@ -757,7 +934,7 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
                 photo = model.Attraction.get_by_id(long(photo_id))
                 self.response.out.write(template.render({
                     'attractionId': photo_id,
-                    'redirectUrl': 'index.html?attractionId={}'.format(photo_id),
+                    'redirectUrl': 'add_attraction_new.html?attractionId={}'.format(photo_id),
                     'name': 'Attraction by {} for {} | AffordableCulture'.format(
                         photo.owner_display_name,
                         photo.theme_display_name),
@@ -769,12 +946,12 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
                 photo = model.Attraction.all().get()
                 if photo:
                     self.response.out.write(template.render({
-                        'redirectUrl': 'index.html?attractionId='.format(photo_id),
+                        'redirectUrl': 'add_attraction_new.html?attractionId='.format(photo_id),
                         'name': 'Attraction by {} for {} | AffordableCulture'.format(
                             photo.owner_display_name,
                             photo.theme_display_name),
                         'imageUrl': photo.thumbnail_url,
-                        'description': 'Join in the AffordableCulture game.'
+                        'description': 'Join in the AffordableCulture.'
                     }))
                 else:
                     self.response.out.write(template.render({
@@ -782,7 +959,7 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
                         'name': 'AffordableCulture',
                         'imageUrl': '{}/images/interactivepost-icon.png'.format(
                             get_base_url()),
-                        'description': 'Join in the AffordableCulture game.'
+                        'description': 'Join in the AffordableCulture.'
                     }))
         except TypeError as te:
             self.send_error(404, "Resource not found")
@@ -799,9 +976,11 @@ class MainHandler(webapp2.RequestHandler):
         context = {
             'nickname': nickname,
             'link_text': link_text,
-            'link_url': link_url
+            'link_url': link_url,
+            'CLIENT_ID': '622222016553.apps.googleusercontent.com'
         }
         self.response.out.write(template.render(context))
+
 
 def get_login_logout_context(target_url):
     """Returns nickname, link url and link text for the common_header.html."""
@@ -817,6 +996,7 @@ def get_login_logout_context(target_url):
     return nickname, link_url, link_text
 
 routes = [
+    ('/admin/init', InitHandler),
     ('/api/connect', ConnectHandler),
     ('/api/disconnect', DisconnectHandler),
     ('/api/categories', CategoriesHandler),
