@@ -107,9 +107,10 @@ class JsonRestHandler(webapp2.RequestHandler):
     def send_error(self, code, message):
         """Convenience method to format an HTTP error response in a standard format.
         """
+        self.response.headers["Content-Type"] = self.JSON_MIMETYPE
         self.response.set_status(code, message)
-        self.response.out.write(message)
-        return
+        err = {'status': 'failure', 'code': code, 'message': message};
+        self.response.out.write(json.dumps(err))
 
     def send_success(self, obj=None, jsonkind='affcult#unknown'):
         """Convenience method to format a affcult JSON HTTP response in a standard
@@ -772,19 +773,7 @@ class InitHandler(JsonRestHandler, SessionEnabledHandler,
 
 def initAttractions(user):
 
-    attractions = [{
-            "country": "Australia",
-            "city": "Sydney",
-            "name": "Rocks Discovery Museum",
-            "category": "Museum",
-            "address": "The Rocks, 2-8 Kendall Ln, Sydney, New South Wales (NSW) 2000, Australia",
-            "latlng": "-33.85909,151.208345",
-            "website": "http://www.therocks.com/things-to-do/the-rocks-discovery-museum.aspx",
-            "source": "http://www.therocks.com/things-to-do/the-rocks-discovery-museum.aspx",
-            "googlepluslocal": "https://plus.google.com/111631762247805094518/about",
-            "tripadvisor": "http://www.tripadvisor.com/Attraction_Review-g255060-d618987-Reviews-The_Rocks_Discovery_Museum-Sydney_New_South_Wales.html",
-            "yelp": "http://www.yelp.com/biz/the-rocks-discovery-museum-the-rocks"
-                    }]
+    attractions = []
 
     url = 'https://script.google.com/macros/s/AKfycbyqNWGDg6DlSHt2f-5ZVTFzsjGHQNdh60t0Wyi8Y5iVh3D9JC8/exec'
 
