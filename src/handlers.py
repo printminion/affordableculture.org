@@ -27,6 +27,7 @@ from webapp2_extras import sessions
 from google.appengine.ext import deferred
 
 from google.appengine.api import users
+from geosearch import SearchAttractionsService
 
 JINJA_ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(
@@ -109,8 +110,10 @@ class JsonRestHandler(webapp2.RequestHandler):
         """
         self.response.headers["Content-Type"] = self.JSON_MIMETYPE
         self.response.set_status(code, message)
-        err = {'status': 'failure', 'code': code, 'message': message};
-        self.response.out.write(json.dumps(err))
+        self.response.out.write(json.dumps({'status': 'error',
+                                            'code': code,
+                                            'error': {'message': message}
+                                            }))
 
     def send_success(self, obj=None, jsonkind='affcult#unknown'):
         """Convenience method to format a affcult JSON HTTP response in a standard
@@ -512,9 +515,22 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                 return
 
             if latlong:
+                latlong = latlong.split(',')
+                params = {'lat': latlong[0],
+                          'lon': latlong[1],
+                          'maxresults': 10,
+                          'maxdistance': None,
+                          'category': None
+                }
 
-                latlong = self.request.get('ll')
-                zoom = self.request.get('z')
+                search = SearchAttractionsService()
+                attractions = search.search(query_type='proximity', params=params)
+
+                if attractions:
+                    self.send_success(attractions)
+                else:
+                    self.send_error(404, 'location is not approved')
+                return
 
             #get by attractions id
             if user_id:
@@ -638,13 +654,14 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                                         # Group affiliation
                                         #category = self.request.get('category'),
                                         address=self.request.get('address'),
-                                        latlong=self.request.get('latlong'),
+                                        location=self.request.get('latlong'),
                                         free_time=self.request.get('free_time'),
                                         donation=self.request.get('donation'),
                                         website=self.request.get('website'),
                                         source=self.request.get('source'),
                                         email=self.request.get('email')
                 )
+                attraction.update_location()
                 attraction.put()
                 logging.debug('redirect:/api/attractions?attractionId=')
                 try:
@@ -849,13 +866,14 @@ def initAttractions(user):
                                     # Group affiliation
                                     #category = attraction['category'),
                                     address=attraction['address'],
-                                    latlong=attraction['latlng'],
+                                    location=attraction['latlng'],
                                     free_time=attraction['free_time'],
                                     donation=attraction['donation'],
                                     website=attraction['website'],
                                     source=attraction['source'],
                                     email=attraction['email']
             )
+            attraction.update_location()
             attraction.put()
             logging.debug('redirect:/api/attractions?attractionId=')
 

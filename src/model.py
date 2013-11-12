@@ -16,6 +16,7 @@ from google.appengine.api import images
 from google.appengine.ext import db
 from google.appengine.ext import blobstore
 from oauth2client.appengine import CredentialsProperty
+from geo.geomodel import GeoModel
 
 
 class JsonifiableEncoder(json.JSONEncoder):
@@ -116,7 +117,7 @@ class DirectedUserToUserEdge(db.Model, Jsonifiable):
     friend_user_id = db.IntegerProperty()
 
 
-class Attraction(db.Model, Jsonifiable):
+class Attraction(GeoModel, Jsonifiable):
     """Represents a user submitted Attraction."""
     jsonkind = 'affcult#attraction'
     DEFAULT_THUMBNAIL_SIZE = 400
@@ -137,7 +138,7 @@ class Attraction(db.Model, Jsonifiable):
 
 
     address = db.PostalAddressProperty()
-    latlong = db.GeoPtProperty()
+    #latlong = db.GeoPtProperty()
     free_time = db.StringProperty()
     donation = db.StringProperty()
     website = db.LinkProperty()
@@ -198,6 +199,33 @@ class Attraction(db.Model, Jsonifiable):
     def get_image_url(self, size=None):
         """Return the image serving url for this Photo."""
         return images.get_serving_url(self.image_blob_key, size=size)
+
+    @staticmethod
+    def public_attributes():
+        """Returns a set of simple attributes on public school entities."""
+        return ['id', 'name', 'address', 'city']
+
+    def _get_latitude(self):
+        return self.location.lat if self.location else None
+
+    def _set_latitude(self, lat):
+        if not self.location:
+            self.location = db.GeoPt()
+
+        self.location.lat = lat
+
+        latitude = property(self._get_latitude, self._set_latitude)
+
+    def _get_longitude(self):
+        return self.location.lon if self.location else None
+
+    def _set_longitude(self, lon):
+        if not self.location:
+            self.location = db.GeoPt()
+
+        self.location.lon = lon
+
+        longitude = property(self._get_longitude, self._set_longitude)
 
 
 class Category(db.Model, Jsonifiable):
