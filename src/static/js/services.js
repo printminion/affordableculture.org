@@ -58,6 +58,10 @@ angular.module('affordableCulture.services', [])
         },
         disconnect: function() {
           return $http.post(Conf.apiBase + 'disconnect');
+        },
+        search: function(term) {
+          return $http.get(Conf.apiBase + 'attractions', {params:
+              {'search': term}});
         }
       };
     })

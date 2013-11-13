@@ -1,4 +1,7 @@
 <span>
+    {{item.name}}
+    {{item.address}}
+    {{item.categories}}
 <div class="imageContainer">
   <img ng-src="{{item.thumbnailUrl}}" alt="My photo for {{item.themeDisplayName}}"/>
 </div>
@@ -12,8 +15,12 @@
     </a>
   </div>
   <button class="button">Promote</button>
-  <button class="button icon danger remove" ng-show="item.canDelete">
-    Delete
+
+</div>
+<div class="vote">
+  <div class="count">{{item.numVotes}}</div>
+  <button class="voteButton" ng-class="item.voteClass" ng-show="item.canVote">
+    Vote
   </button>
 </div>
 <div class="vote">
