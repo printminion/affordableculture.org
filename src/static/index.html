@@ -27,15 +27,20 @@
   <script type='text/javascript'>
   function startApp() {
     console.log('start');
-    angular.bootstrap(document, ['photoHunt']);
+    angular.bootstrap(document, ['affordableCulture']);
   }
   </script>
 </head>
-<body ng-controller="PhotoHuntCtrl" ng-cloak>
+<body ng-controller="AffordableCultureCtrl" ng-cloak>
 <div id="container">
 
     <header>
     <div id="topHeader">
+
+      <div id="search" >
+        <input type="text" id="country" placeholder="enter country here"/>
+        <button id="countryButton" ng-click="search()">Search by country</button>
+      </div>
 
       <div id="profileInfo" >
         <span id="signin" ng-show="immediateFailed">
@@ -129,7 +134,7 @@
       </ul>
     </div>
     <div ng-show="friends">
-      <h3>Friends using PhotoHunt</h3>
+      <h3>Friends using Free Attractions</h3>
       <ul id="friendList">
         <li ng-repeat="friend in friends | orderBy:'displayName'">
           <a href="{{friend.googlePublicProfileUrl}}"><img ng-src="{{friend.googlePublicProfilePhotoUrl|profilePicture:50}}"

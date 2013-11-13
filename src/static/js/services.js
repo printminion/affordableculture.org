@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('photoHunt.services', [])
+angular.module('affordableCulture.services', [])
     .factory('Conf', function($location) {
       function getRootUrl() {
         var rootUrl = $location.protocol() + '://' + $location.host();
@@ -18,7 +18,7 @@ angular.module('photoHunt.services', [])
          'cookiepolicy': 'single_host_origin'
       };
     })
-    .factory('PhotoHuntApi', function($http, Conf) {
+    .factory('AffordableCultureApi', function($http, Conf) {
       return {
         signIn: function(authResult) {
           return $http.post(Conf.apiBase + 'connect', authResult);

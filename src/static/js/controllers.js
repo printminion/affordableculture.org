@@ -1,6 +1,6 @@
 'use strict';
 
-function PhotoHuntCtrl($scope, $location, Conf, PhotoHuntApi) {
+function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
   // signIn
   $scope.userProfile = undefined;
   $scope.hasUserProfile = false;
@@ -23,7 +23,7 @@ function PhotoHuntCtrl($scope, $location, Conf, PhotoHuntApi) {
   $scope.uploadUrl;
   
   $scope.disconnect = function() {
-    PhotoHuntApi.disconnect().then(function() {
+    AffordableCultureApi.disconnect().then(function() {
       $scope.userProfile = undefined;
       $scope.hasUserProfile = false;
       $scope.isSignedIn = false;
@@ -76,7 +76,7 @@ function PhotoHuntCtrl($scope, $location, Conf, PhotoHuntApi) {
   }
   
   $scope.deletePhoto = function(photoId) {
-    PhotoHuntApi.deletePhoto(photoId);
+    AffordableCultureApi.deletePhoto(photoId);
     $scope.userPhotos = $scope.removePhotoFromArray($scope.userPhotos, photoId);
     $scope.friendsPhotos = $scope.removePhotoFromArray($scope.friendsPhotos, photoId);
     $scope.allPhotos = $scope.removePhotoFromArray($scope.allPhotos, photoId);
@@ -94,7 +94,7 @@ function PhotoHuntCtrl($scope, $location, Conf, PhotoHuntApi) {
   
   $scope.getUserPhotos = function() {
     if ($scope.hasUserProfile && ($scope.themes.length > 0)) {
-      PhotoHuntApi.getUserPhotosByTheme($scope.selectedTheme.id)
+      AffordableCultureApi.getUserPhotosByTheme($scope.selectedTheme.id)
       	  .then(function(response) {
         $scope.userPhotos = $scope.adaptPhotos(response.data);
       });
@@ -102,28 +102,28 @@ function PhotoHuntCtrl($scope, $location, Conf, PhotoHuntApi) {
   }
   
   $scope.getAllPhotos = function() {
-    PhotoHuntApi.getAllPhotosByTheme($scope.selectedTheme.id)
+    AffordableCultureApi.getAllPhotosByTheme($scope.selectedTheme.id)
     	.then(function(response) {
       $scope.allPhotos = $scope.adaptPhotos(response.data);
     });
   }
   
   $scope.getFriendsPhotos = function() {
-    PhotoHuntApi.getFriendsPhotosByTheme($scope.selectedTheme.id)
+    AffordableCultureApi.getFriendsPhotosByTheme($scope.selectedTheme.id)
         .then(function(response) {
       $scope.friendsPhotos = $scope.adaptPhotos(response.data);
     });
   }
   
   $scope.getUploadUrl = function(params) {
-    PhotoHuntApi.getUploadUrl().then(function(response) {
+    AffordableCultureApi.getUploadUrl().then(function(response) {
       $scope.uploadUrl = response.data.url;
     });
   }
   
   $scope.checkIfVoteActionRequested = function() {
     if($location.search()['action'] == 'VOTE') {
-      PhotoHuntApi.votePhoto($location.search()['photoId'])
+      AffordableCultureApi.votePhoto($location.search()['photoId'])
           .then(function(response) {
         var photo = response.data;
         $scope.highlightedPhoto = photo;
@@ -133,7 +133,7 @@ function PhotoHuntCtrl($scope, $location, Conf, PhotoHuntApi) {
   }
   
   $scope.getFriends = function() {
-    PhotoHuntApi.getFriends().then(function(response) {
+    AffordableCultureApi.getFriends().then(function(response) {
       $scope.friends = response.data;
       $scope.getFriendsPhotos();
     })
@@ -182,7 +182,7 @@ function PhotoHuntCtrl($scope, $location, Conf, PhotoHuntApi) {
   
   $scope.checkForHighlightedPhoto = function() {
     if($location.search()['photoId']) {
-      PhotoHuntApi.getPhoto($location.search()['photoId'])
+      AffordableCultureApi.getPhoto($location.search()['photoId'])
           .then(function(response) {
         $scope.highlightedPhoto = response.data;
       })
@@ -203,7 +203,7 @@ function PhotoHuntCtrl($scope, $location, Conf, PhotoHuntApi) {
     if (authResult['access_token']) {
       $scope.immediateFailed = false;
       // Successfully authorized, create session
-      PhotoHuntApi.signIn(authResult).then(function(response) {
+      AffordableCultureApi.signIn(authResult).then(function(response) {
         $scope.signedIn(response.data);
       });
     } else if (authResult['error']) {
@@ -231,7 +231,7 @@ function PhotoHuntCtrl($scope, $location, Conf, PhotoHuntApi) {
   $scope.start = function() {
     $scope.renderSignIn();
     $scope.checkForHighlightedPhoto();
-    PhotoHuntApi.getThemes().then(function(response) {
+    AffordableCultureApi.getThemes().then(function(response) {
       $scope.themes = response.data;
       $scope.selectedTheme = $scope.themes[0];
       $scope.orderBy('recent');
@@ -241,7 +241,7 @@ function PhotoHuntCtrl($scope, $location, Conf, PhotoHuntApi) {
         'contenturl': Conf.rootUrl + '/invite.html',
         'contentdeeplinkid': '/',
         'prefilltext': 'Join the hunt, upload and vote for photos of ' +
-            $scope.selectedTheme.displayName + '. #photohunt',
+            $scope.selectedTheme.displayName + '. #affordableculture',
         'calltoactionlabel': 'Join',
         'calltoactionurl': Conf.rootUrl,
         'calltoactiondeeplinkid': '/',

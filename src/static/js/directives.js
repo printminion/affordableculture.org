@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('photoHunt.directives', ['photoHunt.services'])
-    .directive('photo', function(Conf, PhotoHuntApi) {
+angular.module('affordableCulture.directives', ['affordableCulture.services'])
+    .directive('photo', function(Conf, AffordableCultureApi) {
       return {
         restrict: 'E',
         replace: true,
@@ -22,7 +22,7 @@ angular.module('photoHunt.directives', ['photoHunt.services'])
                     voteButton.focus();
                     scope.item.voteClass.push('disable');
                   });
-                  PhotoHuntApi.votePhoto(scope.item.id)
+                  AffordableCultureApi.votePhoto(scope.item.id)
                       .then(function(response) {});
                 }
               });
@@ -39,7 +39,7 @@ angular.module('photoHunt.directives', ['photoHunt.services'])
             'contenturl': scope.item.photoContentUrl,
             'contentdeeplinkid': '/?id=' + scope.item.id,
             'prefilltext': 'What do you think?  Does this image embody \'' +
-                scope.item.themeDisplayName + '\'? #photohunt',
+                scope.item.themeDisplayName + '\'? #affordableculture',
             'calltoactionlabel': 'VOTE',
             'calltoactionurl': scope.item.voteCtaUrl,
             'calltoactiondeeplinkid': '/?id=' + scope.item.id + '&action=VOTE',
