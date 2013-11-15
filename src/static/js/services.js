@@ -27,6 +27,14 @@ angular.module('affordableCulture.services', [])
           return $http.put(Conf.apiBase + 'votes',
               {'photoId': photoId});
         },
+        voteAttractionBeenThere: function(attractionId) {
+          return $http.put(Conf.apiBase + 'votes',
+              {'attractionId': attractionId, 'vote': 'beenThere'});
+        },
+        voteAttractionWantToGo: function(attractionId) {
+          return $http.put(Conf.apiBase + 'votes',
+              {'attractionId': attractionId, 'vote': 'wantToGo'});
+        },
         getThemes: function() {
           return $http.get(Conf.apiBase + 'themes');
         },

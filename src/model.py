@@ -123,10 +123,17 @@ class Attraction(GeoModel, Jsonifiable):
     DEFAULT_THUMBNAIL_SIZE = 400
     #fullsize_url = None
     #thumbnail_url = None
-    vote_cta_url = None
     attraction_content_url = None
-    num_votes = None
-    voted = False
+
+    vote_cta_url = db.StringProperty()
+    vote_been_url = db.StringProperty()
+
+    num_votes_want_to_go = db.IntegerProperty()
+    num_votes_been_there = db.IntegerProperty()
+
+    voted_want_togo = False
+    voted_been_there = False
+
     approved = db.BooleanProperty(default=False)
 
     country = db.StringProperty()
@@ -135,7 +142,6 @@ class Attraction(GeoModel, Jsonifiable):
     # Group affiliation
     #category = db.ListProperty(db.Key)
     categories = db.ListProperty(str, indexed=False, default=[])
-
 
     address = db.PostalAddressProperty()
     #latlong = db.GeoPtProperty()
@@ -178,17 +184,23 @@ class Attraction(GeoModel, Jsonifiable):
         if self.image_blob_key:
             self.fullsize_url = self.get_image_url()
             self.thumbnail_url = self.get_image_url(self.DEFAULT_THUMBNAIL_SIZE)
+
         if self.is_saved():
             key = self.key()
-            self.num_votes = VoteWantToGo.all().filter("attraction_id =", key.id()).count()
+
+            self.num_votes_want_to_go = VoteWantToGo.all().filter("attraction_id =", key.id()).count()
+            self.num_votes_been_there = VoteBeenHere.all().filter("attraction_id =", key.id()).count()
+
             template = '%s/add_attraction_new.html?attractionId=%s%s'
-            self.vote_cta_url = template % (
-                handlers.get_base_url(), key.id(), '&action=VOTE')
+
+            self.vote_cta_url = template % (handlers.get_base_url(), key.id(), '&action=VOTEWANTTOGO')
+            self.vote_been_url = template % (handlers.get_base_url(), key.id(), '&action=VOTEBEENTHERE')
+
             template = '%s/attraction.html?attractionId=%s'
-            self.attraction_content_url = template % (
-                handlers.get_base_url(), key.id())
+            self.attraction_content_url = template % (handlers.get_base_url(), key.id())
         else:
-            self.num_votes = 0
+            self.num_votes_want_to_go = 0
+            self.num_votes_been_there = 0
 
     def json_properties(self):
         """Hide image_blob_key from JSON serialization."""
@@ -277,6 +289,7 @@ class VoteWantToGo(db.Model, Jsonifiable):
     jsonkind = 'affcult#votewanttogo'
     owner_user_id = db.IntegerProperty()
     attraction_id = db.IntegerProperty()
+
 
 class VoteBeenHere(db.Model, Jsonifiable):
     """Represents a vote case by a affcult user."""

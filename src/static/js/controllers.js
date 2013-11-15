@@ -35,7 +35,7 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
     });
   };
 
-  $scope.search = function(term) {
+  $scope.search = function() {
     AffordableCultureApi.search($scope.keywords).then(function(response) {
         //console.log('search', response);
         $scope.allAttractions = $scope.adaptAttractions(response.data);
@@ -62,7 +62,8 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
   $scope.adaptAttractions = function(photos) {
     angular.forEach(photos, function(value, key) {
       value['canDelete'] = false;
-      value['canVote'] = false;
+      value['canVoteBeenThere'] = false;
+      value['canVoteWantToGo'] = false;
       value['voteClass'] = [];
       if ($scope.hasUserProfile) {
         if (value.ownerUserId == $scope.userProfile.id) {
@@ -71,12 +72,13 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
           if ($scope.userProfile.role == 'admin') {
             value['canDelete'] = true;
           }
-          value['canVote'] = true;
+          value['canVoteBeenThere'] = true;
+          value['canVoteWantToGo'] = true;
           value['voteClass'] = ['button', 'icon', 'arrowup'];
-          if (value.voted) {
+          if (value.votedBeenThere) {
             value['voteClass'].push('disable');
           } else {
-            value.voted = false;
+            value.votedBeenThere = false;
           }
         }
       }

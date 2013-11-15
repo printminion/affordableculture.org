@@ -14,7 +14,7 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
           element.find('.voteButton')
               .click(function(evt) {
                 if(scope.item.canVote && !scope.item.voted) {
-                  var voteButton = angular.element(evt.target)
+                  var voteButton = angular.element(evt.target);
                   scope.$apply(function() {
                     voteButton.unbind('click');
                     scope.item.numVotes = scope.item.numVotes + 1;
@@ -46,7 +46,7 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
             'requestvisibleactions': Conf.requestvisibleactions,
             'scope': Conf.scopes,
             'cookiepolicy': Conf.cookiepolicy
-          }
+          };
           gapi.interactivepost.render(
               element.find('.toolbar button').get(0), options);
         }
@@ -62,18 +62,19 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
         },
         templateUrl: 'partials/attraction.html',
         link: function (scope, element, attrs) {
+            console.log('scope.item', scope.item);
           element.find('.voteButton')
               .click(function(evt) {
-                if(scope.item.canVote && !scope.item.voted) {
-                  var voteButton = angular.element(evt.target)
+                if(scope.item.canVoteBeenThere && !scope.item.votedBeenThere) {
+                  var voteButton = angular.element(evt.target);
                   scope.$apply(function() {
                     voteButton.unbind('click');
-                    scope.item.numVotes = scope.item.numVotes + 1;
-                    scope.item.voted = true;
+                    scope.item.numVotesBeenThere = scope.item.numVotesBeenThere + 1;
+                    scope.item.votedBeenThere = true;
                     voteButton.focus();
                     scope.item.voteClass.push('disable');
                   });
-                  AffordableCultureApi.votePhoto(scope.item.id)
+                  AffordableCultureApi.voteAttractionBeenThere(scope.item.id)
                       .then(function(response) {});
                 }
               });
