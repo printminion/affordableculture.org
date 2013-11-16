@@ -108,8 +108,6 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
             'contentdeeplinkid': '/?id=' + scope.item.id,
             'prefilltext': '*Having fun doesn’t require a lot of money!*\n' +
                'Visiting this attraction will help you to see more while spending less.\n' +
-              'Having fun doesn’t require a lot of money! Visiting this attraction will help ' +
-                'you to see more while paying less while visiting the \n' +
                 scope.item.name + ' #affordableculture',
             'calltoactionlabel': 'VOTE',
             'calltoactionurl': scope.item.voteCtaUrl,
