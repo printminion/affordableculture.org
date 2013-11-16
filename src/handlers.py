@@ -50,6 +50,8 @@ TOKEN_INFO_ENDPOINT = ('https://www.googleapis.com/oauth2/v1/tokeninfo' +
                        '?access_token=%s')
 TOKEN_REVOKE_ENDPOINT = 'https://accounts.google.com/o/oauth2/revoke?token=%s'
 
+logging.getLogger().setLevel(logging.DEBUG)
+
 
 class SessionEnabledHandler(webapp2.RequestHandler):
     """Base type which ensures that derived types always have an HTTP session."""
@@ -435,6 +437,84 @@ class DisconnectHandler(JsonRestHandler, SessionEnabledHandler):
             return
 
 
+class FriendsHandler(JsonRestHandler, SessionEnabledHandler):
+    """Provides an API for working with Users.
+
+    This handler provides the /api/friends end-point, and exposes the following
+    operations:
+      GET /api/friends
+    """
+
+    def get(self):
+        """Exposed as `GET /api/friends`.
+
+        Takes no request payload, and identifies the incoming user by the user
+        data stored in their session.
+
+        Returns the following JSON response representing the people that are
+        connected to the currently signed in user:
+        [
+          {
+            'id':0,
+            'googleUserId':'',
+            'googleDisplayName':'',
+            'googlePublicProfileUrl':'',
+            'googlePublicProfilePhotoUrl':'',
+            'googleExpiresAt':0
+          },
+             ...
+        ]
+
+        Issues the following errors along with corresponding HTTP response codes:
+        401: 'Unauthorized request'
+        """
+        try:
+            user = self.get_user_from_session()
+            friends = user.get_friends()
+            self.send_success(friends, jsonkind="affcult#friends")
+        except UserNotAuthorizedException as e:
+            self.send_error(401, e.msg)
+
+
+class ImageHandler(JsonRestHandler, SessionEnabledHandler):
+    """Provides an API for creating and retrieving URLs to which photo images can
+    be uploaded.
+
+    This handler provides the /api/images end-point, and exposes the following
+    operations:
+      POST /api/images
+    """
+
+    def post(self):
+        """Exposed as `POST /api/images`.
+
+        Creates and returns a URL that can be used to upload an image for a
+        photo. Returned URL, after receiving an upload, will fire a callback
+        (resend the entire HTTP request) to /api/photos.
+
+        Takes no request payload.
+
+        Returns the following JSON response representing an upload URL:
+
+        {
+          "url": "http://appid.appspot.com/_ah/upload/upload-key"
+        }
+
+        Issues the following errors along with corresponding HTTP response codes:
+        401: 'Unauthorized request'
+        """
+        user = self.get_user_from_session()
+        upload_url_string = blobstore.create_upload_url('/api/photos')
+        self.send_success(model.UploadUrl(url=upload_url_string))
+
+    def get(self):
+        """Serve an image."""
+        photo_id = self.request.get('id')
+        attraction = model.Attraction.all().filter('id=', photo_id).get()
+        self.response.headers['Content-Type'] = 'image/png'
+        self.response.out.write(attraction.image_blob)
+
+
 class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                     blobstore_handlers.BlobstoreUploadHandler):
     """Provides an API for working with Attractions.
@@ -507,7 +587,7 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
             user_id = self.request.get('userId')
             show_friends = bool(self.request.get('friends'))
 
-            if search:
+            if search or category_id:
                 attractions = list(query.run(limit=5))
                 self.populateVotes(attractions, user_id)
                 self.send_success(attractions, jsonkind='affcult#attractions')
@@ -536,7 +616,9 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                 attractions = search.search(query_type='proximity', params=params)
 
                 if attractions:
-                    self.send_success(attractions)
+
+                    self.populateVotes(attractions, user_id)
+                    self.send_success(attractions, jsonkind='affcult#attractions')
                 else:
                     self.send_error(404, 'location is not approved')
                 return
@@ -575,6 +657,7 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
     def populateVotes(self, attractions, user_id=None):
         user = None
         if self.session.get(self.CURRENT_USER_SESSION_KEY) is not None:
+            user = self.get_user_from_session()
             if not user_id:
                 user = self.get_user_from_session()
 
@@ -835,10 +918,14 @@ def initAttractions(user):
     db.delete(results)
 
     validated_categories = []
+    stats = {'added': 0, 'no_address': 0, 'no_source': 0, 'no_latlng': 0, 'no_category': 0, 'no_website': 0}
+
     approved = False
     for attraction in attractions:
 
         if not 'category' in attraction:
+            stats['no_category'] += 1
+
             logging.critical('Missing category')
             continue
         categories = attraction['category'].split(',')
@@ -857,16 +944,29 @@ def initAttractions(user):
                 logging.critical('Missing category:%s' % attraction)
                 continue
 
+        if not current_category:
+            logging.critical('Missing current_category')
+            continue
+
         if not 'address' in attraction:
+            stats['no_address'] += 1
             logging.critical('Missing address')
+            continue
+
+        if not 'website' in attraction:
+            stats['no_website'] += 1
+            logging.critical('Missing website')
             continue
 
         if not 'source' in attraction:
-            logging.critical('Missing source')
-            continue
+            attraction['source'] = None
+            stats['no_source'] += 1
+            logging.warning('Missing source')
+            #continue
 
         if not 'latlng' in attraction:
-            logging.critical('Missing address')
+            stats['no_latlng'] += 1
+            logging.critical('Missing latlong')
             continue
 
         if not 'free_time' in attraction:
@@ -875,47 +975,47 @@ def initAttractions(user):
             attraction['donation'] = None
         if not 'email' in attraction:
             attraction['email'] = None
-        if not 'free_time' in attraction:
-            attraction['free_time'] = None
 
         approved = True
 
-        if current_category:
-            #uploads = self.get_uploads('image')
-            #blob_info = uploads[0]
-            try:
-                attraction = model.Attraction(owner_user_id=user.key().id(),
-                                        owner_display_name=user.google_display_name,
-                                        owner_profile_photo=user.google_public_profile_photo_url,
-                                        owner_profile_url=user.google_public_profile_url,
-                                        #theme_id=current_theme.key().id(),
-                                        categories=categories,
-                                        theme_display_name=current_category.name,
-                                        created=datetime.datetime.now(),
-                                        approved=approved,
-                                        num_votes_want_to_go=0,
-                                        num_votes_been_there=0,
-                                        #image_blob_key=blob_info.key()
-                                        country=attraction['country'],
-                                        city=attraction['city'],
-                                        name=attraction['name'],
-                                        # Group affiliation
-                                        #category = attraction['category'),
-                                        address=attraction['address'],
-                                        location=attraction['latlng'],
-                                        free_time=attraction['free_time'],
-                                        donation=attraction['donation'],
-                                        website=attraction['website'],
-                                        source=attraction['source'],
-                                        email=attraction['email']
-                )
-                attraction.update_location()
-                attraction.put()
-            except Exception, e:
-                logging.critical('failed to add attraction[%s]: %s' % (e.message, attraction))
-                pass
+        #uploads = self.get_uploads('image')
+        #blob_info = uploads[0]
+        try:
+            attraction = model.Attraction(owner_user_id=user.key().id(),
+                                    owner_display_name=user.google_display_name,
+                                    owner_profile_photo=user.google_public_profile_photo_url,
+                                    owner_profile_url=user.google_public_profile_url,
+                                    #theme_id=current_theme.key().id(),
+                                    categories=categories,
+                                    theme_display_name=current_category.name,
+                                    created=datetime.datetime.now(),
+                                    approved=approved,
+                                    num_votes_want_to_go=0,
+                                    num_votes_been_there=0,
+                                    #image_blob_key=blob_info.key()
+                                    country=attraction['country'],
+                                    city=attraction['city'],
+                                    name=attraction['name'],
+                                    # Group affiliation
+                                    #category = attraction['category'),
+                                    address=attraction['address'],
+                                    location=attraction['latlng'],
+                                    free_time=attraction['free_time'],
+                                    donation=attraction['donation'],
+                                    website=attraction['website'],
+                                    source=attraction['source'],
+                                    email=attraction['email']
+            )
+            attraction.update_location()
+            attraction.put()
+            stats['added'] += 1
+        except Exception, e:
+            logging.critical('failed to add attraction[%s]: %s' % (e.message, attraction))
+            pass
 
-            logging.debug('redirect:/api/attractions?attractionId=')
+    logging.critical('stats:%s' % stats)
+
+    #logging.debug('redirect:/api/attractions?attractionId=')
 
 
 class CategoriesHandler(JsonRestHandler):
@@ -977,7 +1077,8 @@ class VotesHandler(JsonRestHandler, SessionEnabledHandler):
            for which the currently logged in user is voting.
 
            {
-             'photoId':0
+             attractionId: "4506898162253824"
+            vote: "beenThere"
            }
 
            Returns the following JSON response representing the Photo for which the
@@ -1005,20 +1106,41 @@ class VotesHandler(JsonRestHandler, SessionEnabledHandler):
            401: 'Access token expired'.  Retry with a new access token.
            500: 'Error writing app activity: ' + error from client library
         """
+        request = json.loads(self.request.body)
+        user = self.get_user_from_session()
+
+        voter = None
+        if request['vote'] == 'wantToGo':
+            voter = model.VoteWantToGo()
+        elif request['vote'] == 'beenThere':
+            voter = model.VoteBeenHere()
+        else:
+            self.send_error(500, 'unknown voting type')
+            return
+
         try:
-            user = self.get_user_from_session()
-            voteWantToGo = model.VoteWantToGo()
-            voteWantToGo.from_json(self.request.body)
-            voteWantToGo.owner_user_id = user.key().id()
-            voteExist = model.VoteWantToGo.all().filter(
-                "owner_user_id =", user.key().id()).filter(
-                "attraction_id =", voteWantToGo.attraction_id).get()
+
+            voter.from_json(self.request.body)
+            voter.owner_user_id = user.key().id()
+            voteExist = voter.all()\
+                .filter("owner_user_id =", user.key().id())\
+                .filter("attraction_id =", voter.attraction_id)\
+                .get()
             if voteExist is None:
-                attraction = model.Attraction.get_by_id(voteWantToGo.attraction_id)
+                attraction = model.Attraction.get_by_id(voter.attraction_id)
                 if attraction is not None:
-                    voteWantToGo.put()
-                    attraction.voted_want_togo = True
-                    self.add_attraction_to_google_plus_activity(user, attraction)
+                    voter.put()
+
+                    if request['vote'] == 'wantToGo':
+                        attraction.voted_want_togo = True
+                    elif request['vote'] == 'beenThere':
+                        attraction.voted_been_there = True
+
+                    try:
+                        self.add_attraction_to_google_plus_activity(user, attraction)
+                    except Exception as e:
+                        logging.critical('Failed to add_attraction_to_google_plus_activity: %s' % e)
+
                     self.send_success(attraction)
                     return
         except UserNotAuthorizedException as e:
@@ -1029,7 +1151,7 @@ class VotesHandler(JsonRestHandler, SessionEnabledHandler):
 
         Args:
           user: User voting.
-          photo: Photo being voted on.
+          attraction: Attraction being voted on.
         """
         activity = {"type": "http://schemas.google.com/ReviewActivity",
                     "target": {
@@ -1134,6 +1256,8 @@ routes = [
     ('/api/categories', CategoriesHandler),
     ('/api/attractions', AttractionsHandler),
     ('/api/votes', VotesHandler),
+    ('/api/friends', FriendsHandler),
+    ('/api/images', ImageHandler),
     ('/admin/attractions/add', MainHandler),
     ('/attraction.html', SchemaHandler)
 ]
@@ -1141,4 +1265,5 @@ config = {}
 config['webapp2_extras.sessions'] = {
     'secret_key': 'YOUR_SESSION_SECRET'
 }
+
 app = webapp2.WSGIApplication(routes, config=config, debug=True)

@@ -19,6 +19,8 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+
   <script src="js/jquery.filedrop.js"></script>
   <script src="js/app.js"></script>
   <script src="js/services.js"></script>
@@ -59,8 +61,8 @@
       </div>
     </div>
     <div id="bottomHeader">
-      <h2>Hunting for photos of
-        <span id="todayTheme">{{selectedTheme.displayName}}</span>!
+      <h2>Category
+        <span id="todayTheme">{{selectedCategory.name}}</span>!
       </h2>
       <div>
         <button id="invite" class="button icon add primary" ng-show="themes">
@@ -93,39 +95,40 @@
       </div>
     </ng-switch>
     <div class="contentGroup" ng-show="isSignedIn">
-      <h3>My Photos</h3>
+      <!-- <h3>My Photos</h3>
       <div id="uploadContainer" ng-show="canUpload()">
         <button upload-box
             upload-url="uploadUrl"
             on-complete="uploadedPhoto(photo)"
             id="upload">
         </button>
-      </div>
+      </div> -->
       <ul id="myPhotos" ng-show="userPhotos.length">
-        <li ng-repeat="photo in userPhotos|orderBy:ordering">
-          <photo item="photo" delete-photo="deletePhoto(photoId)"></photo>
+        <li ng-repeat="attraction in userPhotos|orderBy:ordering">
+          <attraction item="attraction" delete-photo="deletePhoto(photoId)"></attraction>
         </li>
       </ul>
     </div>
     <div id="friendsPhotos" class="contentGroup" ng-show="friendsPhotos.length">
       <h3>Photos from Friends</h3>
       <ul id="friendsPhotos">
-        <li ng-repeat="photo in friendsPhotos|orderBy:ordering">
-          <photo item="photo" delete-photo="deletePhoto(photoId)"></photo>
+        <li ng-repeat="attraction in friendsPhotos|orderBy:ordering">
+          <attraction item="attraction" delete-photo="deletePhoto(photoId)"></attraction>
         </li>
       </ul>
     </div>
-    <div id="allPhotos" class="contentGroup" ng-show="allPhotos.length">
-      <h3>All Photos</h3>
+
+    <!-- <div id="allPhotos" class="contentGroup" ng-show="allPhotos.length">
+      <h3>All Attractions</h3>
       <ul id="allPhotos">
         <li ng-repeat="photo in allPhotos|orderBy:ordering">
           <photo item="photo" delete-photo="deletePhoto(photoId)"></photo>
         </li>
       </ul>
-    </div>
+    </div> -->
 
     <div id="allAttractions" class="contentGroup" ng-show="allAttractions.length">
-      <h3>All Photos</h3>
+      <h3>All Attractions</h3>
       <ul id="allAttractions">
         <li ng-repeat="attraction in allAttractions|orderBy:ordering">
           <attraction item="attraction"></attraction>
@@ -134,12 +137,12 @@
     </div>
   </section>
 
-  <nav ng-show="themes" id="boxThemes">
+  <nav ng-show="categories" id="boxThemes">
     <div>
-    <h3>Recent Themes</h3>
+    <h3>Categories</h3>
       <ul id="recentThemes">
-        <li ng-repeat="(key, value) in themes|limitTo:10">
-          <span><a ng-click="selectTheme(key)">{{value.displayName}}</a></span>
+        <li ng-repeat="(key, value) in categories|limitTo:10">
+          <span><a ng-click="selectCategory(key)">{{value.name}}</a></span>
           <span class="date">{{value.created|date:'longDate'}}</span>
         </li>
       </ul>

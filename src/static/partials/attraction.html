@@ -3,7 +3,7 @@
     {{item.address}}
     {{item.categories}}
 <div class="imageContainer">
-  <img ng-src="{{item.thumbnailUrl}}" alt="My photo for {{item.themeDisplayName}}"/>
+  <img ng-src="{{item.thumbnailUrl}}" alt="Photo for {{item.name}}"/>
 </div>
 <div class="toolbar">
   <div class="authorInfo">
@@ -19,13 +19,13 @@
 </div>
 <div class="vote">
   <div class="count">{{item.numVotesWantToGo}}</div>
-  <button class="voteButton" ng-class="item.voteClass" ng-show="item.canVoteWantToGo">
+  <button class="voteButton voteButtonWantToGo" ng-class="item.voteClass" ng-show="item.canVoteWantToGo">
     I've been here
   </button>
 </div>
 <div class="vote">
   <div class="count">{{item.numVotesBeenThere}}</div>
-  <button class="voteButton" ng-class="item.voteClass" ng-show="item.canVoteBeenThere">
+  <button class="voteButton voteButtonBeenThere" ng-class="item.voteClass" ng-show="item.canVoteBeenThere">
     I want to go here
   </button>
 </div>
