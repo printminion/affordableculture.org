@@ -121,8 +121,8 @@ class Attraction(GeoModel, Jsonifiable):
     """Represents a user submitted Attraction."""
     jsonkind = 'affcult#attraction'
     DEFAULT_THUMBNAIL_SIZE = 400
-    #fullsize_url = None
-    #thumbnail_url = None
+    fullsize_url = None
+    thumbnail_url = None
     attraction_content_url = None
 
     vote_cta_url = db.StringProperty()

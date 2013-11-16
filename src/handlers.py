@@ -1183,43 +1183,51 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
         try:
             attraction_id = self.request.get('attractionId')
             self.response.headers['Content-Type'] = 'text/html'
-            template = JINJA_ENV.get_template('templates' + self.request.path)
+            template = JINJA_ENV.get_template(self.request.path)
             if attraction_id:
                 attraction = model.Attraction.get_by_id(long(attraction_id))
+                imageUrl = attraction.thumbnail_url
+
+                if not imageUrl:
+                    imageUrl = '{}/images/interactivepost-icon.png'.format(
+                            get_base_url())
                 self.response.out.write(template.render({
                     'attractionId': attraction_id,
-                    'redirectUrl': 'add_attraction_new.html?attractionId={}'.format(attraction_id),
-                    'name': 'Attraction by {} for {} | AffordableCulture'.format(
-                        attraction.owner_display_name,
-                        attraction.theme_display_name),
-                    'imageUrl': attraction.thumbnail_url,
-                    'description': '{} needs your vote to win this hunt.'.format(
-                        attraction.owner_display_name)
+                    'redirectUrl': 'index.html?attractionId={}'.format(attraction_id),
+                    'name': '{} | Affordable Culture'.format(
+                        attraction.name),
+                    'imageUrl': imageUrl,
+                    'description': 'Visit Affordable Culture learn how to see more while paying less.'
+                    #, 'description': '{} needs your vote to win this hunt.'.format(attraction.owner_display_name)
                 }))
             else:
                 attraction = model.Attraction.all().get()
                 if attraction:
+                    imageUrl = attraction.thumbnail_url
+
+                    if not imageUrl:
+                        imageUrl = '{}/images/interactivepost-icon.png'.format(
+                                get_base_url())
                     self.response.out.write(template.render({
-                        'redirectUrl': 'add_attraction_new.html?attractionId='.format(attraction_id),
-                        'name': 'Attraction by {} for {} | AffordableCulture'.format(
-                            attraction.owner_display_name,
-                            attraction.theme_display_name),
-                        'imageUrl': attraction.thumbnail_url,
-                        'description': 'Join in the AffordableCulture.'
+                        'redirectUrl': 'index.html?attractionId='.format(attraction_id),
+                        'name': '{} | Affordable Culture'.format(
+                            attraction.name),
+                        'imageUrl': imageUrl,
+                        'description': 'Visit Affordable Culture learn how to see more while paying less.'
                     }))
                 else:
                     self.response.out.write(template.render({
                         'redirectUrl': get_base_url(),
-                        'name': 'AffordableCulture',
+                        'name': 'Affordable Culture',
                         'imageUrl': '{}/images/interactivepost-icon.png'.format(
                             get_base_url()),
-                        'description': 'Join in the AffordableCulture.'
+                        'description': 'Visit Affordable Culture learn how to see more while paying less.'
                     }))
         except TypeError as te:
             self.send_error(404, "Resource not found")
 
 
-class MainHandler(webapp2.RequestHandler):
+class AdminAttractionHandler(webapp2.RequestHandler):
     """A handler for showing an HTML form."""
 
     def get(self):
@@ -1258,8 +1266,9 @@ routes = [
     ('/api/votes', VotesHandler),
     ('/api/friends', FriendsHandler),
     ('/api/images', ImageHandler),
-    ('/admin/attractions/add', MainHandler),
-    ('/attraction.html', SchemaHandler)
+    ('/admin/attractions/add', AdminAttractionHandler),
+    ('/attraction.html', SchemaHandler),
+    ('/invite.html', SchemaHandler)
 ]
 config = {}
 config['webapp2_extras.sessions'] = {
