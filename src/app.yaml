@@ -36,6 +36,15 @@ handlers:
   static_files: static/add_attraction_new.html
   upload: static/add_attraction_new.html
 
+- url: /bootstrap
+  static_dir: static/bootstrap
+
+- url: /assets
+  static_dir: static/assets
+
+- url: /smicons
+  static_dir: static/smicons
+
 - url: /index.html
   static_files: static/index.html
   upload: static/index.html

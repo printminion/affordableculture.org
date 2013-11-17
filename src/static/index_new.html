@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+  <head>
+      <meta charset="utf-8">
+      <title>Affordable Culture. Pay less, see more.</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="">
+      <meta name="author" content="">
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+	<link href="instr.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="carousel.css" rel="stylesheet">
+
+  <!-- IE Fix for HTML5 Tags -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+      <script src="instr.js"></script>
+      <script type='text/javascript'>
+
+      </script>
+  </head>
+<!-- NAVBAR
+================================================== -->
+  <body>
+    <script id="attraction-template" type="text/x-handlebars-template">
+      <div class="profile-card"> <div class="profile-info margin-10"> <div class="profile-info-details"> <img class="img-circle profile-img" src="{{attraction.img}}" alt="{{attraction.name}}"> <h2>{{attraction.name}}</h2> <h3><i class="glyphicon glyphicon-map-marker"></i>{{attraction.address}}</h3> <h3><i class="glyphicon glyphicon-usd"></i>{{attraction.time}}</h3> <h3><i class="glyphicon glyphicon-tags"></i>{{attraction.tags}}</h3></div> <div class="more-info"> <ul>
+      <li><a href="{{attraction.wikipedia}}"><img src="smicons/wikipedia-icon.png" alt="Wikipedia" width="32"></i></a></li>
+      <li><a href="{{attraction.googlepluslocal}}"><img src="smicons/googlepluslocal-icon.png" alt="Google+ Local" width="32"></i></a></li>
+      <li><a href="{{attraction.tripadvisor}}"><img src="smicons/tripadvisor-icon.png" alt="TripAdvisor" width="32"></i></a></li>
+      <li><a href="{{attraction.yelp}}"><img src="smicons/yelp-icon.png" alt="Yelp" width="32"></i></a></li>
+      <li><a href="{{attraction.facebook}}"><img src="smicons/facebook-icon.png" alt="Facebook" width="32"></i></a></li>
+      <li><a href="{{attraction.twitter}}"><img src="smicons/twitter-icon.png" alt="Twitter" width="32"></i></a></li>
+      <li><a href="{{attraction.youtube}}"><img src="smicons/youtube-icon.png" alt="YouTube" width="32"></i></a></li>
+      <li><a href="{{attraction.instagram}}"><img src="smicons/instagram-icon.png" alt="Instagram" width="32"></i></a></li>
+      <li><a href="{{attraction.android}}"><img src="smicons/android-icon.png" alt="Android" width="32"></i></a></li>
+      <li><a href="{{attraction.ios}}"><img src="smicons/ios-icon.png" alt="iOS" width="32"></i></a></li>
+    </ul> </div> </div> </div>
+    </script>
+ 
+    <div class="navbar-wrapper">
+      <div class="container">
+
+        <div class="navbar navbar-inverse navbar-static-top">
+          <div class="container">
+    	    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+    	      <span class="icon-bar"></span>
+    	      <span class="icon-bar"></span>
+    	      <span class="icon-bar"></span>
+    	    </button>
+            <a class="navbar-brand" href="#">Affordable Culture</a>
+            <div class="nav-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">Search</a></li>
+                <li><a href="#contact">About</a></li>
+              </ul>
+            </div>			
+			<form class="navbar-form pull-right">
+				<input type="text" class="form-control" id="country" style="width: 400px;">
+				<button type="submit" class="btn btn-default" id="countryButton">Go!</button>
+			</form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- Carousel
+    ================================================== -->
+    <div id="myCarousel" class="carousel slide">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+		<li data-target="#myCarousel" data-slide-to="2"></li>
+		<li data-target="#myCarousel" data-slide-to="3"></li>
+      </ol>
+      <div class="carousel-inner">
+        <div class="item active">
+          <img data-src="holder.js/1500x500/auto/#777:#7a7a7a/text:First slide" alt="">
+          <div class="container">
+		  <div class="carousel-caption">
+          <div class="row">
+        <div class="col-lg-4">
+          <img class="img-circle" src="img/san-francisco.jpg">
+          <h2>San Francisco</h2>
+          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <img class="img-circle" src="img/new-york.jpg">
+          <h2>New York</h2>
+          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <img class="img-circle" src="img/los-angeles.jpg">
+          <h2>Los Angeles</h2>
+          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
+	  </div>
+          </div>
+        </div>
+        <div class="item">
+          <img data-src="holder.js/1500x500/auto/#777:#7a7a7a/text:Second slide" alt="">
+          <div class="container">
+		  <div class="carousel-caption">
+          <div class="row">
+        <div class="col-lg-4">
+          <img class="img-circle" data-src="holder.js/140x140">
+          <h2>Stuttgart</h2>
+          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <img class="img-circle" data-src="holder.js/140x140">
+          <h2>Munich</h2>
+          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <img class="img-circle" data-src="holder.js/140x140">
+          <h2>Berlin</h2>
+          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
+          </div>
+		  </div>
+        </div>
+		<div class="item">
+          <img data-src="holder.js/1500x500/auto/#777:#7a7a7a/text:Third slide" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+          <div class="row">
+        <div class="col-lg-4">
+          <img class="img-circle" data-src="holder.js/140x140">
+          <h2>London</h2>
+          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <img class="img-circle" data-src="holder.js/140x140">
+          <h2>Birmingham</h2>
+          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <img class="img-circle" data-src="holder.js/140x140">
+          <h2>Glasgow</h2>
+          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
+          </div>
+          </div>
+        </div>
+		<div class="item">
+          <img data-src="holder.js/1500x500/auto/#777:#7a7a7a/text:Forth slide" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+          <div class="row">
+        <div class="col-lg-4">
+          <img class="img-circle" data-src="holder.js/140x140">
+          <h2>Rom</h2>
+          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <img class="img-circle" data-src="holder.js/140x140">
+          <h2>Florence</h2>
+          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <img class="img-circle" data-src="holder.js/140x140">
+          <h2>Venice</h2>
+          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
+          </div>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+      <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    </div><!-- /.carousel -->
+
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+	<div class="profile-list-area"></div>
+	  
+      <!-- FOOTER -->
+      <footer>
+        <p>&copy; 2013 Affordable Culture &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+      </footer>
+
+    </div><!-- /.container -->
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- script src="assets/js/jquery.js"></script -->
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/holder.js"></script>
+	<script src="js/search-attr.js"></script>
+  <script type="text/javascript">
+  window.___gcfg = {
+    parsetags: 'explicit'
+  };
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/auth:plusone.js?onload=startApp';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+
+
+  </script>
+</body>
+</html>

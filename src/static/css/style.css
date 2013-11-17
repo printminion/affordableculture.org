@@ -1,0 +1,127 @@
+a.find-my-location {
+display: block;
+width: 20px;
+height: 20px;
+position: absolute;
+right: 75px;
+top: 15px;
+font-size: 0;
+z-index: 9999;
+background: url('img/find-location-6834.png') no-repeat top center;
+}
+
+a.find-my-location:hover {
+background-position: bottom center;
+}
+
+.profile-list-area {
+background: #fafafa;
+overflow: hidden;
+}
+
+.profile-list-area .profile-info {
+background: #fff;
+-webkit-box-shadow: 0 0 7px 1px #e1e1e1;
+-moz-box-shadow: 0 0 7px 1px #e1e1e1;
+box-shadow: 0 0 7px 1px #e1e1e1;
+-webkit-border-radius: 7px;
+-moz-border-radius: 7px;
+border-radius: 7px;
+}
+
+.margin-10 {
+margin: 10px;
+}
+
+.margin-tbl-10 {
+margin: 10px 0 10px 10px;
+}
+
+.margin-trb-10 {
+margin: 10px 10px 10px 0;
+}
+
+.profile-list-area .profile-info .profile-info-details {
+padding: 20px 15px;
+border-bottom: 1px solid #ddd;
+margin: 0 0 13px 0;
+min-height: 266px;
+}
+
+.profile-list-area .profile-info .profile-info-details .profile-img {
+float: left;
+margin: 0 30px 0 0;
+width: 150px;
+height: 150px;
+}
+
+.profile-list-area .profile-info .profile-info-details h2 {
+font: 300 32px/32px "Proxima Nova",Arial;
+color: #15c;
+margin: 0 0 15px 0;
+}
+
+.profile-list-area .profile-info .profile-info-details h3 {
+font: 14px/22px "Gotham Book",Arial;
+color: #929faa;
+margin: 0 0 15px 0;
+}
+
+.profile-list-area .profile-info .profile-info-details h3 {
+font: 14px/22px "Gotham Book",Arial;
+color: #929faa;
+margin: 0 0 15px 0;
+}
+
+.profile-list-area .profile-info .profile-info-details p {
+font: 14px/20px "Gotham Book",Arial;
+color: #636372;
+margin: 0 0 0 180px;
+}
+
+.profile-list-area .profile-info .profile-info-details h3 i {
+color: #e35d3c;
+font-size: 20px;
+display: inline-block;
+float: left;
+margin-right: 5px;
+}
+
+.profile-list-area .profile-info .more-info {
+padding: 0 15px 15px 15px;
+overflow: hidden;
+}
+
+.profile-list-area .profile-info .more-info {
+padding: 0 15px 15px 15px;
+overflow: hidden;
+}
+
+.profile-list-area .profile-info .more-info ul {
+float: left;
+list-style: none;
+margin: 0;
+overflow: hidden;
+}
+
+.profile-list-area .profile-info .more-info li {
+float: left;
+margin: 0 10px 0 0;
+}
+
+.ts-badge-subject {
+background-color: #636372;
+}
+
+.ts-badge {
+-webkit-border-radius: 500px;
+-moz-border-radius: 500px;
+border-radius: 500px;
+background-color: #48b9ad;
+width: 36px;
+height: 36px;
+color: white;
+line-height: 36px;
+text-align: center;
+vertical-align: top;
+}
