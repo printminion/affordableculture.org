@@ -8,14 +8,14 @@
                                 <div class="birrg">
                                     <ul><!--m-->
                                         <li class="bili bilik bilirk"
-                                            style="width: 452px;">
+                                            style="width: 422px;">
                                             <div class="bicc"
-                                                 style="height:160px;width: 452px;">
+                                                 style="height:160px;width: 422px;">
                                                 <img ng-src="{{item.thumbnailUrl}}"
                                                     alt="Photo for {{item.name}}" align="middle" border="0" height="160" name="imgthumb16"
                                                     class="th"
                                                     title="Photo for {{item.name}}"
-                                                    style="margin:0 -9px 0 0" width="160"></div>
+                                                    style="margin:0 -9px 0 0" width="422"></div>
                                         </li>
                                         <!--n--></ul>
                                 </div>
@@ -29,7 +29,7 @@
                 <div class="kno-ecr-t kno-ecr-t-w-st ">
                     <div>
                         <div class="kno-ecr-pt">{{item.name}}</div>
-                        <div class="kno-ecr-st"><span class="kno-ecr-st-val">{{item.categories}}</span></div>
+                        <div class="kno-ecr-st"><span class="kno-ecr-st-val">{{item.categories.join(', ')}}</span></div>
                     </div>
                     <div class="" style="margin-top:13px">
                         <div style="clear:both"></div>
