@@ -12,9 +12,9 @@
                                             <div class="bicc"
                                                  style="height:160px;width: 422px;">
                                                 <img ng-src="{{item.thumbnailUrl}}"
-                                                    alt="Photo for {{item.name}}" align="middle" border="0" height="160" name="imgthumb16"
+                                                    alt="Photo of the {{item.name}} in {{item.city}}, {{item.country}}" align="middle" border="0" height="160" name="imgthumb16"
                                                     class="th"
-                                                    title="Photo for {{item.name}}"
+                                                    title="Photo of the {{item.name}} in {{item.city}}, {{item.country}}"
                                                     style="margin:0 -9px 0 0" width="422"></div>
                                         </li>
                                         <!--n--></ul>
@@ -44,49 +44,49 @@
                         <span class="kno-fv">{{item.address}}</span>
                     </div>
                     <div class="kno-f ">
-                        <span class="kno-fh">Established: </span>
-                        <span class="kno-fv">1793</span>
+                        <span class="kno-fh">Free admission time: </span>
+                        <span class="kno-fv">{{item.freeTime}} {{item.donation}}</span>
                     </div>
                     <div class="kno-f ">
-                        <span class="kno-fh">Hours: </span>
-
-                        <div style="margin-bottom:6px;width:100%;display:inline;vertical-align:top">
-                            Saturday 9:00 am 5:30 pm</div>
-                    </div>
-                    <div class="kno-f ">
-                        <span class="kno-fh">Phone: </span>
-                        <span class="kno-fv">+33 1 40 20 50 50</span>
+                        <span class="kno-fh">Web: </span>
+                        <span class="kno-fv">{{item.website}}</span>
                     </div>
                 </div>
             </div>
+
+            <div class="kno-card">
+             <div class="toolbar">
+                  <div class="authorInfo">
+                    <a target="_blank" href="{{item.ownerProfileUrl}}">
+                      <img ng-src="{{item.ownerProfilePhoto|profilePicture:24}}"
+                          alt="{{item.ownerDisplayName}}"
+                          width="24" height="24"/>
+                      <span>{{item.ownerDisplayName}}</span>
+                    </a>
+                  </div>
+                  <button class="button">Promote</button>
+
+                </div>
+
+                 <div class="vote">
+                  <div class="count">{{item.numVotesWantToGo}}</div>
+                  <button class="voteButton voteButtonWantToGo" ng-class="item.voteClass" ng-show="item.canVoteWantToGo">
+                    I've been here
+                  </button>
+                </div>
+
+                 <div class="vote">
+                  <div class="count">{{item.numVotesBeenThere}}</div>
+                  <button class="voteButton voteButtonBeenThere" ng-class="item.voteClass" ng-show="item.canVoteBeenThere">
+                    I want to go here
+                  </button>
+                </div>
+
+
+            </div>
+
+
         </div>
 
-
-             <div class="toolbar">
-  <div class="authorInfo">
-    <a target="_blank" href="{{item.ownerProfileUrl}}">
-      <img ng-src="{{item.ownerProfilePhoto|profilePicture:24}}"
-          alt="{{item.ownerDisplayName}}"
-          width="24" height="24"/>
-      <span>{{item.ownerDisplayName}}</span>
-    </a>
-  </div>
-  <button class="button">Promote</button>
-
-</div>
-
- <div class="vote">
-  <div class="count">{{item.numVotesWantToGo}}</div>
-  <button class="voteButton voteButtonWantToGo" ng-class="item.voteClass" ng-show="item.canVoteWantToGo">
-    I've been here
-  </button>
-</div>
-
- <div class="vote">
-  <div class="count">{{item.numVotesBeenThere}}</div>
-  <button class="voteButton voteButtonBeenThere" ng-class="item.voteClass" ng-show="item.canVoteBeenThere">
-    I want to go here
-  </button>
-</div>
     </div>
 
