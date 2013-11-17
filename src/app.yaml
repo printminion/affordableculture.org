@@ -20,6 +20,9 @@ handlers:
 - url: /images
   static_dir: static/images
 
+- url: /img
+  static_dir: static/images
+
 - url: /js
   static_dir: static/js
 
@@ -29,8 +32,8 @@ handlers:
 - url: /partials
   static_dir: static/partials
 
-- url: /stylesheets
-  static_dir: static/stylesheets
+- url: /css
+  static_dir: static/css
 
 - url: /add_attraction_new.html
   static_files: static/add_attraction_new.html
@@ -50,8 +53,10 @@ handlers:
   upload: static/index.html
 
 - url: /
-  static_files: static/index.html
-  upload: static/index.html
+  static_files: static/index_new.html
+  upload: static/index_new.html
 
 - url: /.*
   script: handlers.app
+
+

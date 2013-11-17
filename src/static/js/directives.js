@@ -1,57 +1,6 @@
 'use strict';
 
 angular.module('affordableCulture.directives', ['affordableCulture.services'])
-//    .directive('photo', function(Conf, AffordableCultureApi) {
-//      return {
-//        restrict: 'E',
-//        replace: true,
-//        scope: {
-//          item: '=',
-//          deletePhoto: '&deletePhoto'
-//        },
-//        templateUrl: 'partials/_photo.html',
-//        link: function (scope, element, attrs) {
-//          element.find('.voteButton')
-//              .click(function(evt) {
-//                if(scope.item.canVote && !scope.item.voted) {
-//                  var voteButton = angular.element(evt.target);
-//                  scope.$apply(function() {
-//                    voteButton.unbind('click');
-//                    scope.item.numVotes = scope.item.numVotes + 1;
-//                    scope.item.voted = true;
-//                    voteButton.focus();
-//                    scope.item.voteClass.push('disable');
-//                  });
-//                  AffordableCultureApi.votePhoto(scope.item.id)
-//                      .then(function(response) {});
-//                }
-//              });
-//
-//          element.find('.remove')
-//              .click(function() {
-//                if (scope.item.canDelete) {
-//                  scope.deletePhoto({photoId: scope.item.id});
-//                }
-//              });
-//
-//          var options = {
-//            'clientid': Conf.clientId,
-//            'contenturl': scope.item.photoContentUrl,
-//            'contentdeeplinkid': '/?id=' + scope.item.id,
-//            'prefilltext': 'What do you think?  Does this image embody \'' +
-//                scope.item.themeDisplayName + '\'? #affordableculture',
-//            'calltoactionlabel': 'VOTE',
-//            'calltoactionurl': scope.item.voteCtaUrl,
-//            'calltoactiondeeplinkid': '/?id=' + scope.item.id + '&action=VOTE',
-//            'requestvisibleactions': Conf.requestvisibleactions,
-//            'scope': Conf.scopes,
-//            'cookiepolicy': Conf.cookiepolicy
-//          };
-//          gapi.interactivepost.render(
-//              element.find('.toolbar button').get(0), options);
-//        }
-//      }
-//    })
     .directive('attraction', function(Conf, AffordableCultureApi) {
       return {
         restrict: 'E',
@@ -62,7 +11,7 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
         },
         templateUrl: 'partials/attraction.html',
         link: function (scope, element, attrs) {
-            console.log('scope.item', scope.item);
+          console.log('scope.item', scope.item);
 
           element.find('.voteButtonBeenThere').click(function(evt) {
                 if(scope.item.canVoteBeenThere && !scope.item.votedBeenThere) {
@@ -79,20 +28,21 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
                 }
               });
 
-             element.find('.voteButtonWantToGo').click(function(evt) {
-                if(scope.item.canVoteWantToGo && !scope.item.votedWantToGo) {
-                  var voteButton = angular.element(evt.target);
-                  scope.$apply(function() {
-                    voteButton.unbind('click');
-                    scope.item.numVotesWantToGo = scope.item.numVotesWantToGo + 1;
-                    scope.item.votedWantToGo = true;
-                    voteButton.focus();
-                    scope.item.voteWantToGoClass.push('disable');
-                  });
-                  AffordableCultureApi.voteAttractionWantToGo(scope.item.id)
-                      .then(function(response) {});
-                }
+          element.find('.voteButtonWantToGo').click(function(evt) {
+            if(scope.item.canVoteWantToGo && !scope.item.votedWantToGo) {
+              var voteButton = angular.element(evt.target);
+              scope.$apply(function() {
+                voteButton.unbind('click');
+                scope.item.numVotesWantToGo = scope.item.numVotesWantToGo + 1;
+                scope.item.votedWantToGo = true;
+                voteButton.focus();
+                scope.item.voteWantToGoClass.push('disable');
               });
+              AffordableCultureApi.voteAttractionWantToGo(scope.item.id)
+                  .then(function(response) {});
+            }
+          });
+
           element.find('.remove')
               .click(function() {
                 if (scope.item.canDelete) {
