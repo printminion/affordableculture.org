@@ -1,33 +1,46 @@
 'use strict';
 
-function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
+function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, AffordableCultureApi) {
+
+  $scope.$route = $route;
+  $scope.$location = $location;
+  $scope.$routeParams = $routeParams;
+
+
+
   // signIn
   $scope.userProfile = undefined;
   $scope.hasUserProfile = false;
   $scope.isSignedIn = false;
   $scope.immediateFailed = false;
   // categories
-  //$scope.selectedTheme;
   $scope.selectedCategory;
-  $scope.themes = [];
+
   $scope.categories = [];
   // attractions
   $scope.ordering;
   $scope.recentButtonClasses;
   $scope.popularButtonClasses;
-  $scope.highlightedPhoto;
-  //$scope.userPhotos = [];
+
+  $scope.highlightedAttraction;
   $scope.userAttractions = [];
   $scope.allAttractions = [];
-  $scope.friendsPhotos = [];
 
   // friends
   $scope.friends = [];
   // uploads
   $scope.uploadUrl;
 
+    $scope.showCarousel = true;
+
+
+
   $scope.keywords = undefined;
-  
+
+  $scope.$on('$routeChangeStart', function(next, current) {
+    console.log('$routeChangeStart', next, current);
+  });
+
   $scope.disconnect = function() {
     AffordableCultureApi.disconnect().then(function() {
       $scope.userProfile = undefined;
@@ -43,9 +56,46 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
   };
 
   $scope.search = function() {
-    AffordableCultureApi.search($scope.keywords).then(function(response) {
+    //$location.hash('!search/' + $scope.keywords);
+
+    AffordableCultureApi.searchAttractions($scope.keywords).then(function(response) {
         //console.log('search', response);
+
+
         $scope.allAttractions = $scope.adaptAttractions(response.data);
+        neighborhoods = [];
+
+        if ($scope.allAttractions) {
+
+            $('#map-canvas').removeClass('opacity');
+
+            $scope.showCarousel = false;
+
+
+            //map.clearOverlays();
+            var bounds = new google.maps.LatLngBounds();
+
+            angular.forEach(response.data, function(value, key) {
+                  if (value['location']) {
+
+                    var marker = new google.maps.LatLng(value['location']['lat'], value['location']['lon']);
+
+                    neighborhoods.push(marker);
+
+                    bounds.extend(marker);
+
+                }
+            });
+
+            map.fitBounds(bounds);
+            dropMarkers();
+
+        } else {
+            $('#map-canvas').addClass('opacity');
+            $scope.showCarousel = true;
+        }
+
+
         //console.log('$scope.allAttractions', $scope.allAttractions);
     });
   };
@@ -106,42 +156,10 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
     return attraction;
   };
 
-//  $scope.adaptPhotos = function(photos) {
-//    angular.forEach(photos, function(value, key) {
-//      value['canDelete'] = false;
-//      value['canVote'] = false;
-//      value['voteClass'] = [];
-//      if ($scope.hasUserProfile) {
-//        if (value.ownerUserId == $scope.userProfile.id) {
-//          value['canDelete'] = true;
-//        } else {
-//          if ($scope.userProfile.role == 'admin') {
-//            value['canDelete'] = true;
-//          }
-//          value['canVote'] = true;
-//          value['voteClass'] = ['button', 'icon', 'arrowup'];
-//          if (value.voted) {
-//            value['voteClass'].push('disable');
-//          } else {
-//            value.voted = false;
-//          }
-//        }
-//      }
-//    });
-//    return photos;
-//  };
-  
-//  $scope.deletePhoto = function(photoId) {
-//    AffordableCultureApi.deletePhoto(photoId);
-//    $scope.userPhotos = $scope.removePhotoFromArray($scope.userPhotos, photoId);
-//    $scope.friendsPhotos = $scope.removePhotoFromArray($scope.friendsPhotos, photoId);
-//    $scope.allPhotos = $scope.removePhotoFromArray($scope.allPhotos, photoId);
-//  };
-
   $scope.deleteAttraction = function(attractionId) {
     AffordableCultureApi.deleteAttraction(attractionId);
-    $scope.userAttraction = $scope.removeFromArray($scope.userAttraction, attractionId);
-    $scope.friendsAttraction = $scope.removeFromArray($scope.friendsAttraction, attractionId);
+    $scope.userAttractions = $scope.removeFromArray($scope.userAttractions, attractionId);
+    $scope.friendsAttractions = $scope.removeFromArray($scope.friendsAttractions, attractionId);
     $scope.allAttractions = $scope.removeFromArray($scope.allAttractions, attractionId);
   };
 
@@ -156,25 +174,6 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
     return newArray;
   };
 
-//  $scope.removePhotoFromArray = function (array, photoId) {
-//    var newArray = [];
-//    angular.forEach(array, function(value, key) {
-//      if (value.id != photoId) {
-//        newArray.push(value);
-//      }
-//    });
-//    return newArray;
-//  };
-  
-//  $scope.getUserPhotos = function() {
-//    if ($scope.hasUserProfile && ($scope.themes.length > 0)) {
-//      AffordableCultureApi.getUserPhotosByTheme($scope.selectedTheme.id)
-//      	  .then(function(response) {
-//        $scope.userPhotos = $scope.adaptPhotos(response.data);
-//      });
-//    }
-//  };
-
   $scope.getUserAttractions = function() {
     if ($scope.hasUserProfile && ($scope.categories.length > 0)) {
       AffordableCultureApi.getUserAttractionsByCategory($scope.selectedCategory.id)
@@ -183,13 +182,6 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
       });
     }
   };
-  
-//  $scope.getAllPhotos = function() {
-//    AffordableCultureApi.getAllPhotosByTheme($scope.selectedTheme.id)
-//    	.then(function(response) {
-//      $scope.allPhotos = $scope.adaptPhotos(response.data);
-//    });
-//  };
 
     $scope.getAllAttractions = function() {
     AffordableCultureApi.getAllAttractionsByCategory($scope.selectedCategory.id)
@@ -197,13 +189,6 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
       $scope.allAttractions = $scope.adaptAttractions(response.data);
     });
   };
-
-//  $scope.getFriendsPhotos = function() {
-//    AffordableCultureApi.getFriendsPhotosByTheme($scope.selectedTheme.id)
-//        .then(function(response) {
-//      $scope.friendsPhotos = $scope.adaptPhotos(response.data);
-//    });
-//  };
 
   $scope.getFriendsAttractions = function() {
     AffordableCultureApi.getFriendsAttractionsByCategory($scope.selectedCategory.id)
@@ -232,25 +217,10 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
   $scope.getFriends = function() {
     AffordableCultureApi.getFriends().then(function(response) {
       $scope.friends = response.data;
-//      $scope.getFriendsPhotos();
       $scope.getFriendsAttractions();
     })
   };
   
-//  $scope.selectTheme = function(themeIndex) {
-//    $scope.selectedTheme = $scope.themes[themeIndex];
-//    if ($scope.selectedTheme.id != $scope.themes[0].id) {
-//      $scope.orderBy('popular');
-//    }
-//    $scope.getAllPhotos();
-//    if($scope.isSignedIn) {
-//      $scope.getUserPhotos();
-//    }
-//    if ($scope.friends.length) {
-//      $scope.getFriendsPhotos();
-//    }
-//  };
-
   $scope.selectCategory = function(themeIndex) {
     $scope.selectedCategory = $scope.categories[themeIndex];
     if ($scope.selectedCategory.id != $scope.categories[0].id) {
@@ -266,17 +236,17 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
   };
   
   $scope.canUpload = function() {
-    if ($scope.uploadUrl) {
-        return true;
-    } else {
-        return false;
-    }
+      if (!$scope.uploadUrl) {
+          return false;
+      } else {
+          return true;
+      }
   };
   
   $scope.uploadedPhoto = function(uploadedPhoto) {
     uploadedPhoto['canDelete'] = true;
-    $scope.userPhotos.unshift(uploadedPhoto);
-    $scope.allPhotos.unshift(uploadedPhoto);
+    $scope.userAttractions.unshift(uploadedPhoto);
+    $scope.allAttractions.unshift(uploadedPhoto);
     $scope.getUploadUrl();
   };
   
@@ -284,10 +254,8 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
     $scope.isSignedIn = true;
     $scope.userProfile = profile;
     $scope.hasUserProfile = true;
-    //$scope.getUserPhotos();
     $scope.getUserAttractions();
     // refresh the state of operations that depend on the local user
-    //$scope.allPhotos = $scope.adaptPhotos($scope.allPhotos);
     $scope.allAttractions = $scope.adaptAttractions($scope.allAttractions);
     // now we can perform other actions that need the user to be signed in
     $scope.getUploadUrl();
@@ -295,11 +263,11 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
     $scope.getFriends();
   };
   
-  $scope.checkForHighlightedPhoto = function() {
-    if($location.search()['photoId']) {
-      AffordableCultureApi.getPhoto($location.search()['photoId'])
+  $scope.checkForHighlightedAttraction = function() {
+    if($location.search()['attractionId']) {
+      AffordableCultureApi.getAttraction(location.search()['attractionId'])
           .then(function(response) {
-        $scope.highlightedPhoto = response.data;
+        $scope.highlightedAttraction = response.data;
       })
     }
   };
@@ -345,29 +313,9 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
   
   $scope.start = function() {
     $scope.renderSignIn();
-    $scope.checkForHighlightedPhoto();
-//    AffordableCultureApi.getThemes().then(function(response) {
-//      $scope.themes = response.data;
-//      $scope.selectedTheme = $scope.themes[0];
-//      $scope.orderBy('recent');
-//      $scope.getUserPhotos();
-//      var options = {
-//        'clientid': Conf.clientId,
-//        'contenturl': Conf.rootUrl + '/invite.html',
-//        'contentdeeplinkid': '/',
-//        'prefilltext': 'Join the hunt, upload and vote for photos of ' +
-//            $scope.selectedTheme.displayName + '. #affordableculture',
-//        'calltoactionlabel': 'Join',
-//        'calltoactionurl': Conf.rootUrl,
-//        'calltoactiondeeplinkid': '/',
-//        'callback': $scope.signIn,
-//        'requestvisibleactions': Conf.requestvisibleactions,
-//        'scope': Conf.scopes,
-//        'cookiepolicy': Conf.cookiepolicy
-//      };
-//      gapi.interactivepost.render('invite', options);
-//      $scope.getAllPhotos();
-//    });
+    //$scope.checkForHighlightedAttraction();
+
+      console.log('$location.path()', $location.path());
 
       AffordableCultureApi.getCategories().then(function(response) {
       $scope.categories = response.data;
@@ -390,7 +338,14 @@ function AffordableCultureCtrl($scope, $location, Conf, AffordableCultureApi) {
         'cookiepolicy': Conf.cookiepolicy
       };
       gapi.interactivepost.render('invite', options);
-      $scope.getAllAttractions();
+      //$scope.getAllAttractions();
+
+
+      if ($location.path()) {
+
+          //$scope.searchAttractions();
+
+      }
     });
   };
   

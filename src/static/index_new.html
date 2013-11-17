@@ -7,13 +7,15 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
   <head>
   <meta charset="utf-8" />
-    <title>Affordable Culture. Pay less, see more.</title>
+  <meta name="fragment" content="!" />
+
+    <title>Affordable Culture. See more, pay less.</title>
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css"/>
 	<!-- Custom styles for this template -->
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
+	<link href="css/affordableculture.css" rel="stylesheet">
     <link href="css/carousel.css" rel="stylesheet">
 
   <!-- IE Fix for HTML5 Tags -->
@@ -31,6 +33,7 @@
   <script src="js/controllers.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/directives.js"></script>
+  <script src="js/maps.js"></script>
   <script type='text/javascript'>
   function startApp() {
     console.log('start');
@@ -94,106 +97,103 @@
 
     <!-- Carousel
     ================================================== -->
-    <div id="myCarousel" class="carousel slide">
+    <div id="map-canvas" class="opacity"></div>
+    <div id="myCarousel" class="carousel slide" ng-show="showCarousel">
       <!-- Indicators -->
       <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-		<li data-target="#myCarousel" data-slide-to="2"></li>
-		<li data-target="#myCarousel" data-slide-to="3"></li>
+        <li data-slide-to="0" class="active"></li>
+        <li data-slide-to="1"></li>
+		<li data-slide-to="2"></li>
+		<li data-slide-to="3"></li>
       </ol>
       <div class="carousel-inner">
         <div class="item active">
-          <img data-src="holder.js/1500x500/auto/#777" alt="">
           <div class="container">
 		  <div class="carousel-caption">
           <div class="row">
         <div class="col-lg-4">
           <img class="img-circle" src="img/san-francisco.jpg">
           <h2>San Francisco</h2>
-          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+          <p><a class="btn btn-default" href="#!search/San Francisco">See more &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <img class="img-circle" src="img/new-york.jpg">
           <h2>New York</h2>
-          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+          <p><a class="btn btn-default" href="#!search/New York">See more &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <img class="img-circle" src="img/los-angeles.jpg">
           <h2>Los Angeles</h2>
-          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+          <p><a class="btn btn-default" href="#!search/Los Angeles">See more &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
 	  </div>
           </div>
         </div>
         <div class="item">
-          <img data-src="holder.js/1500x500/auto/#777" alt="">
           <div class="container">
 		  <div class="carousel-caption">
           <div class="row">
         <div class="col-lg-4">
           <img class="img-circle" data-src="holder.js/140x140">
           <h2>Stuttgart</h2>
-          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+          <p><a class="btn btn-default" href="#Stuttgart">See more &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <img class="img-circle" data-src="holder.js/140x140">
           <h2>Munich</h2>
-          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+          <p><a class="btn btn-default" href="#Munich">See more &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <img class="img-circle" data-src="holder.js/140x140">
           <h2>Berlin</h2>
-          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+          <p><a class="btn btn-default" href="#Berlin">See more &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
           </div>
 		  </div>
         </div>
 		<div class="item">
-          <img data-src="holder.js/1500x500/auto/#777" alt="">
           <div class="container">
             <div class="carousel-caption">
           <div class="row">
         <div class="col-lg-4">
           <img class="img-circle" data-src="holder.js/140x140">
           <h2>London</h2>
-          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+          <p><a class="btn btn-default" href="#London">See more &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <img class="img-circle" data-src="holder.js/140x140">
           <h2>Birmingham</h2>
-          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+          <p><a class="btn btn-default" href="#Birmingham">See more &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <img class="img-circle" data-src="holder.js/140x140">
           <h2>Glasgow</h2>
-          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+          <p><a class="btn btn-default" href="#Glasgow">See more &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
           </div>
           </div>
         </div>
 		<div class="item">
-          <img data-src="holder.js/1500x500/auto/#777:#7a7a7a/text:Forth slide" alt="">
           <div class="container">
             <div class="carousel-caption">
           <div class="row">
         <div class="col-lg-4">
           <img class="img-circle" data-src="holder.js/140x140">
           <h2>Rom</h2>
-          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+          <p><a class="btn btn-default" href="#Rom">See more &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <img class="img-circle" data-src="holder.js/140x140">
           <h2>Florence</h2>
-          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+          <p><a class="btn btn-default" href="#Florence">See more &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <img class="img-circle" data-src="holder.js/140x140">
           <h2>Venice</h2>
-          <p><a class="btn btn-default" href="#">See more &raquo;</a></p>
+          <p><a class="btn btn-default" href="#Venice">See more &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
           </div>
@@ -211,23 +211,20 @@
 	<div class="profile-list-area"></div>
 
     <div id="allAttractions" class="contentGroup" ng-show="allAttractions.length">
-      <h3>All Attractions</h3>
       <ul id="allAttractions">
-        <li ng-repeat="attraction in allAttractions|orderBy:ordering">
+        <li ng-repeat="attraction in allAttractions|orderBy:ordering" id="rhs">
           <attraction item="attraction"></attraction>
         </li>
       </ul>
     </div>
 
 
-      <!-- FOOTER -->
-      <footer>
-        <p>&copy; 2013 Affordable Culture &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-      </footer>
-
     </div><!-- /.container -->
 
-
+  <!-- FOOTER -->
+  <!--footer class="bs-footer">
+    <p>&copy; 2013 Affordable Culture &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+  </footer -->
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

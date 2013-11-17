@@ -56,6 +56,8 @@ body {
 .marketing {
   padding-left: 15px;
   padding-right: 15px;
+    top: 500px;
+    position: relative;
 }
 
 /* Center align the text within the three columns below the carousel */
@@ -70,7 +72,6 @@ body {
   margin-left: 10px;
   margin-right: 10px;
 }
-
 
 /* Featurettes
 ------------------------- */

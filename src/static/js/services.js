@@ -23,10 +23,6 @@ angular.module('affordableCulture.services', [])
         signIn: function(authResult) {
           return $http.post(Conf.apiBase + 'connect', authResult);
         },
-//        votePhoto: function(photoId) {
-//          return $http.put(Conf.apiBase + 'votes',
-//              {'photoId': photoId});
-//        },
         voteAttractionBeenThere: function(attractionId) {
           return $http.put(Conf.apiBase + 'votes',
               {'attractionId': attractionId, 'vote': 'beenThere'});
@@ -35,31 +31,20 @@ angular.module('affordableCulture.services', [])
           return $http.put(Conf.apiBase + 'votes',
               {'attractionId': attractionId, 'vote': 'wantToGo'});
         },
-//        getThemes: function() {
-//          return $http.get(Conf.apiBase + 'themes');
-//        },
         getCategories: function() {
           return $http.get(Conf.apiBase + 'categories');
         },
         getUploadUrl: function() {
           return $http.post(Conf.apiBase + 'images');
         },
-//        getAllPhotosByTheme: function(themeId) {
-//          return $http.get(Conf.apiBase + 'photos',
-//              {params: {'themeId': themeId}});
-//        },
         getAllAttractionsByCategory: function(categoryId) {
           return $http.get(Conf.apiBase + 'attractions',
               {params: {'categoryId': categoryId}});
         },
-//        getPhoto: function(photoId) {
-//          return $http.get(Conf.apiBase + 'photos', {params:
-//              {'photoId': photoId}});
-//        },
-//        getUserPhotosByTheme: function(themeId) {
-//          return $http.get(Conf.apiBase + 'photos', {params:
-//              {'themeId': themeId, 'userId': 'me'}});
-//        },
+        getAttraction: function(attractionId) {
+          return $http.get(Conf.apiBase + 'attractions', {params:
+              {'attractionId': attractionId}});
+        },
         getUserAttractionsByCategory: function(categoryId) {
           return $http.get(Conf.apiBase + 'attractions', {params:
               {'categoryId': categoryId, 'userId': 'me'}});
@@ -67,22 +52,14 @@ angular.module('affordableCulture.services', [])
         getFriends: function () {
           return $http.get(Conf.apiBase + 'friends');
         },
-//        getFriendsPhotosByTheme: function(themeId) {
-//          return $http.get(Conf.apiBase + 'photos', {params:
-//              {'themeId': themeId, 'userId': 'me', 'friends': 'true'}});
-//        },
         getFriendsAttractionsByCategory: function(categoryId) {
           return $http.get(Conf.apiBase + 'attractions', {params:
               {'categoryId': categoryId, 'userId': 'me', 'friends': 'true'}});
         },
-//        deletePhoto: function(photoId) {
-//          return $http.delete(Conf.apiBase + 'photos', {params:
-//              {'photoId': photoId}});
-//        },
         disconnect: function() {
           return $http.post(Conf.apiBase + 'disconnect');
         },
-        search: function(term) {
+        searchAttractions: function(term) {
           return $http.get(Conf.apiBase + 'attractions', {params:
               {'search': term}});
         }

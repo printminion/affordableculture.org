@@ -1,0 +1,92 @@
+    <div id="rhs_block">
+        <div class="vk_rhsc kno-ec rhsvw">
+            <div class="kno-card">
+                <div class="kno-mrg" style="position:relative">
+                    <ol>
+                        <div class="kno-ibrg">
+                            <div class="img-brk">
+                                <div class="birrg">
+                                    <ul><!--m-->
+                                        <li class="bili bilik bilirk"
+                                            style="width: 452px;">
+                                            <div class="bicc"
+                                                 style="height:160px;width: 452px;">
+                                                <img ng-src="{{item.thumbnailUrl}}"
+                                                    alt="Photo for {{item.name}}" align="middle" border="0" height="160" name="imgthumb16"
+                                                    class="th"
+                                                    title="Photo for {{item.name}}"
+                                                    style="margin:0 -9px 0 0" width="160"></div>
+                                        </li>
+                                        <!--n--></ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </ol>
+                </div>
+            </div>
+            <div class="kno-card">
+                <div class="kno-ecr-t kno-ecr-t-w-st ">
+                    <div>
+                        <div class="kno-ecr-pt">{{item.name}}</div>
+                        <div class="kno-ecr-st"><span class="kno-ecr-st-val">{{item.categories}}</span></div>
+                    </div>
+                    <div class="" style="margin-top:13px">
+                        <div style="clear:both"></div>
+                        <div style="height:5px"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="kno-card">
+                <div>
+                    <div class="kno-f ">
+                        <span class="kno-fh">Address: </span>
+                        <span class="kno-fv">{{item.address}}</span>
+                    </div>
+                    <div class="kno-f ">
+                        <span class="kno-fh">Established: </span>
+                        <span class="kno-fv">1793</span>
+                    </div>
+                    <div class="kno-f ">
+                        <span class="kno-fh">Hours: </span>
+
+                        <div style="margin-bottom:6px;width:100%;display:inline;vertical-align:top">
+                            Saturday 9:00 am 5:30 pm</div>
+                    </div>
+                    <div class="kno-f ">
+                        <span class="kno-fh">Phone: </span>
+                        <span class="kno-fv">+33 1 40 20 50 50</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+             <div class="toolbar">
+  <div class="authorInfo">
+    <a target="_blank" href="{{item.ownerProfileUrl}}">
+      <img ng-src="{{item.ownerProfilePhoto|profilePicture:24}}"
+          alt="{{item.ownerDisplayName}}"
+          width="24" height="24"/>
+      <span>{{item.ownerDisplayName}}</span>
+    </a>
+  </div>
+  <button class="button">Promote</button>
+
+</div>
+
+ <div class="vote">
+  <div class="count">{{item.numVotesWantToGo}}</div>
+  <button class="voteButton voteButtonWantToGo" ng-class="item.voteClass" ng-show="item.canVoteWantToGo">
+    I've been here
+  </button>
+</div>
+
+ <div class="vote">
+  <div class="count">{{item.numVotesBeenThere}}</div>
+  <button class="voteButton voteButtonBeenThere" ng-class="item.voteClass" ng-show="item.canVoteBeenThere">
+    I want to go here
+  </button>
+</div>
+    </div>
+

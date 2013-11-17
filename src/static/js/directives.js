@@ -9,7 +9,7 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
           item: '=',
           deletePhoto: '&deletePhoto'
         },
-        templateUrl: 'partials/attraction.html',
+        templateUrl: 'partials/attraction_new.html',
         link: function (scope, element, attrs) {
           console.log('scope.item', scope.item);
 
@@ -46,7 +46,7 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
           element.find('.remove')
               .click(function() {
                 if (scope.item.canDelete) {
-                  scope.deleteAttraction({photoId: scope.item.id});
+                  scope.deleteAttraction({attractionId: scope.item.id});
                 }
               });
 
