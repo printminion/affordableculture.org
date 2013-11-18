@@ -801,6 +801,7 @@ body {
     padding-right: 15px;
     position: relative;
     width: 424px;
+    overflow: hidden;
 }
 
 .kno-ec {
@@ -874,3 +875,39 @@ body {
 .carousel-indicators li {
 border-color: #333333;
 }
+
+
+
+#sharebar{height:40px;background-color:#212121;line-height:42px;
+position: absolute;
+left: 0px;
+bottom: 0px;
+}
+#sharebar .label{float:left;text-align:left;margin-left:15px;width:90px;text-transform:uppercase;height:100%;color:#fff;color:rgba(255,255,255,0.6);font-weight:600}
+#sharebar .bitly{float:left;text-align:left;margin-left:5px;width:182px;text-transform:none;font-weight:400;height:100%;color:#fff;}
+#sharebar .bitly input{font-weight:400;font-size:16px;font-family:'Open Sans','Helvetica Neue',helvetica,sans-serif;letter-spacing:0;color:#fff;color:rgba(255,255,255,0.6);background-color:#212121;outline:none}
+#sharebar a{display:block;float:left;height:100%;width:150px;text-align:left;font-weight:700;text-transform:uppercase;color:#000;color:rgba(0,0,0,0.6)}
+#sharebar a:hover{color:#fff}
+#sharebar a.googleplus{background-color:#dd4b39;width:45px}
+#sharebar .googleplus-icon{float:left;background-color:#dd4b39}
+#sharebar a.facebook{background-color:#3b5997;width:45px}
+#sharebar .facebook-icon{float:left;background-color:#3b5997}
+#sharebar a.twitter{background-color:#00acee;width:45px}
+#sharebar .twitter-icon{float:left;background-color:#00acee}
+#sharebar a.pinterest{background-color:#c11a22;width:45px}
+#sharebar .pinterest-icon{float:left;background-color:#c11a22}
+#sharebar a.beenhere{background-color:#33506e;width:140px}
+#sharebar .beenhere-icon{float:left;background-color:#33506e}
+#sharebar a.wanttogo{background-color:#33506e;width:160px}
+#sharebar .wanttogo-icon{float:left;background-color:#33506e}
+#sharebar a.embed{color:#fff;color:rgba(255,255,255,0.6);background-color:#212121;padding-left:5px;width:120px}
+#sharebar a.embed:hover{color:#fff}
+#sharebar .embed-icon{float:left;background-color:#212121}
+#sharebar a.favorite{color:#fff;color:rgba(255,255,255,0.6);background-color:#212121;width:132px}
+#sharebar .favorite-icon{width:44px;height:40px;float:left;border-left:2px solid #000;background-color:#212121;background-repeat:no-repeat;background-image:url("/img/heart_white.png")}
+#sharebar .favorite-icon.selected{background-image:url("/img/heart_red.png")}
+#sharebar .favorite-label.selected{color:#f16667}
+#sharebar a.view-options{text-align:right;float:right;font-weight:400;text-transform:none;color:#fff;color:#fff;background-color:#212121}
+#sharebar .view-options-icon{float:right;width:40px;background-color:#212121}
+#sharebar .embed-code{display:none;background-color:#212121;height:80px;position:absolute;right:0;top:-130px}
+#sharebar #embed-textarea{border:10px solid #212121;background-color:#000;padding:15px;height:100%;font-family:'Open Sans','Helvetica Neue',helvetica,sans-serif;letter-spacing:0;font-weight:400;font-size:14px;outline:none;color:#f16667;text-align:left;-webkit-font-smoothing:antialiased;resize:none;overflow:hidden}
