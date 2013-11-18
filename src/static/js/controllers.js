@@ -39,6 +39,7 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
 
   $scope.$on('$routeChangeStart', function(next, current) {
     console.log('$routeChangeStart', next, current);
+    //render();
   });
 
   $scope.disconnect = function() {
@@ -125,6 +126,10 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
       value['canVoteWantToGo'] = false;
       value['voteBeenThereClass'] = [];
       value['voteWantToGoClass'] = [];
+
+      if (!value['thumbnailUrl']) {
+          value['thumbnailUrl'] = 'http://placehold.it/422x160';
+      }
 
       if ($scope.hasUserProfile) {
         if (value.ownerUserId != $scope.userProfile.id) {

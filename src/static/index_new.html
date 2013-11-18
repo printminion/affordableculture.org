@@ -17,6 +17,7 @@
 	<link href="css/style.css" rel="stylesheet">
 	<link href="css/affordableculture.css" rel="stylesheet">
     <link href="css/carousel.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,100italic' rel='stylesheet' type='text/css'>
 
   <!-- IE Fix for HTML5 Tags -->
   <!--[if lt IE 9]>
@@ -46,31 +47,41 @@
 
     <div class="navbar-wrapper">
       <div class="container">
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="/">Affordable Culture</a>
+  </div>
 
-        <div class="navbar navbar-inverse navbar-static-top">
-          <div class="container">
-    	    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
-    	      <span class="icon-bar"></span>
-    	      <span class="icon-bar"></span>
-    	      <span class="icon-bar"></span>
-    	    </button>
-            <a class="navbar-brand" href="/">Affordable Culture</a>
-            <div class="nav-collapse collapse">
-              <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">Search</a></li>
-                <li><a href="#contact">About</a></li>
-              </ul>
-            </div>			
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
 
 
-            <div id="profileInfo" class="navbar-form pull-right">
+    <ul class="nav navbar-nav navbar-right">
+      <li>
+     <form class="navbar-form navbar-right" role="search">
+      <div class="form-group">
+        <input type="text" class="form-control" ng-model="keywords" placeholder="desired location" style="width: 357px;">
+      </div>
+      <button type="submit" class="btn btn-default" id="countryButton"  ng-click="search()">Go!</button>
+    </form>
+
+      </li>
+        <li>
+
+           <div id="profileInfo" class="navbar-form pull-right">
                 <span id="signin" ng-show="immediateFailed">
                   <span id="myGsignin"></span>
                 </span>
 
-                <span ng-show="userProfile">
+                <span id="userProfile" ng-show="userProfile">
                 <a target="_blank" href="{{userProfile.googlePublicProfileUrl}}">
                   <span class="name">{{userProfile.googleDisplayName}}</span>
                   <img ng-src="{{userProfile.googlePublicProfilePhotoUrl|profilePicture:32}}" />
@@ -81,15 +92,13 @@
                 </span>
           </div>
 
-			<form class="navbar-form pull-right">
-				<input type="text" class="form-control" id="country" style="width: 400px;" ng-model="keywords" placeholder="desired location">
-				<button type="submit" class="btn btn-default" id="countryButton"  ng-click="search()">Go!</button>
-			</form>
 
-          </div>
+      </li>
+    </ul>
 
+  </div><!-- /.navbar-collapse -->
+</nav>
 
-        </div>
 
       </div>
     </div>
@@ -111,21 +120,21 @@
           <div class="container">
 		  <div class="carousel-caption">
           <div class="row">
-        <div class="col-lg-4">
+        <div class="col-md-4">
           <img class="img-circle" src="img/san-francisco.jpg">
           <h2>San Francisco</h2>
-          <p><a class="btn btn-default" href="#!search/San Francisco">See more &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
+          <p><a class="btn btn-default btn-invert" href="#/search/San Francisco">See more &raquo;</a></p>
+        </div><!-- /.col-md-4 -->
+        <div class="col-md-4">
           <img class="img-circle" src="img/new-york.jpg">
           <h2>New York</h2>
-          <p><a class="btn btn-default" href="#!search/New York">See more &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
+          <p><a class="btn btn-default btn-invert" href="#!/search/New York">See more &raquo;</a></p>
+        </div><!-- /.col-md-4 -->
+        <div class="col-md-4">
           <img class="img-circle" src="img/los-angeles.jpg">
           <h2>Los Angeles</h2>
-          <p><a class="btn btn-default" href="#!search/Los Angeles">See more &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
+          <p><a class="btn btn-default btn-invert" href="#!/search/Los Angeles">See more &raquo;</a></p>
+        </div><!-- /.col-md-4 -->
       </div><!-- /.row -->
 	  </div>
           </div>
@@ -134,21 +143,21 @@
           <div class="container">
 		  <div class="carousel-caption">
           <div class="row">
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140">
+        <div class="col-md-4">
+          <img class="img-circle" data-src="http://placehold.it/140x140">
           <h2>Stuttgart</h2>
-          <p><a class="btn btn-default" href="#Stuttgart">See more &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140">
+          <p><a class="btn btn-default btn-invert" href="#Stuttgart">See more &raquo;</a></p>
+        </div><!-- /.col-md-4 -->
+        <div class="col-md-4">
+          <img class="img-circle" data-src="http://placehold.it/140x140">
           <h2>Munich</h2>
-          <p><a class="btn btn-default" href="#Munich">See more &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140">
+          <p><a class="btn btn-default btn-invert" href="#Munich">See more &raquo;</a></p>
+        </div><!-- /.col-md-4 -->
+        <div class="col-md-4">
+          <img class="img-circle" data-src="http://placehold.it/140x140">
           <h2>Berlin</h2>
-          <p><a class="btn btn-default" href="#Berlin">See more &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
+          <p><a class="btn btn-default btn-invert" href="#Berlin">See more &raquo;</a></p>
+        </div><!-- /.col-md-4 -->
       </div><!-- /.row -->
           </div>
 		  </div>
@@ -157,21 +166,21 @@
           <div class="container">
             <div class="carousel-caption">
           <div class="row">
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140">
+        <div class="col-md-4">
+          <img class="img-circle" data-src="http://placehold.it/140x140">
           <h2>London</h2>
-          <p><a class="btn btn-default" href="#London">See more &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140">
+          <p><a class="btn btn-default btn-invert" href="#London">See more &raquo;</a></p>
+        </div><!-- /.col-md-4 -->
+        <div class="col-md-4">
+          <img class="img-circle" data-src="http://placehold.it/140x140">
           <h2>Birmingham</h2>
-          <p><a class="btn btn-default" href="#Birmingham">See more &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140">
+          <p><a class="btn btn-default btn-invert" href="#Birmingham">See more &raquo;</a></p>
+        </div><!-- /.col-md-4 -->
+        <div class="col-md-4">
+          <img class="img-circle" data-src="http://placehold.it/140x140">
           <h2>Glasgow</h2>
-          <p><a class="btn btn-default" href="#Glasgow">See more &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
+          <p><a class="btn btn-default btn-invert" href="#Glasgow">See more &raquo;</a></p>
+        </div><!-- /.col-md-4 -->
       </div><!-- /.row -->
           </div>
           </div>
@@ -180,26 +189,27 @@
           <div class="container">
             <div class="carousel-caption">
           <div class="row">
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140">
+        <div class="col-md-4">
+          <img class="img-circle" data-src="http://placehold.it/140x140">
           <h2>Rom</h2>
-          <p><a class="btn btn-default" href="#Rom">See more &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140">
+          <p><a class="btn btn-default btn-invert" href="#Rom">See more &raquo;</a></p>
+        </div><!-- /.col-md-4 -->
+        <div class="col-md-4">
+          <img class="img-circle" data-src="http://placehold.it/140x140">
           <h2>Florence</h2>
-          <p><a class="btn btn-default" href="#Florence">See more &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140">
+          <p><a class="btn btn-default btn-invert" href="#Florence">See more &raquo;</a></p>
+        </div><!-- /.col-md-4 -->
+        <div class="col-md-4">
+          <img class="img-circle" data-src="http://placehold.it/140x140">
           <h2>Venice</h2>
-          <p><a class="btn btn-default" href="#Venice">See more &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
+          <p><a class="btn btn-default btn-invert" href="#Venice">See more &raquo;</a></p>
+        </div><!-- /.col-md-4 -->
       </div><!-- /.row -->
           </div>
           </div>
         </div>
       </div>
+
       <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
       <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
     </div><!-- /.carousel -->
@@ -231,7 +241,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <!-- script src="assets/js/jquery.js"></script -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/holder.js"></script>
+    <!--script src="assets/js/holder.js"></script-->
 
   <script type="text/javascript">
   window.___gcfg = {

@@ -12,7 +12,8 @@ function initialize() {
     var mapOptions = {
         zoom: 10,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-        center: berlin
+        center: berlin,
+        'scrollwheel': false
     };
 
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);

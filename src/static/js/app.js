@@ -5,19 +5,22 @@ angular.module('affordableCulture',
     function($routeProvider, $locationProvider) {
         console.log('location', $routeProvider, $locationProvider);
 
-        $routeProvider.when('#!search/:search', {
-        controller: AffordableCultureCtrl,
-        resolve: {
-              // I will cause a 1 second delay
-              delay: function($q, $timeout) {
-                console.log('delay');
-                var delay = $q.defer();
-                $timeout(delay.resolve, 1000);
-                return delay.promise;
-              }
-            }
+        $routeProvider
+            .when('/search/:search', {
+            action: "contact.form"
+         })
+            .when('myCarousel', {
+         })
+            .when('#myCarousel', {
+         })
+            .when('%2Fsearch%2F:search', {
+            action: "contact.form"
+         })
+
+            .otherwise({
          });
 
-      $locationProvider.html5Mode(true).hashPrefix('!');
+      $locationProvider.html5Mode(true);
+        //.hashPrefix('!');
     }
 );

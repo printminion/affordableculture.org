@@ -1,7 +1,6 @@
-div#search {
-    float: left;
+body {
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-
 
 
 .ts td {
@@ -9,7 +8,8 @@ div#search {
 }
 
 #rhs_block {
-    padding-bottom: 15px
+    padding-bottom: 15px;
+    font-size: small;
 }
 
 .c h2, #mbEnd h2, #tads h2, #tadsb h2 {
@@ -214,7 +214,12 @@ span.malbstb a, div#tads span.malbstb a {
 #rhs {
     display: block;
     padding-bottom: 10px;
+    /*
     min-width: 268px
+    */
+    width: 443px;
+    float: left;
+    min-height: 610px;
 }
 
 .mdm #rhs {
@@ -807,4 +812,65 @@ body {
     line-height: 1.24;
     margin-top: 6px;
     position: relative;
+}
+
+#profileInfo {
+    -webkit-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    -moz-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    -o-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    transition:width 300ms ease-in-out, height 300ms ease-in-out;
+}
+
+.navbar-brand {
+    font-family: 'Roboto', sans-serif;
+    color: #ebebeb!important;
+}
+
+#profileInfo {
+    height: 34px;
+    overflow: hidden;
+    min-width: 145px;
+}
+
+#profileInfo #signin {
+    min-width: 140px;
+    line-height: 64px;
+        -webkit-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    -moz-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    -o-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    transition:width 300ms ease-in-out, height 300ms ease-in-out;
+}
+
+#profileInfo #userProfile {
+    min-width: 176px;
+        -webkit-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    -moz-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    -o-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    transition:width 300ms ease-in-out, height 300ms ease-in-out;
+}
+
+
+#profileInfo .name {
+    margin-right: 10px;
+}
+#profileInfo img {
+    margin-right: 7px;
+}
+
+#myCarousel h2 {
+    color: #101010;
+}
+
+.btn-invert {
+    color: #ffffff;
+    background-color: #333333;
+    border-color: #cccccc;
+}
+
+.carousel-indicators .active {
+    background-color: #333333;
+}
+
+.carousel-indicators li {
+border-color: #333333;
 }
