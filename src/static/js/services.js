@@ -9,7 +9,7 @@ angular.module('affordableCulture.services', [])
         return rootUrl;
       };
       return {
-        'clientId': '622222016553.apps.googleusercontent.com',
+        'clientId': '538920374889.apps.googleusercontent.com',
         'apiBase': '/api/',
         'rootUrl': getRootUrl(),
         'scopes': 'https://www.googleapis.com/auth/plus.login ',

@@ -59,9 +59,9 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
             'prefilltext': '*Having fun doesn’t require a lot of money!*\n' +
                'Visiting this attraction will help you to see more while spending less.\n' +
                 scope.item.name + ' #affordableculture',
-            'calltoactionlabel': 'VOTE',
+            'calltoactionlabel': 'DISCOVER',
             'calltoactionurl': scope.item.voteCtaUrl,
-            'calltoactiondeeplinkid': '/?id=' + scope.item.id + '&action=VOTE',
+            'calltoactiondeeplinkid': '/?id=' + scope.item.id + '&action=DISCOVER',
             'requestvisibleactions': Conf.requestvisibleactions,
             'scope': Conf.scopes,
             'cookiepolicy': Conf.cookiepolicy

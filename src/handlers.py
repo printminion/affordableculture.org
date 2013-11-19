@@ -420,11 +420,11 @@ class DisconnectHandler(JsonRestHandler, SessionEnabledHandler):
 
             del (self.session[self.CURRENT_USER_SESSION_KEY])
             user_id = user.key().id()
-            db.delete(model.VoteWantToGo.all().filter("owner_user_id =", user_id).run())
-            db.delete(model.Attraction.all().filter("owner_user_id =", user_id).run())
-            db.delete(model.DirectedUserToUserEdge.all().filter(
-                "owner_user_id =", user_id).run())
-            db.delete(user)
+            #db.delete(model.VoteWantToGo.all().filter("owner_user_id =", user_id).run())
+            #db.delete(model.Attraction.all().filter("owner_user_id =", user_id).run())
+            #db.delete(model.DirectedUserToUserEdge.all().filter(
+            #    "owner_user_id =", user_id).run())
+            #db.delete(user)
 
             DisconnectHandler.revoke_token(credentials)
             self.send_success('Successfully disconnected.')
@@ -629,6 +629,7 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                     user = self.get_user_from_session()
                 else:
                     user = model.User.get_by_id(long(user_id))
+
                 if show_friends:
                     user = self.get_user_from_session()
                     friends = user.get_friends()
@@ -661,26 +662,37 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
             if not user_id:
                 user = self.get_user_from_session()
 
-            num_votes_want_to_go = model.VoteWantToGo.all().filter("owner_user_id =", user.key().id()).run()
-            num_votes_been_there = model.VoteBeenHere.all().filter("owner_user_id =", user.key().id()).run()
-            photo_votes_want_to_go = []
-            photo_votes_been_there = []
+        query = model.VoteWantToGo.all()
+        if user:
+            query.filter("owner_user_id =", user.key().id()).run()
+        num_votes_want_to_go = list(query.run())
 
-            for vote in num_votes_want_to_go:
-                photo_votes_want_to_go.append(vote.attraction_id)
 
-            for vote in num_votes_been_there:
-                photo_votes_been_there.append(vote.attraction_id)
+        query = model.VoteBeenHere.all()
+        if user:
+            query.filter("owner_user_id =", user.key().id())
 
-            logging.critical(num_votes_want_to_go)
-            logging.critical(photo_votes_been_there)
+        num_votes_been_there = list(query.run())
 
-            logging.critical(photo_votes_want_to_go)
-            logging.critical(photo_votes_been_there)
 
-            for attraction in attractions:
-                attraction.voted_want_to_go = attraction.key().id() in photo_votes_want_to_go
-                attraction.voted_been_there = attraction.key().id() in photo_votes_been_there
+        photo_votes_want_to_go = []
+        photo_votes_been_there = []
+
+        for vote in num_votes_want_to_go:
+            photo_votes_want_to_go.append(vote.attraction_id)
+
+        for vote in num_votes_been_there:
+            photo_votes_been_there.append(vote.attraction_id)
+
+        logging.critical(num_votes_want_to_go)
+        logging.critical(photo_votes_been_there)
+
+        logging.critical(photo_votes_want_to_go)
+        logging.critical(photo_votes_been_there)
+
+        for attraction in attractions:
+            attraction.voted_want_to_go = attraction.key().id() in photo_votes_want_to_go
+            attraction.voted_been_there = attraction.key().id() in photo_votes_been_there
 
     def post(self):
         """Exposed as `POST /api/attractions`.
@@ -873,9 +885,12 @@ class InitHandler(JsonRestHandler, SessionEnabledHandler,
           ...
         ]
         """
-        user = self.get_user_from_session()
-        deferred.defer(initAttractions, user=user)
-        self.send_success({'result': 'success'})
+        try:
+            user = self.get_user_from_session()
+            deferred.defer(initAttractions, user=user)
+            self.send_success({'result': 'success'})
+        except Exception as e:
+            self.send_error(500, e.message)
 
     def initCategories(self):
         #category = list(model.Category.all().order('-start').run())
@@ -1239,7 +1254,7 @@ class AdminAttractionHandler(webapp2.RequestHandler):
             'nickname': nickname,
             'link_text': link_text,
             'link_url': link_url,
-            'CLIENT_ID': '622222016553.apps.googleusercontent.com'
+            'CLIENT_ID': '538920374889.apps.googleusercontent.com'
         }
         self.response.out.write(template.render(context))
 

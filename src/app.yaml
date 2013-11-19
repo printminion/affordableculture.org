@@ -1,4 +1,4 @@
-application: affordable-culture
+application: gcdc2013-affordable-culture
 version: 12
 runtime: python27
 api_version: 1
