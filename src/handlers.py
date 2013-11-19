@@ -1212,7 +1212,7 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
                     'name': '{} | Affordable Culture'.format(
                         attraction.name),
                     'imageUrl': imageUrl,
-                    'description': 'Visit Affordable Culture learn how to see more while paying less.'
+                    'description': 'Visit Affordable Culture to learn how to see more while paying less.'
                     #, 'description': '{} needs your vote to win this hunt.'.format(attraction.owner_display_name)
                 }))
             else:
@@ -1228,7 +1228,7 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
                         'name': '{} | Affordable Culture'.format(
                             attraction.name),
                         'imageUrl': imageUrl,
-                        'description': 'Visit Affordable Culture learn how to see more while paying less.'
+                        'description': 'Visit Affordable Culture to learn how to see more while paying less.'
                     }))
                 else:
                     self.response.out.write(template.render({
@@ -1236,7 +1236,7 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
                         'name': 'Affordable Culture',
                         'imageUrl': '{}/images/interactivepost-icon.png'.format(
                             get_base_url()),
-                        'description': 'Visit Affordable Culture learn how to see more while paying less.'
+                        'description': 'Visit Affordable Culture to learn how to see more while paying less.'
                     }))
         except TypeError as te:
             self.send_error(404, "Resource not found")
