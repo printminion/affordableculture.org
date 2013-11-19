@@ -219,7 +219,7 @@ span.malbstb a, div#tads span.malbstb a {
     */
     width: 443px;
     float: left;
-    min-height: 610px;
+    min-height: 544px;
 }
 
 .mdm #rhs {
@@ -591,7 +591,8 @@ body {
 .kno-ecr-pt {
     color: #000;
     font-size: 30px;
-    font-weight: normal
+    font-weight: normal;
+    height: 110px;
 }
 
 .bili {
@@ -911,3 +912,13 @@ bottom: 0px;
 #sharebar .view-options-icon{float:right;width:40px;background-color:#212121}
 #sharebar .embed-code{display:none;background-color:#212121;height:80px;position:absolute;right:0;top:-130px}
 #sharebar #embed-textarea{border:10px solid #212121;background-color:#000;padding:15px;height:100%;font-family:'Open Sans','Helvetica Neue',helvetica,sans-serif;letter-spacing:0;font-weight:400;font-size:14px;outline:none;color:#f16667;text-align:left;-webkit-font-smoothing:antialiased;resize:none;overflow:hidden}
+
+
+#searchByLocation {
+    position: absolute;
+    z-index: 20;
+}
+
+.glyphicon-chevron-right, .glyphicon-chevron-left {
+    color: #101010!important;
+}

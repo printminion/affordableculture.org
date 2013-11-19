@@ -616,11 +616,10 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                 attractions = search.search(query_type='proximity', params=params)
 
                 if attractions:
-
                     self.populateVotes(attractions, user_id)
                     self.send_success(attractions, jsonkind='affcult#attractions')
                 else:
-                    self.send_error(404, 'location is not approved')
+                    self.send_success(attractions)
                 return
 
             #get by attractions id

@@ -26,12 +26,13 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
   $scope.userAttractions = [];
   $scope.allAttractions = [];
 
+  $scope.locationToSearch = undefined;
   // friends
   $scope.friends = [];
   // uploads
   $scope.uploadUrl;
 
-    $scope.showCarousel = true;
+  $scope.showCarousel = true;
 
 
 
@@ -41,6 +42,15 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
     console.log('$routeChangeStart', next, current);
     //render();
   });
+
+  $scope.$watch('locationToSearch', function(newValue, oldValue) {
+    // run some code here whenever chatID changes
+      console.log('$scope.$watch.locationToSearch', newValue, oldValue);
+      if (newValue) {
+          $scope.searchByLocation(newValue);
+      }
+  });
+
 
   $scope.disconnect = function() {
     AffordableCultureApi.disconnect().then(function() {
@@ -58,7 +68,7 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
 
   $scope.search = function() {
     //$location.hash('!search/' + $scope.keywords);
-
+    return;
     AffordableCultureApi.searchAttractions($scope.keywords).then(function(response) {
         //console.log('search', response);
 
@@ -100,7 +110,57 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
         //console.log('$scope.allAttractions', $scope.allAttractions);
     });
   };
-  
+
+  $scope.searchByLocation = function() {
+    //$location.hash('!search/' + $scope.keywords);
+    console.log('$scope.searchByLocation', $scope.locationToSearch, $scope.$$phase);
+
+    AffordableCultureApi.searchAttractionsByLocation($scope.locationToSearch).then(function(response) {
+        console.log('searchAttractionsByLocation', response);
+
+
+        $scope.allAttractions = $scope.adaptAttractions(response.data);
+        neighborhoods = [];
+
+        if ($scope.allAttractions) {
+
+            $('#map-canvas').removeClass('opacity');
+
+            $scope.showCarousel = false;
+
+
+            //map.clearOverlays();
+            var bounds = new google.maps.LatLngBounds();
+
+            angular.forEach(response.data, function(value, key) {
+                  if (value['location']) {
+
+                    var marker = new google.maps.LatLng(value['location']['lat'], value['location']['lon']);
+
+                    neighborhoods.push(marker);
+
+                    bounds.extend(marker);
+
+                }
+            });
+
+            map.fitBounds(bounds);
+
+            for (var i = 0; i < neighborhoods.length; i++) {
+                addMarker(neighborhoods[i], $scope.allAttractions[i]);
+            }
+
+
+        } else {
+            $('#map-canvas').addClass('opacity');
+            $scope.showCarousel = true;
+        }
+
+
+        //console.log('$scope.allAttractions', $scope.allAttractions);
+    });
+  };
+
   // methods
   $scope.orderBy = function(criteria) {
     var activeItemClasses = ['active','primary'];
@@ -326,8 +386,7 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
       $scope.categories = response.data;
       $scope.selectedCategory = $scope.categories[0];
       $scope.orderBy('recent');
-      //$scope.getUserPhotos();
-      $scope.getUserAttractions();
+      //$scope.getUserAttractions();
       var options = {
         'clientid': Conf.clientId,
         'contenturl': Conf.rootUrl + '/invite.html',
@@ -343,8 +402,6 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
         'cookiepolicy': Conf.cookiepolicy
       };
       gapi.interactivepost.render('invite', options);
-      //$scope.getAllAttractions();
-
 
       if ($location.path()) {
 

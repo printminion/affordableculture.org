@@ -62,6 +62,10 @@ angular.module('affordableCulture.services', [])
         searchAttractions: function(term) {
           return $http.get(Conf.apiBase + 'attractions', {params:
               {'search': term}});
+        },
+        searchAttractionsByLocation: function(term) {
+            term = decodeURIComponent(term);
+          return $http.get(Conf.apiBase + 'attractions?' + term);
         }
       };
     })
