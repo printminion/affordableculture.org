@@ -144,10 +144,12 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
                 }
             });
 
-            map.fitBounds(bounds);
+            if (neighborhoods.length) {
+                map.fitBounds(bounds);
 
-            for (var i = 0; i < neighborhoods.length; i++) {
-                addMarker(neighborhoods[i], $scope.allAttractions[i]);
+                for (var i = 0; i < neighborhoods.length; i++) {
+                    addMarker(neighborhoods[i], $scope.allAttractions[i]);
+                }
             }
 
 
