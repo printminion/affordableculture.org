@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 """All request handlers of AffordableCulture, including its built-in API."""
 
@@ -314,9 +315,13 @@ class ConnectHandler(JsonRestHandler, SessionEnabledHandler):
         """
         # Only connect a user that is not already connected.
         if self.session.get(self.CURRENT_USER_SESSION_KEY) is not None:
-            user = self.get_user_from_session()
-            self.send_success(user)
-            return
+            try:
+                user = self.get_user_from_session()
+                self.send_success(user)
+                return
+            except Exception as e:
+                #self.send_error(401, 'Failed to exchange the authorization code.')
+                pass
 
         credentials = None
         try:
@@ -1208,8 +1213,7 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
                 self.response.out.write(template.render({
                     'attractionId': attraction_id,
                     'redirectUrl': 'index.html?attractionId={}'.format(attraction_id),
-                    'name': '{} | Affordable Culture'.format(
-                        attraction.name),
+                    'name': '{} | Affordable Culture'.format(attraction.name),
                     'imageUrl': imageUrl,
                     'description': 'Visit Affordable Culture to learn how to see more while paying less.'
                     #, 'description': '{} needs your vote to win this hunt.'.format(attraction.owner_display_name)
