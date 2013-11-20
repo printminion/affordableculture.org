@@ -191,7 +191,7 @@ class Attraction(GeoModel, Jsonifiable):
             self.num_votes_want_to_go = VoteWantToGo.all().filter("attraction_id =", key.id()).count()
             self.num_votes_been_there = VoteBeenHere.all().filter("attraction_id =", key.id()).count()
 
-            template = '%s/add_attraction_new.html?attractionId=%s%s'
+            template = '%s/attraction.html?attractionId=%s%s'
 
             self.vote_cta_url = template % (handlers.get_base_url(), key.id(), '&action=VOTEWANTTOGO')
             self.vote_been_url = template % (handlers.get_base_url(), key.id(), '&action=VOTEBEENTHERE')
