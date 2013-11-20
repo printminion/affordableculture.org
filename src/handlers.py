@@ -1203,7 +1203,7 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
                 imageUrl = attraction.thumbnail_url
 
                 if not imageUrl:
-                    imageUrl = '{}/images/interactivepost-icon.png'.format(
+                    imageUrl = '{}/images/interactivepost-icon.jpg'.format(
                             get_base_url())
                 self.response.out.write(template.render({
                     'attractionId': attraction_id,
@@ -1220,7 +1220,7 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
                     imageUrl = attraction.thumbnail_url
 
                     if not imageUrl:
-                        imageUrl = '{}/images/interactivepost-icon.png'.format(
+                        imageUrl = '{}/images/interactivepost-icon.jpg'.format(
                                 get_base_url())
                     self.response.out.write(template.render({
                         'redirectUrl': 'index.html?attractionId='.format(attraction_id),
@@ -1233,7 +1233,7 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
                     self.response.out.write(template.render({
                         'redirectUrl': get_base_url(),
                         'name': 'Affordable Culture',
-                        'imageUrl': '{}/images/interactivepost-icon.png'.format(
+                        'imageUrl': '{}/images/interactivepost-icon.jpg'.format(
                             get_base_url()),
                         'description': 'Visit Affordable Culture to learn how to see more while paying less.'
                     }))

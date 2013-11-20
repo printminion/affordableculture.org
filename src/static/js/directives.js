@@ -67,8 +67,7 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
             'cookiepolicy': Conf.cookiepolicy
           };
 
-          gapi.interactivepost.render(
-              element.find('.toolbar button').get(0), options);
+          gapi.interactivepost.render(element.find('#googleplus-share').get(0), options);
         }
       }
     })
