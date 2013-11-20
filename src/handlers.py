@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+#from __future__ import unicode_literals
+
 """All request handlers of AffordableCulture, including its built-in API."""
 
 import httplib2
@@ -1208,14 +1210,16 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
                 imageUrl = attraction.thumbnail_url
 
                 if not imageUrl:
-                    imageUrl = '{}/images/interactivepost-icon.jpg'.format(
-                            get_base_url())
+                    imageUrl = '{}/images/interactivepost-icon.jpg'.format(get_base_url())
+
                 self.response.out.write(template.render({
                     'attractionId': attraction_id,
-                    'redirectUrl': 'index.html?attractionId={}'.format(attraction_id),
-                    'name': '{} | Affordable Culture'.format(attraction.name),
+                    'redirectUrl': 'index.html?attractionId={}&ll={},{}&z=10'.format(attraction_id
+                        , attraction.location.lat
+                        , attraction.location.lon),
+                    'name': u'%s | Affordable Culture' % attraction.name,
                     'imageUrl': imageUrl,
-                    'description': 'Visit Affordable Culture to learn how to see more while paying less.'
+                    'description': u'Learn more about when you can visit %s for free.' % attraction.name
                     #, 'description': '{} needs your vote to win this hunt.'.format(attraction.owner_display_name)
                 }))
             else:
@@ -1228,18 +1232,17 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
                                 get_base_url())
                     self.response.out.write(template.render({
                         'redirectUrl': 'index.html?attractionId='.format(attraction_id),
-                        'name': '{} | Affordable Culture'.format(
-                            attraction.name),
+                        'name': u'%s | Affordable Culture' % attraction.name,
                         'imageUrl': imageUrl,
-                        'description': 'Visit Affordable Culture to learn how to see more while paying less.'
+                        'description': u'Learn more about when you can visit %s for free.' % attraction.name
                     }))
                 else:
                     self.response.out.write(template.render({
                         'redirectUrl': get_base_url(),
                         'name': 'Affordable Culture',
-                        'imageUrl': '{}/images/interactivepost-icon.jpg'.format(
-                            get_base_url()),
-                        'description': 'Visit Affordable Culture to learn how to see more while paying less.'
+                        'imageUrl': '{}/images/interactivepost-icon.jpg'.format(get_base_url()),
+                        'description': 'Learn more about when you can visit '
+                                       'various attractions around the world for free.'
                     }))
         except TypeError as te:
             self.send_error(404, "Resource not found")
