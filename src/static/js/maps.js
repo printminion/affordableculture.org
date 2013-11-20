@@ -5,7 +5,10 @@ var markers = [];
 
 var iterator = 0;
 var map;
+var mapObj = 33;
 var dontCallSearch = false;
+
+var ignoreZoomEvent = false;
 
 function initialize() {
     var mapOptions = {
@@ -102,13 +105,18 @@ function initialize() {
 
 }
 
-function addMarker(neighborhood, attraction) {
-    var marker = new google.maps.Marker({
+function addMarker(neighborhood, attraction, selectedAttractionId) {
+
+    var markerData = {
         position: neighborhood,
         map: map,
-        draggable: false
-    });
-
+        draggable: false,
+        title: attraction.name + '\n' + attraction.categories.join(', ')
+    };
+    if (attraction.id == selectedAttractionId) {
+        markerData['icon'] = '/img/beachflag.png';
+    }
+    var marker = new google.maps.Marker(markerData);
     var infowindow = new google.maps.InfoWindow();
 
     google.maps.event.addListener(marker, 'click', function () {
@@ -120,4 +128,4 @@ function addMarker(neighborhood, attraction) {
 }
 
 
-google.maps.event.addDomListener(window, 'load', initialize);
+//google.maps.event.addDomListener(window, 'load', initialize);

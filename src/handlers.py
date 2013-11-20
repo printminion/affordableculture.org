@@ -605,7 +605,7 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                 attraction = model.Attraction.get_by_id(long(attraction_id))
 
                 if attraction.approved:
-                    self.send_success(attraction)
+                    self.send_success([attraction])
                 else:
                     self.send_error(404, 'location is not approved')
                 return

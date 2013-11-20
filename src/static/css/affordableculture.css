@@ -834,14 +834,6 @@ body {
     min-width: 145px;
 }
 
-#profileInfo #signin {
-    min-width: 140px;
-    line-height: 64px;
-        -webkit-transition:width 300ms ease-in-out, height 300ms ease-in-out;
-    -moz-transition:width 300ms ease-in-out, height 300ms ease-in-out;
-    -o-transition:width 300ms ease-in-out, height 300ms ease-in-out;
-    transition:width 300ms ease-in-out, height 300ms ease-in-out;
-}
 
 #profileInfo #userProfile {
     min-width: 176px;
@@ -921,4 +913,17 @@ bottom: 0px;
 
 .glyphicon-chevron-right, .glyphicon-chevron-left {
     color: #101010!important;
+}
+
+
+#signin {
+    margin-top: 9px;
+    height: 33px;
+    margin-right: 16px;
+    line-height: 64px;
+        -webkit-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    -moz-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    -o-transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    transition:width 300ms ease-in-out, height 300ms ease-in-out;
+
 }

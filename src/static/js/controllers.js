@@ -6,6 +6,7 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
   $scope.$location = $location;
   $scope.$routeParams = $routeParams;
 
+  $scope.map;
 
 
   // signIn
@@ -15,6 +16,7 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
   $scope.immediateFailed = false;
   // categories
   $scope.selectedCategory;
+  $scope.selectedAttractionId;
 
   $scope.categories = [];
   // attractions
@@ -145,11 +147,16 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
             });
 
             if (neighborhoods.length) {
+                ignoreZoomEvent = true;
+
                 map.fitBounds(bounds);
 
+
+
                 for (var i = 0; i < neighborhoods.length; i++) {
-                    addMarker(neighborhoods[i], $scope.allAttractions[i]);
+                    addMarker(neighborhoods[i], $scope.allAttractions[i], $scope.selectedAttractionId);
                 }
+
             }
 
 
@@ -221,6 +228,11 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
       }
     });
     return attraction;
+  };
+
+  $scope.updateAttractionPhoto = function(attractionId) {
+    console.log('updateAttractionPhoto', attractionId);
+    //AffordableCultureApi.updateAttractionPhoto(attractionId);
   };
 
   $scope.deleteAttraction = function(attractionId) {
@@ -321,13 +333,13 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
     $scope.isSignedIn = true;
     $scope.userProfile = profile;
     $scope.hasUserProfile = true;
-    $scope.getUserAttractions();
+    //$scope.getUserAttractions();
     // refresh the state of operations that depend on the local user
     $scope.allAttractions = $scope.adaptAttractions($scope.allAttractions);
     // now we can perform other actions that need the user to be signed in
     $scope.getUploadUrl();
     $scope.checkIfVoteActionRequested();
-    $scope.getFriends();
+    //$scope.getFriends();
   };
   
   $scope.checkForHighlightedAttraction = function() {
@@ -382,8 +394,21 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
     $scope.renderSignIn();
     //$scope.checkForHighlightedAttraction();
 
-      console.log('$location.path()', $location.path());
+      //show predefined attraction
+      if ($location.search().attractionId && $location.search().ll && $location.search().z) {
+        $scope.locationToSearch = 'attractionId=' + ($location.search()).attractionId +  '&ll=' + ($location.search().ll) + '&z=' + ($location.search()).z;
+        $scope.selectedAttractionId = ($location.search()).attractionId;
+        var ll = $location.search().ll.split(',');
 
+        var location = new google.maps.LatLng(ll[0], ll[0]);
+        //map.setCenter(location);
+
+      } else {
+          $scope.selectedAttractionId = undefined;
+      }
+
+
+      if (false) {
       AffordableCultureApi.getCategories().then(function(response) {
       $scope.categories = response.data;
       $scope.selectedCategory = $scope.categories[0];
@@ -405,12 +430,10 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
       };
       gapi.interactivepost.render('invite', options);
 
-      if ($location.path()) {
 
-          //$scope.searchAttractions();
-
-      }
     });
+  }
+
   };
   
   $scope.start();

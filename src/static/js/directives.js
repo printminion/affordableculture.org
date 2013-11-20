@@ -7,7 +7,8 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
         replace: true,
         scope: {
           item: '=',
-          deletePhoto: '&deletePhoto'
+          deleteAttraction: '&deleteAttraction',
+          updateAttractionPhoto: '&updateAttractionPhoto'
         },
         templateUrl: 'partials/attraction_new.html',
         link: function (scope, element, attrs) {
@@ -137,4 +138,128 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
         }
       }
     })
-;
+.directive('helloMaps', function () {
+            return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          item: '=',
+          deleteAttraction: '&deleteAttraction'
+        },
+
+        link: function (scope, elem, attrs) {
+          console.log('scope', scope);
+        var mapOptions,
+          latitude = attrs.latitude,
+          longitude = attrs.longitude;
+
+        latitude = latitude && parseFloat(latitude, 10) || 43.074688;
+        longitude = longitude && parseFloat(longitude, 10) || -89.384294;
+
+        mapOptions = {
+          center: new google.maps.LatLng(latitude, longitude),
+            zoom: 10,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            streetViewControl: false,
+            mapTypeControl: false,
+            'scrollwheel': false
+        };
+
+        map = new google.maps.Map(elem[0], mapOptions);
+
+
+
+              var input = /** @type {HTMLInputElement} */(
+        document.getElementById('search'));
+
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.bindTo('bounds', map);
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        console.log('place_changed', map.getZoom(), map.getCenter());
+
+
+        var place = autocomplete.getPlace();
+        if (!place.geometry) {
+            return;
+        }
+
+        $('#map-canvas').removeClass('opacity');
+        $('#myCarousel').hide();
+
+        var location = place.geometry.location;
+        map.setCenter(location);
+        //map.setZoom(13);  // Why 17? Because it looks good.
+
+        var search = 'z=' +  map.getZoom() + '&ll=' + location.ob + ',' + location.pb;
+        console.log('search:place_changed', search);
+
+        if (!dontCallSearch) {
+            var inputSearchByLocation = $('#searchByLocation');
+            inputSearchByLocation.val(search);
+            inputSearchByLocation.trigger('input');
+        }
+
+    });
+
+   google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
+        console.log('bounds_changed', map.getZoom(), map.getCenter());
+        if (neighborhoods.length == 1) {
+            map.setZoom(18);
+        }
+
+       ignoreZoomEvent = false;
+   });
+
+    google.maps.event.addListener(map, 'zoom_changed', function () {
+        console.log('zoom_changed', map.getZoom(), map.getCenter());
+        if (ignoreZoomEvent) {
+            return;
+        }
+        //zoom_changed
+        var location = map.getCenter();
+        var search = 'z=' +  map.getZoom() + '&ll=' + location.ob + ',' + location.pb;
+        console.log('search:zoom_changed', search);
+
+        if (!dontCallSearch) {
+            var inputSearchByLocation = $('#searchByLocation');
+            inputSearchByLocation.val(search);
+            inputSearchByLocation.trigger('input');
+        }
+
+    });
+
+//    google.maps.event.addListener(map, 'center_changed', function () {
+//        console.log('center_changed', map.getZoom(), map.getCenter());
+//
+//        //zoom_changed
+//        var location = map.getCenter();
+//        var search = 'z=' +  map.getZoom() + '&ll=' + location.ob + ',' + location.pb;
+//        console.log('search', search);
+//
+//        $('#searchByLocation').val(search);
+//
+//    });
+
+
+    google.maps.event.addListener(map, 'mouseup', function () {
+        console.log('mouseup', map.getZoom(), map.getCenter());
+
+        //zoom_changed
+        var location = map.getCenter();
+        var search = 'z=' +  map.getZoom() + '&ll=' + location.ob + ',' + location.pb;
+        console.log('search:mouseup', search);
+
+        $('#searchByLocation').val(search);
+
+    });
+
+    google.maps.Map.prototype.clearMarkers = function () {
+        for (var i = 0; i < this.markers.length; i++) {
+            this.markers[i].setMap(null);
+        }
+        this.markers = [];
+    };
+
+        } };
+    });

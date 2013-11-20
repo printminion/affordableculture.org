@@ -9,7 +9,7 @@
   <meta charset="utf-8" />
   <meta name="fragment" content="!" />
 
-    <title>Affordable Culture. See more, pay less.</title>
+    <title>Affordable Culture | See more, pay less.</title>
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css"/>
 	<!-- Custom styles for this template -->
     <!-- Bootstrap core CSS -->
@@ -62,37 +62,55 @@
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-
-
-    <ul class="nav navbar-nav navbar-right">
-      <li>
+<ul class="nav navbar-nav navbar-left">
+<li>
      <form class="navbar-form navbar-right" role="search">
       <div class="form-group">
-        <input id="search" type="text" class="form-control" ng-model="keywords" placeholder="desired location" style="width: 357px;">
+        <input id="search" type="text" class="form-control" ng-model="keywords" placeholder="Type in country or city" style="width: 357px;">
       </div>
       <button type="submit" class="btn btn-default" id="countryButton" ng-click="search()">Go!</button>
     </form>
 
+</li>
+</ul>
+
+    <ul class="nav navbar-nav navbar-right">
+      <li>
+
       </li>
         <li>
 
-           <div id="profileInfo" class="navbar-form pull-right">
+           <!-- div id="profileInfo" class="navbar-form pull-right">
                 <span id="signin" ng-show="immediateFailed">
                   <span id="myGsignin"></span>
                 </span>
 
                 <span id="userProfile" ng-show="userProfile">
-                <a target="_blank" href="{{userProfile.googlePublicProfileUrl}}">
-                  <span class="name">{{userProfile.googleDisplayName}}</span>
-                  <img ng-src="{{userProfile.googlePublicProfilePhotoUrl|profilePicture:32}}" />
-                </a>
                  <button class="button danger disconnect btn btn-default" ng-click="disconnect()" style="">
-                   Disconnect
+                     Disconnect
                  </button>
+                 <a target="_blank" href="{{userProfile.googlePublicProfileUrl}}" title="{{userProfile}}">
+                         <span class="name">{{userProfile.googleDisplayName}}</span>
+                         <img ng-src="{{userProfile.googlePublicProfilePhotoUrl|profilePicture:32}}"/>
+                 </a>
                 </span>
-          </div>
+          </div -->
 
 
+      </li>
+        <li class="dropdown" ng-show="immediateFailed">
+            <div id="signin">
+                <span id="myGsignin"></span>
+            </div>
+        </li>
+        <li ng-show="userProfile"><a href="#">My Wishlist</a></li>
+        <li class="dropdown" ng-show="userProfile">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding: 9px;"><img ng-src="{{userProfile.googlePublicProfilePhotoUrl|profilePicture:32}}"/> <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <!--li><a href="#">Settings</a></li-->
+          <!--li class="divider"></li-->
+          <li><a href="#" ng-click="disconnect()">Disconnect</a></li>
+        </ul>
       </li>
     </ul>
 
@@ -106,7 +124,7 @@
 
     <!-- Carousel
     ================================================== -->
-    <div id="map-canvas" class="opacity"></div>
+    <div id="map-canvas" hello-maps="" latitude="43.074688" longitude="-89.384294" class="opacity"></div>
     <div id="myCarousel" class="carousel slide" ng-show="showCarousel">
       <!-- Indicators -->
       <ol class="carousel-indicators">
