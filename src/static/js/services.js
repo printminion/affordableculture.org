@@ -7,7 +7,7 @@ angular.module('affordableCulture.services', [])
         if ($location.port())
           rootUrl += ':' + $location.port();
         return rootUrl;
-      };
+      }
       return {
         'clientId': '538920374889.apps.googleusercontent.com',
         'apiBase': '/api/',
@@ -15,7 +15,8 @@ angular.module('affordableCulture.services', [])
         'scopes': 'https://www.googleapis.com/auth/plus.login ',
         'requestvisibleactions': 'http://schemas.google.com/AddActivity ' +
                 'http://schemas.google.com/ReviewActivity',
-         'cookiepolicy': 'single_host_origin'
+         'cookiepolicy': 'single_host_origin',
+          'mapsAPI': 'https://maps.googleapis.com/maps/api/geocode/json?'
       };
     })
     .factory('AffordableCultureApi', function($http, Conf) {
@@ -66,6 +67,10 @@ angular.module('affordableCulture.services', [])
         searchAttractionsByLocation: function(term) {
             term = decodeURIComponent(term);
           return $http.get(Conf.apiBase + 'attractions?' + term);
+        },
+        searchLocation: function(term) {
+            term = decodeURIComponent(term);
+            return $http.get(Conf.mapsAPI + '&address=' + term + '&sensor=true');
         }
       };
     })

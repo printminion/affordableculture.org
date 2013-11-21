@@ -75,6 +75,21 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
 
   $scope.search = function() {
     //$location.hash('!search/' + $scope.keywords);
+
+    AffordableCultureApi.searchLocation($scope.keywords).then(function(response) {
+       console.log('searchLocation', response);
+        if (response.status != 'OK') {
+            $scope.allAttractions = null;
+            return true;
+        }
+
+        var location =  response.results[0].geometry.location;
+
+        $scope.locationToSearch = 'll=' + location.lat + ',' + location.lng + '&z=10';
+
+    });
+
+
     return;
     AffordableCultureApi.searchAttractions($scope.keywords).then(function(response) {
         //console.log('search', response);
