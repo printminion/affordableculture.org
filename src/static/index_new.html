@@ -131,7 +131,6 @@
         <li data-slide-to="0" class="active"></li>
         <li data-slide-to="1"></li>
 		<li data-slide-to="2"></li>
-		<li data-slide-to="3"></li>
       </ol>
       <div class="carousel-inner">
         <div class="item active">
@@ -141,17 +140,17 @@
         <div class="col-md-4">
           <img class="img-circle" src="/img/san-francisco.jpg">
           <h2>San Francisco</h2>
-          <p><a class="btn btn-default btn-invert" href="#/search/San Francisco">See more &raquo;</a></p>
+          <p><button class="btn btn-default btn-invert" ng-click="setLocationToSearch('z=10&ll=37.7749295,-122.41941550000001')">See more &raquo;</button></p>
         </div><!-- /.col-md-4 -->
         <div class="col-md-4">
           <img class="img-circle" src="/img/new-york.jpg">
           <h2>New York</h2>
-          <p><a class="btn btn-default btn-invert" href="#!/search/New York">See more &raquo;</a></p>
+          <p><button class="btn btn-default btn-invert" ng-click="setLocationToSearch('z=13&ll=40.7143528,-74.0059731')">See more &raquo;</button></p>
         </div><!-- /.col-md-4 -->
         <div class="col-md-4">
           <img class="img-circle" src="/img/los-angeles.jpg">
           <h2>Los Angeles</h2>
-          <p><a class="btn btn-default btn-invert" href="#!/search/Los Angeles">See more &raquo;</a></p>
+          <p><button class="btn btn-default btn-invert" ng-click="setLocationToSearch('z=12&ll=34.0522342,-118.2436849')">See more &raquo;</button></p>
         </div><!-- /.col-md-4 -->
       </div><!-- /.row -->
 	  </div>
@@ -162,19 +161,19 @@
 		  <div class="carousel-caption">
           <div class="row">
         <div class="col-md-4">
-          <img class="img-circle" src="/img/140x140.gif">
-          <h2>Stuttgart</h2>
-          <p><a class="btn btn-default btn-invert" href="#Stuttgart">See more &raquo;</a></p>
+          <img class="img-circle" src="/img/london.jpg">
+          <h2>London</h2>
+          <p><button class="btn btn-default btn-invert"  ng-click="setLocationToSearch('z=11&ll=51.51121389999999,-0.11982439999997041')">See more &raquo;</button></p>
         </div><!-- /.col-md-4 -->
         <div class="col-md-4">
-          <img class="img-circle" src="/img/140x140.gif">
-          <h2>Munich</h2>
-          <p><a class="btn btn-default btn-invert" href="#Munich">See more &raquo;</a></p>
+          <img class="img-circle" src="/img/brussels.jpg">
+          <h2>Brussels</h2>
+          <p><button class="btn btn-default btn-invert"  ng-click="setLocationToSearch('z=13&ll=50.8503396,4.351710300000036')">See more &raquo;</button></p>
         </div><!-- /.col-md-4 -->
         <div class="col-md-4">
-          <img class="img-circle" src="/img/140x140.gif">
-          <h2>Berlin</h2>
-          <p><a class="btn btn-default btn-invert" href="#Berlin">See more &raquo;</a></p>
+          <img class="img-circle" src="/img/paris.jpg">
+          <h2>Paris</h2>
+          <p><button class="btn btn-default btn-invert"  ng-click="setLocationToSearch('z=15&ll=48.856614,2.3522219000000177')">See more &raquo;</button></p>
         </div><!-- /.col-md-4 -->
       </div><!-- /.row -->
           </div>
@@ -185,47 +184,25 @@
             <div class="carousel-caption">
           <div class="row">
         <div class="col-md-4">
-          <img class="img-circle" src="/img/140x140.gif">
-          <h2>London</h2>
-          <p><a class="btn btn-default btn-invert" href="#London">See more &raquo;</a></p>
+          <img class="img-circle" src="/img/moscow.jpg">
+          <h2>Moscow</h2>
+          <p><button class="btn btn-default btn-invert"  ng-click="setLocationToSearch('z=13&ll=55.755826,37.6173')">See more &raquo;</button></p>
         </div><!-- /.col-md-4 -->
         <div class="col-md-4">
-          <img class="img-circle" src="/img/140x140.gif">
-          <h2>Birmingham</h2>
-          <p><a class="btn btn-default btn-invert" href="#Birmingham">See more &raquo;</a></p>
+          <img class="img-circle" src="/img/tokyo.jpg">
+          <h2>Tokyo</h2>
+          <p><button class="btn btn-default btn-invert"  ng-click="setLocationToSearch('z=11&ll=35.6894875,139.69170639999993')">See more &raquo;</button></p>
         </div><!-- /.col-md-4 -->
         <div class="col-md-4">
-          <img class="img-circle" src="/img/140x140.gif">
-          <h2>Glasgow</h2>
-          <p><a class="btn btn-default btn-invert" href="#Glasgow">See more &raquo;</a></p>
+          <img class="img-circle" src="/img/lisbon.jpg">
+          <h2>Lisbon</h2>
+          <p><button class="btn btn-default btn-invert"  ng-click="setLocationToSearch('z=12&ll=38.7252993,-9.150036399999976')">See more &raquo;</button></p>
         </div><!-- /.col-md-4 -->
       </div><!-- /.row -->
           </div>
           </div>
         </div>
-		<div class="item">
-          <div class="container">
-            <div class="carousel-caption">
-          <div class="row">
-        <div class="col-md-4">
-          <img class="img-circle" src="/img/140x140.gif">
-          <h2>Rom</h2>
-          <p><a class="btn btn-default btn-invert" href="#Rom">See more &raquo;</a></p>
-        </div><!-- /.col-md-4 -->
-        <div class="col-md-4">
-          <img class="img-circle" src="/img/140x140.gif">
-          <h2>Florence</h2>
-          <p><a class="btn btn-default btn-invert" href="#Florence">See more &raquo;</a></p>
-        </div><!-- /.col-md-4 -->
-        <div class="col-md-4">
-          <img class="img-circle" src="/img/140x140.gif">
-          <h2>Venice</h2>
-          <p><a class="btn btn-default btn-invert" href="#Venice">See more &raquo;</a></p>
-        </div><!-- /.col-md-4 -->
-      </div><!-- /.row -->
-          </div>
-          </div>
-        </div>
+
       </div>
 
       <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>

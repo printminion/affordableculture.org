@@ -54,6 +54,11 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
   });
 
 
+  $scope.setLocationToSearch = function(location) {
+      console.log('setLocationToSearch', location);
+      $scope.locationToSearch = location;
+  };
+
   $scope.disconnect = function() {
     AffordableCultureApi.disconnect().then(function() {
       $scope.userProfile = undefined;
