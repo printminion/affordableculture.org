@@ -52,52 +52,30 @@
                         <span class="kno-fv"><a href="{{item.website}}" target="_blank" >{{item.website | domain}}</a></span>
                     </div>
                 </div>
-            <a href="{{item.attractionContentUrl}}" title="permalink">#</a>
+
             </div>
-
-
-            <div class="kno-card">
-
-                 <div id="beenhere-share" class="beenhere vote">
-                  <div class="count">{{item.numVotesWantToGo}}</div>
-                  <button class="beenhere-label voteButton voteButtonWantToGo" ng-class="item.voteClass" ng-show="item.canVoteWantToGo">
-                    Been here
-                  </button>
-                </div>
-
-                 <div id="wanttogo-share" class="wanttogo vote">
-                  <div class="count">{{item.numVotesBeenThere}}</div>
-                  <button class="wanttogo-label voteButton voteButtonBeenThere" ng-class="item.voteClass" ng-show="item.canVoteBeenThere">
-                    Want to go
-                  </button>
-                </div>
-            </div>
+            <div style="clear:both;"><!-- --></div>
 
 
             <div id="sharebar" class="kno-card container_12">
 
-        <a id="googleplus-share" class="googleplus" href="#" target="_blank">
-            <img class="googleplus-icon" src="/img/facebook.png">
-        </a>
-        <a id="facebook-share" class="facebook" href="#" onclick="javascript:void window.open('http://www.facebook.com/sharer/sharer.php?u={{item.attractionContentUrl}}','1361370515039','width=650,height=280,toolbar=0,menubar=0,location=0,status=0,scrollbars=0,resizable=1,left=0,top=0');return false;" target="_blank">
-            <img class="facebook-icon" src="/img/facebook.png">
-        </a>
-        <a id="twitter-share" class="twitter" href="#" onclick="javascript:void window.open('http://twitter.com/share?url={{item.attractionContentUrl}}','1361370074860','width=500,height=252,toolbar=0,menubar=0,location=0,status=1,scrollbars=0,resizable=1,left=0,top=0');return false;" target="_blank">
-            <img class="twitter-icon" src="/img/twitter.png">
-        </a>
-        <a id="pinterest-share" class="pinterest" href="#" onclick="javascript:void window.open('http://twitter.com/share?url={{item.attractionContentUrl}}','1361370074860','width=500,height=252,toolbar=0,menubar=0,location=0,status=1,scrollbars=0,resizable=1,left=0,top=0');return false;" target="_blank">
-            <img class="pinterest-icon" src="/img/twitter.png">
-        </a>
-        <!-- a id="beenhere-share" class="beenhere" href="#" target="_blank">
-            <img class="beenhere-icon" src="/img/tumblr.png">
-            <span class="beenhere-label">Been here</span>
-        </a>
-        <a id="wanttogo-share" class="wanttogo" href="#" target="_blank">
-            <img class="wanttogo-icon" src="/img/tumblr.png">
-            <span class="wanttogo-label">Want to go</span>
-        </a -->
+              <span id="googleplus-share" class="g-interactivepost">
+                  <span class="icon">&nbsp;</span>
+                  <span class="glabel">Share</span>
+              </span>
 
+            <a id="facebook-share" class="facebook" href="#" onclick="javascript:void window.open('http://www.facebook.com/sharer/sharer.php?u={{item.attractionContentUrl}}','1361370515039','width=650,height=280,toolbar=0,menubar=0,location=0,status=0,scrollbars=0,resizable=1,left=0,top=0');return false;" target="_blank"><img class="facebook-icon" src="/img/fbshare_button.png"></a>
+            <a id="twitter-share" class="twitter" href="#" onclick="javascript:void window.open('http://twitter.com/share?url={{item.attractionContentUrl}}','1361370074860','width=500,height=252,toolbar=0,menubar=0,location=0,status=1,scrollbars=0,resizable=1,left=0,top=0');return false;" target="_blank"><img class="twitter-icon" src="/img/tweet_button.png"></a>
 
+              <span id="beenhere-share" class="googleplus-share beenhere vote beenhere-label voteButton voteButtonWantToGo" ng-class="item.voteClass" ng-show="item.canVoteWantToGo">
+                  <span class="icon">{{item.numVotesWantToGo}}</span>
+                  <span class="glabel">Been here</span>
+              </span>
+
+               <span id="wanttogo-share" class="googleplus-share wanttogo vote wanttogo-label voteButton voteButtonBeenThere" ng-class="item.voteClass" ng-show="item.canVoteBeenThere">
+                  <span class="icon">{{item.numVotesBeenThere}}</span>
+                  <span class="glabel">Want to go</span>
+              </span>
 
     </div>
 
