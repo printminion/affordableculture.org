@@ -1,5 +1,5 @@
 application: gcdc2013-affordable-culture
-version: 12
+version: 14
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -55,6 +55,10 @@ handlers:
 - url: /
   static_files: static/index_new.html
   upload: static/index_new.html
+
+- url: /admin/.*
+  script: handlers.app
+  login: admin
 
 - url: /.*
   script: handlers.app

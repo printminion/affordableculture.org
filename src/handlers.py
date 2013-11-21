@@ -893,6 +893,9 @@ class InitHandler(JsonRestHandler, SessionEnabledHandler,
         """
         try:
             user = self.get_user_from_session()
+            if not users.is_current_user_admin():
+                self.send_error(500, 'user is not admin')
+                return
             deferred.defer(initAttractions, user=user)
             self.send_success({'result': 'success'})
         except Exception as e:
@@ -990,8 +993,8 @@ def initAttractions(user):
             logging.critical('Missing latlong')
             continue
 
-        if not 'free_time' in attraction:
-            attraction['free_time'] = None
+        if not 'time' in attraction:
+            attraction['time'] = None
         if not 'donation' in attraction:
             attraction['donation'] = None
         if not 'email' in attraction:
@@ -1026,7 +1029,7 @@ def initAttractions(user):
                                     address=attraction['address'],
                                     image=image_url,
                                     location=attraction['latlng'],
-                                    free_time=attraction['free_time'],
+                                    free_time=attraction['time'],
                                     donation=attraction['donation'],
                                     website=attraction['website'],
                                     source=attraction['source'],
