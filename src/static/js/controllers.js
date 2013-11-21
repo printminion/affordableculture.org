@@ -216,8 +216,10 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
       value['voteBeenThereClass'] = [];
       value['voteWantToGoClass'] = [];
 
-      if (!value['thumbnailUrl']) {
-          value['thumbnailUrl'] = 'http://placehold.it/422x160';
+      if (!value['image']) {
+          value['thumbnailUrl'] = '/img/attraction-placeholder.jpg';
+      } else {
+          value['thumbnailUrl'] = value['image'];
       }
 
       if ($scope.hasUserProfile) {

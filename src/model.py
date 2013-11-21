@@ -159,6 +159,7 @@ class Attraction(GeoModel, Jsonifiable):
     #theme_display_name = db.StringProperty()
     image_blob_key = blobstore.BlobReferenceProperty()
     created = db.DateTimeProperty(auto_now_add=True)
+    image = db.StringProperty()
 
     url_wikipedia = db.LinkProperty()
     url_gpl = db.LinkProperty()

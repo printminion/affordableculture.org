@@ -999,6 +999,10 @@ def initAttractions(user):
 
         approved = True
 
+        image_url = None
+        if 'image' in attraction:
+            image_url = 'https://googledrive.com/host/0B5iM8D_nB-PYcWllN3pNaHZiQWM/%s' % attraction['image']
+
         #uploads = self.get_uploads('image')
         #blob_info = uploads[0]
         try:
@@ -1020,6 +1024,7 @@ def initAttractions(user):
                                     # Group affiliation
                                     #category = attraction['category'),
                                     address=attraction['address'],
+                                    image=image_url,
                                     location=attraction['latlng'],
                                     free_time=attraction['free_time'],
                                     donation=attraction['donation'],
