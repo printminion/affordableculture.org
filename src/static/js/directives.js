@@ -57,7 +57,7 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
             'clientid': Conf.clientId,
             'contenturl': scope.item.attractionContentUrl,
             'contentdeeplinkid': '/?id=' + scope.item.id,
-            'prefilltext': 'Having fun doesn’t require a lot of money! * '
+            'prefilltext': 'Having fun doesn’t require a lot of money! *'
                 + scope.item.name + '* is just one of many hundreds of affordable attractions to explore.\n'
                 +'Visit AffordableCulture.org to discover the world\'s most memorable yet absolutely free ' +
                 'cultural experiences at your fingertips. #affordableculture',
