@@ -28,7 +28,7 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 from webapp2_extras import sessions
 from google.appengine.ext import deferred
-
+from google.appengine.api import memcache
 from google.appengine.api import users
 from geosearch import SearchAttractionsService
 
@@ -687,8 +687,10 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
             self.send_success(attractions, jsonkind='affcult#attractions')
 
         except TypeError as te:
+            logging.error(te.message)
             self.send_error(404, "Resource not found")
         except UserNotAuthorizedException as e:
+            logging.error(e.message)
             self.send_error(401, e.msg)
 
     @cached(time=3600)
@@ -708,6 +710,10 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
 
     def populateVotes(self, attractions, user_id=None):
         user = None
+
+        if len(attractions) == 0:
+            return
+
         if self.session.get(self.CURRENT_USER_SESSION_KEY) is not None:
             user = self.get_user_from_session()
             if not user_id:
@@ -916,27 +922,40 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
         queryVotes.filter("owner_user_id =", user.key().id()).run()
         num_votes_want_to_go = list(queryVotes.run())
 
+        logging.info('user:%s has %s woanttogoes' % (user.key().id(), len(num_votes_want_to_go)))
+
+        if len(num_votes_want_to_go) == 0:
+            return []
+
         attractions_votes_want_to_go = []
+        attractions_votes_want_to_go_keys = []
+        attractions_want_to_go = []
 
         #self.send_success(num_votes_want_to_go)
         #return
         #get attractions id
         for vote in num_votes_want_to_go:
             attractions_votes_want_to_go.append(vote.attraction_id)
+            attraction = model.Attraction().get_by_id(vote.attraction_id)
+            attractions_want_to_go.append(attraction)
+            logging.info('key:%s' % attraction.key())
+            #attractions_votes_want_to_go_keys.append(key)
 
-        attractions_want_to_go = []
-        #logging.info(attractions_votes_want_to_go)
-
-        query = model.Attraction.all()
-        attractions = list(query.run())
-        #logging.info('attractions:%s' % attractions)
-        for attraction in attractions:
-            #logging.info('check:%s' % attraction.key().id())
-            if attraction.key().id() in attractions_votes_want_to_go:
-                #logging.info('found:%s' % attraction.key().id())
-                attractions_want_to_go.append(attraction)
+        logging.info(attractions_want_to_go)
 
         return attractions_want_to_go
+
+
+#        query = model.Attraction.all()
+#        attractions = list(query.run())
+#        #logging.info('attractions:%s' % attractions)
+#        for attraction in attractions:
+#            #logging.info('check:%s' % attraction.key().id())
+#            if attraction.key().id() in attractions_votes_want_to_go:
+#                #logging.info('found:%s' % attraction.key().id())
+#                attractions_want_to_go.append(attraction)
+#
+#        return attractions_want_to_go
 
 
 class InitHandler(JsonRestHandler, SessionEnabledHandler,
@@ -948,7 +967,7 @@ class InitHandler(JsonRestHandler, SessionEnabledHandler,
       GET /api/categories
     """
 
-    def get(self):
+    def post(self):
         """Exposed as `GET /api/categories`.
 
         When requested, if no theme exists for the current day, then a theme with
@@ -1243,9 +1262,23 @@ class VotesHandler(JsonRestHandler, SessionEnabledHandler):
                     elif request['vote'] == 'beenThere':
                         attraction.voted_been_there = True
 
+                    ###################################
+                    #refreshing memcache
+                    key = 'searchByWantToGo_AttractionsHandler_%s' % user.key().id()
+                    val = memcache.get(key)
+
+                    if not val:
+                        val = [attraction]
+                    else:
+                        val.append(attraction)
+                    memcache.replace(key, val, time=3600)
+                    #
+                    ###################################
+
                     try:
                         self.add_attraction_to_google_plus_activity(user, attraction)
                     except Exception as e:
+                        logging.error(e.message)
                         logging.critical('Failed to add_attraction_to_google_plus_activity: %s' % e)
 
                     self.send_success(attraction)
@@ -1301,8 +1334,8 @@ class SchemaHandler(JsonRestHandler, SessionEnabledHandler):
                 self.response.out.write(template.render({
                     'attractionId': attraction_id,
                     'redirectUrl': 'index.html?attractionId={}&ll={},{}&z=10'.format(attraction_id
-                        , attraction.location.lat
-                        , attraction.location.lon),
+                            , attraction.location.lat
+                            , attraction.location.lon),
                     'name': u'%s | Affordable Culture' % attraction.name,
                     'imageUrl': imageUrl,
                     'description': u'Learn more about when you can visit %s for free.' % attraction.name
@@ -1366,6 +1399,7 @@ def get_login_logout_context(target_url):
 
 routes = [
     ('/admin/init', InitHandler),
+    ('/admin/attractions/add', AdminAttractionHandler),
     ('/api/connect', ConnectHandler),
     ('/api/disconnect', DisconnectHandler),
     ('/api/categories', CategoriesHandler),
@@ -1373,7 +1407,7 @@ routes = [
     ('/api/votes', VotesHandler),
     ('/api/friends', FriendsHandler),
     ('/api/images', ImageHandler),
-    ('/admin/attractions/add', AdminAttractionHandler),
+
     ('/attraction.html', SchemaHandler),
     ('/invite.html', SchemaHandler)
 ]
