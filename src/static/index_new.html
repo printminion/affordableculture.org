@@ -100,10 +100,11 @@
       </div>
     </div>
 
+    <input id="searchByLocation" value="" ng-model="locationToSearch" ng-change="searchByLocation" type="text" style="display: none"/>
+    <div id="map-canvas" hello-maps="" latitude="43.074688" longitude="-89.384294" class="opacity"></div>
 
     <!-- Carousel
     ================================================== -->
-    <div id="map-canvas" hello-maps="" latitude="43.074688" longitude="-89.384294" class="opacity"></div>
     <div id="myCarousel" class="carousel slide" ng-show="showCarousel">
       <!-- Indicators -->
       <!-- <ol class="carousel-indicators">
@@ -189,11 +190,9 @@
       <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
     </div><!-- /.carousel -->
 
-    <!-- Wrap the rest of the page in another container to center all the content. -->
 
-    <input id="searchByLocation" value="" ng-model="locationToSearch" ng-change="searchByLocation" type="text" style="display: none"/>
 
-    <div class="container" style="top: 425px;position: relative;">
+    <div class="container" style="top: 525px;position: absolute;">
 
         <div id="allAttractions" class="contentGroup" ng-show="allAttractions.length">
           <ul id="allAttractions">
@@ -202,7 +201,6 @@
             </li>
           </ul>
         </div>
-    </div>
 
 
     <section id="section-2" class="container" ng-hide="allAttractions">
@@ -225,7 +223,7 @@
 	</section>
 
 
-    <section id="section-2" style="top: 425px; position: relative;">
+    <section id="section-2">
 		<center>
 			<div class="container_27 clearfix">
 				<div class="grid_21 prefix_3 suffix_3">
@@ -237,6 +235,11 @@
 			</div>
 		</center>
 	</section>
+
+
+
+    </div>
+
 
 
 

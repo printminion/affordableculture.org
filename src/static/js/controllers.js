@@ -96,6 +96,10 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
         $scope.allAttractions = $scope.adaptAttractions(response.data);
 
         $scope.populateResults(response);
+    },function(response){
+        $scope.allAttractions = null;
+        $scope.showCarousel = true;
+        console.log('error:', response);
     });
   };
 
