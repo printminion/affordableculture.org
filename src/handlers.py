@@ -599,21 +599,26 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
 
             #do geocaching
             if search:
-                logging.info('geocoding...')
-                geocoding = GoogleGeoCodingAPI()
-                result = geocoding.doGeocode(search)
-                result = json.loads(result)
+                result = None
+                try:
+                    logging.info('geocoding...')
+                    geocoding = GoogleGeoCodingAPI()
+                    result = geocoding.doGeocode(search)
+                    geocodedLocation = json.loads(result)
 
-                if result['status'] != "OK":
-                    self.send_error(404, 'failed to get location. Status:%s' % result['status'])
+                    if geocodedLocation['status'] != "OK":
+                        self.send_error(404, 'failed to get location. Status:%s' % geocodedLocation['status'])
 
-                if not 'results' in result:
-                    self.send_error(404, 'failed to get location')
+                    if not 'results' in geocodedLocation:
+                        self.send_error(404, 'failed to get location')
 
-                #override latlong
-                latlong = '%s,%s' % (result['results'][0]['geometry']['location']['lat'], result['results'][0]['geometry']['location']['lng'])
+                    #override latlong
+                    latlong = '%s,%s' % (geocodedLocation['results'][0]['geometry']['location']['lat'], geocodedLocation['results'][0]['geometry']['location']['lng'])
 
-                logging.info('latlong:%s' % latlong)
+                    logging.info('latlong:%s' % latlong)
+                except Exception as e:
+                    logging.fatal('Failed to geocode:%s' % result)
+                    self.send_error(500, 'Failed to geocode')
 
             #get by attractions id
             if attraction_id:
