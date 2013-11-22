@@ -937,9 +937,11 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
         for vote in num_votes_want_to_go:
             attractions_votes_want_to_go.append(vote.attraction_id)
             attraction = model.Attraction().get_by_id(vote.attraction_id)
-            attractions_want_to_go.append(attraction)
-            logging.info('key:%s' % attraction.key())
-            #attractions_votes_want_to_go_keys.append(key)
+
+            if attraction:
+                attractions_want_to_go.append(attraction)
+                logging.info('key:%s' % attraction.key())
+                #attractions_votes_want_to_go_keys.append(key)
 
         logging.info(attractions_want_to_go)
 
