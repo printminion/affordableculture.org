@@ -396,9 +396,11 @@ class DisconnectHandler(JsonRestHandler, SessionEnabledHandler):
         throws RevokeException error occurred while making request.
         """
         url = TOKEN_REVOKE_ENDPOINT % credentials.access_token
+        logging.debug('url:%s' % url)
         http = httplib2.Http()
         credentials.authorize(http)
         result = http.request(url, 'GET')[0]
+        logging.debug('result:%s' % result)
 
         if result['status'] != '200':
             raise RevokeException
