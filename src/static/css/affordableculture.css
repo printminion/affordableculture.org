@@ -967,3 +967,8 @@ border-color: #333333;
   #facebook-share img, #twitter-share img {
       margin-top: -3px;
   }
+
+ #myModal .modal-dialog {
+
+     width: 832px;
+ }

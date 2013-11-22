@@ -75,6 +75,8 @@
 </ul>
 
     <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" data-toggle="modal" data-target="#myModal">About</a></li>
+
         <li class="dropdown" ng-show="immediateFailed">
             <div id="signin">
                 <span id="myGsignin"></span>
@@ -104,11 +106,11 @@
     <div id="map-canvas" hello-maps="" latitude="43.074688" longitude="-89.384294" class="opacity"></div>
     <div id="myCarousel" class="carousel slide" ng-show="showCarousel">
       <!-- Indicators -->
-      <ol class="carousel-indicators">
+      <!-- <ol class="carousel-indicators">
         <li data-slide-to="0" class="active"></li>
         <li data-slide-to="1"></li>
 		<li data-slide-to="2"></li>
-      </ol>
+      </ol>-->
       <div class="carousel-inner">
         <div class="item active">
           <div class="container">
@@ -182,6 +184,7 @@
 
       </div>
 
+
       <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
       <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
     </div><!-- /.carousel -->
@@ -210,6 +213,19 @@
 
 	<div class="profile-list-area"></div>
 
+    <section id="section-2" class="container" ng-show="!allAttractions.length">
+		<center>
+			<div class="container_27 clearfix">
+				<div class="grid_21 prefix_3 suffix_3">
+					<div class="subheading" style="margin-top:15px">
+                        We are constantly adding new museums to our website.
+                        Been somewhere cool that’s not yet on the list? Please <a href="#" data-toggle="modal" data-target="#myModal">let us know</a>. Thank you!
+					</div>
+				</div>
+			</div>
+		</center>
+	</section>
+
     <div id="allAttractions" class="contentGroup" ng-show="allAttractions.length">
       <ul id="allAttractions">
         <li ng-repeat="attraction in allAttractions|orderBy:ordering" id="rhs">
@@ -220,6 +236,37 @@
 
 
     </div><!-- /.container -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">About</h4>
+      </div>
+      <div class="modal-body">
+
+<p>Traveling or a day out near home? Would exploring museums, galleries and other attractions be something you'd like to do while on weekend, holiday or vacation? Have you found that it can be too expensive? Find out where you and your family can enjoy free admission to top attractions. Whether you want to see an original Picasso, check out the history of toys or find out about forensics, there are great places  to suit all tastes. Having fun doesn’t require a lot of money! See? ;)</p>
+
+<p>Affordable Culture provides up-to-date free admission information for top museums, galleries, factory tours, zoos and gardens in major cities around the world (500 attractions in more than 190 cities in 28 countries and counting) available at your fingertips. Users can browse museums by city or country, view museum details and find the museum on Google Maps. Feel free to share your own museum experience right on the site by marking places you’ve been to or would like to visit in the future. Get the most of your vacation and use the power of knowledge to save money on your next holiday.</p>
+
+<p>We are constantly adding new free attractions to our website. Been somewhere cool that’s not yet on the list? Please let us know using the form below. Thank you!</p>
+
+<iframe src="https://docs.google.com/forms/d/1WOhXnFdDja1NEcsHuBK2GM-6tD-vu_dGcqsoi_ahfdA/viewform?embedded=true" width="760" height="380" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+
+<p>Please note that the information was accurate when it was published but can change without notice. We do our best to keep the information up to date but we can’t guarantee 100% accuracy. Please be sure to confirm all rates and details directly with the individual attractions in question prior to making travel or visit plans.</p>
+
+<p>P.S. While everybody loves things being free, we also appreciate what it takes to make them free. Often, small organizations rely on donations to keep the doors open and the admission free. If you happen to have some extra money and thought the place was worth it, don't hesitate to fill up that donation box.</p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
   <!-- FOOTER -->
   <!--footer class="bs-footer">

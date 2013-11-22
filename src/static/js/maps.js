@@ -9,6 +9,7 @@ var mapObj = 33;
 var dontCallSearch = false;
 
 var ignoreZoomEvent = false;
+var infoWindows = [];
 
 function initialize() {
     var mapOptions = {
@@ -117,9 +118,12 @@ function addMarker(neighborhood, attraction, selectedAttractionId) {
         markerData['icon'] = '/img/beachflag.png';
     }
     var marker = new google.maps.Marker(markerData);
-    var infowindow = new google.maps.InfoWindow();
+
 
     google.maps.event.addListener(marker, 'click', function () {
+        closeAllInfoWindows();
+        var infowindow = new google.maps.InfoWindow();
+        infoWindows.push(infowindow);
         infowindow.setContent(attraction.name + "<br>" + attraction.address);
         infowindow.open(map, this);
     });
@@ -127,5 +131,10 @@ function addMarker(neighborhood, attraction, selectedAttractionId) {
     markers.push(marker);
 }
 
+function closeAllInfoWindows() {
+  for (var i=0;i<infoWindows.length;i++) {
+     infoWindows[i].close();
+  }
+}
 
 //google.maps.event.addDomListener(window, 'load', initialize);
