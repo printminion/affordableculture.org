@@ -51,3 +51,25 @@ def cached(func, *args, **kwargs):
         return val
         
     return wrapper
+
+@decorator_with_args
+def invalidate(func, *args, **kwargs):
+    """
+    Caches the result of a method for a specified time in seconds
+
+    Use it as:
+
+      @cached(time=1200)
+      def functionToCache(arguments):
+
+    """
+    def wrapper(*pars):
+        key = func.__name__ + '_' + '_'.join([str(par) for par in pars])
+        val = memcache.get(key)
+        logging.info('Cache lookup for %s, found: %s', key, val != None)
+        if not val:
+            val = func(*pars)
+            memcache.delete_multi(key)
+        return val
+
+    return wrapper
