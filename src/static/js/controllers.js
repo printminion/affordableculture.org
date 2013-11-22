@@ -93,9 +93,15 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
 
     AffordableCultureApi.getAttractionsByWantToGo().then(function(response) {
         //console.log('searchAttractions', response);
-        $scope.allAttractions = $scope.adaptAttractions(response.data);
 
-        $scope.populateResults(response);
+        if (response.data.length) {
+            $scope.allAttractions = $scope.adaptAttractions(response.data);
+            $scope.populateResults(response);
+        } else {
+            $scope.allAttractions = null;
+            $scope.showCarousel = true;
+        }
+
     },function(response){
         $scope.allAttractions = null;
         $scope.showCarousel = true;
