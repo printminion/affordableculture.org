@@ -15,13 +15,13 @@ def decorator_with_args(decorator_to_enhance):
     """
 
     # We use the same trick we did to pass arguments
-    def decorator_maker(*args, **kwargs) :
+    def decorator_maker(*args, **kwargs):
 
         # We create on the fly a decorator that accepts only a function
         # but keeps the passed arguments from the maker .
-        def decorator_wrapper(func) :
+        def decorator_wrapper(func):
 
-            # We return the result of the original decorator, which, after all, 
+            # We return the result of the original decorator, which, after all,
             # IS JUST AN ORDINARY FUNCTION (which returns a function).
             # Only pitfall : the decorator must have this specific signature or it won't work :
             return decorator_to_enhance(func, *args, **kwargs)
@@ -44,7 +44,7 @@ def cached(func, *args, **kwargs):
     def wrapper(*pars):
         key = func.__name__ + '_' + '_'.join([str(par) for par in pars])
         val = memcache.get(key)
-        logging.debug('Cache lookup for %s, found: %s', key, val != None)
+        logging.info('Cache lookup for %s, found: %s', key, val != None)
         if not val:
             val = func(*pars)
             memcache.set(key, val, time=kwargs['time'])

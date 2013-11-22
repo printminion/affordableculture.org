@@ -84,6 +84,20 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
     });
   };
 
+
+  $scope.getAttractionsByWantToGo = function() {
+    //$location.hash('!search/' + $scope.keywords);
+    $scope.keywords = ''
+
+    AffordableCultureApi.getAttractionsByWantToGo().then(function(response) {
+        //console.log('searchAttractions', response);
+        $scope.allAttractions = $scope.adaptAttractions(response.data);
+
+        $scope.populateResults(response);
+    });
+  };
+
+
   $scope.searchByLocation = function() {
     //$location.hash('!search/' + $scope.keywords);
     console.log('$scope.searchByLocation', $scope.locationToSearch, $scope.$$phase);

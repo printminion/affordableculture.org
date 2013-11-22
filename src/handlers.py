@@ -543,6 +543,8 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
       POST /api/attractions
       DELETE /api/attractions?attractionId=1234
     """
+    def __repr__(self):
+        return 'AttractionsHandler'
 
     def get(self):
         """Exposed as `GET /api/attractions`.
@@ -596,6 +598,7 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
 
             user_id = self.request.get('userId')
             show_friends = bool(self.request.get('friends'))
+            wantToGo = self.request.get('wantToGo')
 
             #do geocaching
             if search:
@@ -619,7 +622,7 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                 except Exception as e:
                     logging.fatal('Failed to geocode:%s' % result)
                     self.send_error(500, 'Failed to geocode')
-
+                    return
             #get by attractions id
             if attraction_id:
                 attraction = self.searchByAttractionId(long(attraction_id))
@@ -638,26 +641,41 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                     self.populateVotes(attractions, user_id)
                     self.send_success(attractions, jsonkind='affcult#attractions')
                 else:
-                    self.send_success(attractions)
+                    self.send_error('failed to get attractions')
                 return
 
-            #get by attractions id
-            if user_id:
-                if user_id == 'me':
+            if wantToGo:
+                user = None
+                if wantToGo == 'me':
                     user = self.get_user_from_session()
                 else:
                     user = model.User.get_by_id(long(user_id))
 
-                if show_friends:
-                    user = self.get_user_from_session()
-                    friends = user.get_friends()
-                    if len(friends) > 0:
-                        query = query.filter('owner_user_id in', friends[0:30])
-                    else:
-                        self.send_success([])
-                        return
-                else:
-                    query = query.filter('owner_user_id =', user.key().id())
+                user_id = user.key().id()
+
+                attractions = self.searchByWantToGo(user_id)
+                #logging.info('attractions:%s' % attractions)
+                self.populateVotes(attractions, user_id)
+                self.send_success(attractions, jsonkind='affcult#attractions')
+                return
+
+            #get by attractions id
+            # if user_id:
+            #     if user_id == 'me':
+            #         user = self.get_user_from_session()
+            #     else:
+            #         user = model.User.get_by_id(long(user_id))
+            #
+            #     if show_friends:
+            #         user = self.get_user_from_session()
+            #         friends = user.get_friends()
+            #         if len(friends) > 0:
+            #             query = query.filter('owner_user_id in', friends[0:30])
+            #         else:
+            #             self.send_success([])
+            #             return
+            #     else:
+            #         query = query.filter('owner_user_id =', user.key().id())
 
             #get by category id
             if category_id:
@@ -673,7 +691,7 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
         except UserNotAuthorizedException as e:
             self.send_error(401, e.msg)
 
-    @cached("geocode", time=3600)
+    @cached(time=3600)
     def searchByLatong(self, latlong):
         latlong = latlong.split(',')
         params = {'lat': latlong[0],
@@ -700,13 +718,11 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
             query.filter("owner_user_id =", user.key().id()).run()
         num_votes_want_to_go = list(query.run())
 
-
         query = model.VoteBeenHere.all()
         if user:
             query.filter("owner_user_id =", user.key().id())
 
         num_votes_been_there = list(query.run())
-
 
         photo_votes_want_to_go = []
         photo_votes_been_there = []
@@ -717,11 +733,11 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
         for vote in num_votes_been_there:
             photo_votes_been_there.append(vote.attraction_id)
 
-        logging.critical(num_votes_want_to_go)
-        logging.critical(photo_votes_been_there)
+        #logging.info(num_votes_want_to_go)
+        #logging.info(photo_votes_been_there)
 
-        logging.critical(photo_votes_want_to_go)
-        logging.critical(photo_votes_been_there)
+        #logging.info(photo_votes_want_to_go)
+        #logging.info(photo_votes_been_there)
 
         for attraction in attractions:
             attraction.voted_want_to_go = attraction.key().id() in photo_votes_want_to_go
@@ -813,8 +829,7 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                                         donation=self.request.get('donation'),
                                         website=self.request.get('website'),
                                         source=self.request.get('source'),
-                                        email=self.request.get('email')
-                )
+                                        email=self.request.get('email'))
                 attraction.update_location()
                 attraction.put()
                 logging.debug('redirect:/api/attractions?attractionId=')
@@ -887,9 +902,41 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
         return plus.moments().insert(userId='me', collection='vault',
                                      body=activity).execute()
 
-    @cached("geocode", time=3600)
+    @cached(time=3600)
     def searchByAttractionId(self, attraction_id):
         return model.Attraction.get_by_id(attraction_id)
+
+    @cached(time=3600)
+    def searchByWantToGo(self, user_id):
+        logging.info('searchByWantToGo:%s' % user_id)
+
+        user = model.User.get_by_id(long(user_id))
+
+        queryVotes = model.VoteWantToGo.all()
+        queryVotes.filter("owner_user_id =", user.key().id()).run()
+        num_votes_want_to_go = list(queryVotes.run())
+
+        attractions_votes_want_to_go = []
+
+        #self.send_success(num_votes_want_to_go)
+        #return
+        #get attractions id
+        for vote in num_votes_want_to_go:
+            attractions_votes_want_to_go.append(vote.attraction_id)
+
+        attractions_want_to_go = []
+        #logging.info(attractions_votes_want_to_go)
+
+        query = model.Attraction.all()
+        attractions = list(query.run())
+        #logging.info('attractions:%s' % attractions)
+        for attraction in attractions:
+            #logging.info('check:%s' % attraction.key().id())
+            if attraction.key().id() in attractions_votes_want_to_go:
+                #logging.info('found:%s' % attraction.key().id())
+                attractions_want_to_go.append(attraction)
+
+        return attractions_want_to_go
 
 
 class InitHandler(JsonRestHandler, SessionEnabledHandler,
