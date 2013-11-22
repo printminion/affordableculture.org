@@ -77,44 +77,10 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
     //$location.hash('!search/' + $scope.keywords);
 
     AffordableCultureApi.searchAttractions($scope.keywords).then(function(response) {
-        //console.log('search', response);
-
-
+        //console.log('searchAttractions', response);
         $scope.allAttractions = $scope.adaptAttractions(response.data);
-        neighborhoods = [];
 
-        if ($scope.allAttractions) {
-
-            $('#map-canvas').removeClass('opacity');
-
-            $scope.showCarousel = false;
-
-
-            //map.clearOverlays();
-            var bounds = new google.maps.LatLngBounds();
-
-            angular.forEach(response.data, function(value, key) {
-                  if (value['location']) {
-
-                    var marker = new google.maps.LatLng(value['location']['lat'], value['location']['lon']);
-
-                    neighborhoods.push(marker);
-
-                    bounds.extend(marker);
-
-                }
-            });
-
-            map.fitBounds(bounds);
-            dropMarkers();
-
-        } else {
-            $('#map-canvas').addClass('opacity');
-            $scope.showCarousel = true;
-        }
-
-
-        //console.log('$scope.allAttractions', $scope.allAttractions);
+        $scope.populateResults(response);
     });
   };
 
@@ -123,56 +89,59 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
     console.log('$scope.searchByLocation', $scope.locationToSearch, $scope.$$phase);
 
     AffordableCultureApi.searchAttractionsByLocation($scope.locationToSearch).then(function(response) {
-        console.log('searchAttractionsByLocation', response);
-
-
+        //console.log('searchAttractionsByLocation', response);
         $scope.allAttractions = $scope.adaptAttractions(response.data);
-        neighborhoods = [];
 
-        if ($scope.allAttractions) {
-
-            $('#map-canvas').removeClass('opacity');
-
-            $scope.showCarousel = false;
-
-
-            //map.clearOverlays();
-            var bounds = new google.maps.LatLngBounds();
-
-            angular.forEach(response.data, function(value, key) {
-                  if (value['location']) {
-
-                    var marker = new google.maps.LatLng(value['location']['lat'], value['location']['lon']);
-
-                    neighborhoods.push(marker);
-
-                    bounds.extend(marker);
-
-                }
-            });
-
-            if (neighborhoods.length) {
-                ignoreZoomEvent = true;
-
-                map.fitBounds(bounds);
-
-
-
-                for (var i = 0; i < neighborhoods.length; i++) {
-                    addMarker(neighborhoods[i], $scope.allAttractions[i], $scope.selectedAttractionId);
-                }
-
-            }
-
-
-        } else {
-            $('#map-canvas').addClass('opacity');
-            $scope.showCarousel = true;
-        }
-
+        $scope.populateResults(response);
 
         //console.log('$scope.allAttractions', $scope.allAttractions);
     });
+  };
+
+  $scope.populateResults = function(response) {
+        neighborhoods = [];
+
+        if (!$scope.allAttractions) {
+            $('#map-canvas').addClass('opacity');
+            $scope.showCarousel = true;
+            return;
+        }
+
+        $('#map-canvas').removeClass('opacity');
+
+        $scope.showCarousel = false;
+
+
+        //map.clearOverlays();
+        var bounds = new google.maps.LatLngBounds();
+
+        angular.forEach(response.data, function(value, key) {
+              if (value['location']) {
+
+                var marker = new google.maps.LatLng(value['location']['lat'], value['location']['lon']);
+
+                neighborhoods.push(marker);
+
+                bounds.extend(marker);
+
+            }
+        });
+
+        if (neighborhoods.length) {
+            ignoreZoomEvent = true;
+
+            map.fitBounds(bounds);
+
+
+
+            for (var i = 0; i < neighborhoods.length; i++) {
+                addMarker(neighborhoods[i], $scope.allAttractions[i], $scope.selectedAttractionId);
+            }
+
+        }
+
+
+
   };
 
   // methods
