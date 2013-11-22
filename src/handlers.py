@@ -32,6 +32,9 @@ from google.appengine.ext import deferred
 from google.appengine.api import users
 from geosearch import SearchAttractionsService
 
+from kupriyanov.geocoding.GoogleGeoCodingAPI import GoogleGeoCodingAPI
+from kupriyanov.caching.gae_memcache_decorator import cached
+
 JINJA_ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(
         os.path.join(os.path.dirname(__file__), 'templates')),
@@ -594,34 +597,38 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
             user_id = self.request.get('userId')
             show_friends = bool(self.request.get('friends'))
 
-            if search or category_id:
-                attractions = list(query.run(limit=5))
-                self.populateVotes(attractions, user_id)
-                self.send_success(attractions, jsonkind='affcult#attractions')
-                return
+            #do geocaching
+            if search:
+                logging.info('geocoding...')
+                geocoding = GoogleGeoCodingAPI()
+                result = geocoding.doGeocode(search)
+                result = json.loads(result)
+
+                if result['status'] != "OK":
+                    self.send_error(404, 'failed to get location. Status:%s' % result['status'])
+
+                if not 'results' in result:
+                    self.send_error(404, 'failed to get location')
+
+                #override latlong
+                latlong = '%s,%s' % (result['results'][0]['geometry']['location']['lat'], result['results'][0]['geometry']['location']['lng'])
+
+                logging.info('latlong:%s' % latlong)
 
             #get by attractions id
             if attraction_id:
-                attraction = model.Attraction.get_by_id(long(attraction_id))
+                attraction = self.searchByAttractionId(long(attraction_id))
 
                 if attraction.approved:
-                    self.send_success([attraction])
+                    attractions = [attraction]
+                    self.populateVotes(attractions, user_id)
+                    self.send_success(attractions)
                 else:
                     self.send_error(404, 'location is not approved')
                 return
 
             if latlong:
-                latlong = latlong.split(',')
-                params = {'lat': latlong[0],
-                          'lon': latlong[1],
-                          'maxresults': 10,
-                          'maxdistance': None,
-                          'category': None
-                        }
-
-                search = SearchAttractionsService()
-                attractions = search.search(query_type='proximity', params=params)
-
+                attractions = self.searchByLatong(latlong)
                 if attractions:
                     self.populateVotes(attractions, user_id)
                     self.send_success(attractions, jsonkind='affcult#attractions')
@@ -660,6 +667,21 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
             self.send_error(404, "Resource not found")
         except UserNotAuthorizedException as e:
             self.send_error(401, e.msg)
+
+    @cached("geocode", time=3600)
+    def searchByLatong(self, latlong):
+        latlong = latlong.split(',')
+        params = {'lat': latlong[0],
+                  'lon': latlong[1],
+                  'maxresults': 10,
+                  'maxdistance': None,
+                  'category': None
+                }
+
+        search = SearchAttractionsService()
+        attractions = search.search(query_type='proximity', params=params)
+
+        return attractions
 
     def populateVotes(self, attractions, user_id=None):
         user = None
@@ -859,6 +881,10 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
             http = user.google_credentials.authorize(http)
         return plus.moments().insert(userId='me', collection='vault',
                                      body=activity).execute()
+
+    @cached("geocode", time=3600)
+    def searchByAttractionId(self, attraction_id):
+        return model.Attraction.get_by_id(attraction_id)
 
 
 class InitHandler(JsonRestHandler, SessionEnabledHandler,

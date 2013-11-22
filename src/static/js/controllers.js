@@ -1,6 +1,6 @@
 'use strict';
 
-function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, AffordableCultureApi) {
+function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $templateCache, Conf, AffordableCultureApi) {
 
   $scope.$route = $route;
   $scope.$location = $location;
@@ -76,21 +76,6 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
   $scope.search = function() {
     //$location.hash('!search/' + $scope.keywords);
 
-    AffordableCultureApi.searchLocation($scope.keywords).then(function(response) {
-       console.log('searchLocation', response);
-        if (response.status != 'OK') {
-            $scope.allAttractions = null;
-            return true;
-        }
-
-        var location =  response.results[0].geometry.location;
-
-        $scope.locationToSearch = 'll=' + location.lat + ',' + location.lng + '&z=10';
-
-    });
-
-
-    return;
     AffordableCultureApi.searchAttractions($scope.keywords).then(function(response) {
         //console.log('search', response);
 
@@ -409,6 +394,23 @@ function AffordableCultureCtrl($scope, $route, $routeParams, $location, Conf, Af
       'theme': 'dark',
       'cookiepolicy': Conf.cookiepolicy,
       'accesstype': 'offline'
+    });
+  };
+
+  $scope.fetch = function(method, url) {
+    $scope.code = null;
+    $scope.response = null;
+
+    $http({method: method, url: url, cache: $templateCache}).
+      success(function(data, status) {
+        console.log('success', status, data);
+        $scope.status = status;
+        $scope.data = data;
+      }).
+      error(function(data, status) {
+        console.log('error', status, data);
+        $scope.data = data || "Request failed";
+        $scope.status = status;
     });
   };
   

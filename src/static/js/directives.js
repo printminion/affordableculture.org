@@ -201,6 +201,10 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
             inputSearchByLocation.trigger('input');
         }
 
+        var inputSearch = $('#search');
+            inputSearch.trigger('input');
+
+
     });
 
    google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
