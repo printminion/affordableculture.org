@@ -36,8 +36,6 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
 
   $scope.showCarousel = true;
 
-
-
   $scope.keywords = undefined;
 
   $scope.$on('$routeChangeStart', function(next, current) {
@@ -242,6 +240,17 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
     });
     return newArray;
   };
+
+
+  $scope.goHome = function() {
+    console.log('goHome');
+
+    $scope.showCarousel = true;
+
+    $scope.userAttractions = null;
+    $scope.allAttractions = null;
+  };
+
 
   $scope.getUserAttractions = function() {
     if ($scope.hasUserProfile && ($scope.categories.length > 0)) {
