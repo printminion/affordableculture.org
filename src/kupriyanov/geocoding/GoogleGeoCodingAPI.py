@@ -21,6 +21,8 @@ class GoogleGeoCodingAPI(object):
         Constructor
         '''
         pass
+    def __repr__(self):
+        return 'GoogleGeoCodingAPI'
 
     @cached("geocode", time=3600)
     def doGeocode(self, location):

@@ -325,7 +325,7 @@ class ConnectHandler(JsonRestHandler, SessionEnabledHandler):
                 self.send_success(user)
                 return
             except Exception as e:
-                #self.send_error(401, 'Failed to exchange the authorization code.')
+                self.send_error(401, 'Failed to exchange the authorization code.')
                 pass
 
         credentials = None
@@ -611,9 +611,11 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
 
                     if geocodedLocation['status'] != "OK":
                         self.send_error(404, 'failed to get location. Status:%s' % geocodedLocation['status'])
+                        return
 
                     if not 'results' in geocodedLocation:
                         self.send_error(404, 'failed to get location')
+                        return
 
                     #override latlong
                     latlong = '%s,%s' % (geocodedLocation['results'][0]['geometry']['location']['lat'], geocodedLocation['results'][0]['geometry']['location']['lng'])
@@ -641,7 +643,8 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
                     self.populateVotes(attractions, user_id)
                     self.send_success(attractions, jsonkind='affcult#attractions')
                 else:
-                    self.send_error('failed to get attractions')
+                    self.send_error(404, 'failed to get attractions')
+                    #self.send_success(attractions, jsonkind='affcult#attractions')
                 return
 
             if wantToGo:
@@ -695,6 +698,7 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
 
     @cached(time=3600)
     def searchByLatong(self, latlong):
+        logging.info('searchByLatong:%s' % latlong)
         latlong = latlong.split(',')
         params = {'lat': latlong[0],
                   'lon': latlong[1],

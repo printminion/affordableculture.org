@@ -79,13 +79,17 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
         $scope.allAttractions = $scope.adaptAttractions(response.data);
 
         $scope.populateResults(response);
+    },function(response){
+        $scope.allAttractions = null;
+        $scope.showCarousel = true;
+        console.log('error:', response);
     });
   };
 
 
   $scope.getAttractionsByWantToGo = function() {
     //$location.hash('!search/' + $scope.keywords);
-    $scope.keywords = ''
+    $scope.keywords = '';
 
     AffordableCultureApi.getAttractionsByWantToGo().then(function(response) {
         //console.log('searchAttractions', response);
@@ -243,7 +247,6 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
 
 
   $scope.goHome = function() {
-    console.log('goHome');
 
     $scope.showCarousel = true;
 

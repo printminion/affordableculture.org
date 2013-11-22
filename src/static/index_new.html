@@ -193,7 +193,19 @@
 
     <input id="searchByLocation" value="" ng-model="locationToSearch" ng-change="searchByLocation" type="text" style="display: none"/>
 
-    <section id="section-2" class="container">
+    <div class="container" style="top: 425px;position: relative;">
+
+        <div id="allAttractions" class="contentGroup" ng-show="allAttractions.length">
+          <ul id="allAttractions">
+            <li ng-repeat="attraction in allAttractions|orderBy:ordering" id="rhs">
+              <attraction item="attraction"></attraction>
+            </li>
+          </ul>
+        </div>
+    </div>
+
+
+    <section id="section-2" class="container" ng-hide="allAttractions">
 		<center>
 			<h2 class="title" style="font-weight: bold;">Our mission: Making culture affordable</h2>
 			<div class="container_27 clearfix">
@@ -212,11 +224,8 @@
 		</center>
 	</section>
 
-    <div class="container marketing">
 
-	<div class="profile-list-area"></div>
-
-    <section id="section-2" class="container" ng-show="!allAttractions.length">
+    <section id="section-2" style="top: 425px; position: relative;">
 		<center>
 			<div class="container_27 clearfix">
 				<div class="grid_21 prefix_3 suffix_3">
@@ -229,16 +238,6 @@
 		</center>
 	</section>
 
-    <div id="allAttractions" class="contentGroup" ng-show="allAttractions.length">
-      <ul id="allAttractions">
-        <li ng-repeat="attraction in allAttractions|orderBy:ordering" id="rhs">
-          <attraction item="attraction"></attraction>
-        </li>
-      </ul>
-    </div>
-
-
-    </div><!-- /.container -->
 
 
 <!-- Modal -->
