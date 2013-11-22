@@ -40,6 +40,7 @@ class GoogleGeoCodingAPI(object):
             result = urlfetch.fetch(url)
             if result.status_code == 200:
                 result = result.content
+                logging.info('result:%s' % result)
             else:
                 raise Exception('wrong status:%s' % result.status_code)
         except Exception, e:
