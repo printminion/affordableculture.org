@@ -45,6 +45,12 @@
   </head>
 <body ng-controller="AffordableCultureCtrl" ng-cloak>
 
+<section id="notification" class="alert alert-warning" ng-show="notification">{{notification}}</section>
+
+ <div class="notification" post-data-notification="">
+            <p>{{notificationMessage}}</p>
+   </div>
+
 <div style="height: 500px; display: block;">
 
     <div class="navbar-wrapper">
@@ -97,7 +103,6 @@
 
   </div><!-- /.navbar-collapse -->
 </nav>
-
 
       </div>
     </div>
@@ -243,6 +248,29 @@
 
     </div>
 
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModalLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Sign in with Google+</h4>
+      </div>
+      <div class="modal-body">
+        Affordable Culture is powered by Google+.
+          By signing in with your account, you’ll be able to use its social features such as
+          voting for the attractions you've visited or you'd like to visit in the future
+          (the latter places will be saved to your 'My wishlist' page).
+        <div id="signin">
+            <span id="myGsigninDialog"></span>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 
 

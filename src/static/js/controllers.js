@@ -7,18 +7,20 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
   $scope.$routeParams = $routeParams;
 
   $scope.map;
-
+  $scope.notification;
 
   // signIn
   $scope.userProfile = undefined;
   $scope.hasUserProfile = false;
   $scope.isSignedIn = false;
   $scope.immediateFailed = false;
+
   // categories
   $scope.selectedCategory;
   $scope.selectedAttractionId;
 
   $scope.categories = [];
+
   // attractions
   $scope.ordering;
   $scope.recentButtonClasses;
@@ -44,13 +46,18 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
   });
 
   $scope.$watch('locationToSearch', function(newValue, oldValue) {
-    // run some code here whenever chatID changes
       console.log('$scope.$watch.locationToSearch', newValue, oldValue);
       if (newValue) {
           $scope.searchByLocation(newValue);
       }
   });
 
+  $scope.$watch('notification', function(newValue, oldValue) {
+      console.log('$scope.$watch.notification', newValue, oldValue);
+      if (newValue) {
+          $scope.searchByLocation(newValue);
+      }
+  });
 
   $scope.setLocationToSearch = function(location) {
       console.log('setLocationToSearch', location);
@@ -63,11 +70,9 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
       $scope.hasUserProfile = false;
       $scope.isSignedIn = false;
       $scope.immediateFailed = true;
-      //$scope.userPhotos = [];
       $scope.userAttractions = [];
-      //$scope.friendsPhotos = [];
       $scope.friendsAttractions = [];
-      //$scope.renderSignIn();
+      $scope.renderSignIn();
     });
   };
 
@@ -158,15 +163,11 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
 
             map.fitBounds(bounds);
 
-
-
             for (var i = 0; i < neighborhoods.length; i++) {
                 addMarker(neighborhoods[i], $scope.allAttractions[i], $scope.selectedAttractionId);
             }
 
         }
-
-
 
   };
 
@@ -388,7 +389,21 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
       }
     }
   };
-  
+
+  $scope.renderSignInDialog = function() {
+      console.log('myGsigninDialog');
+    gapi.signin.render('myGsigninDialog', {
+      'callback': $scope.signIn,
+      'clientid': Conf.clientId,
+      'requestvisibleactions': Conf.requestvisibleactions,
+      'scope': Conf.scopes,
+      'apppackagename': Conf.apppackagename,
+      'theme': 'dark',
+      'cookiepolicy': Conf.cookiepolicy,
+      'accesstype': 'offline'
+    });
+  };
+
   $scope.renderSignIn = function() {
     gapi.signin.render('myGsignin', {
       'callback': $scope.signIn,

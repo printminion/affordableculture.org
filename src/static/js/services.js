@@ -73,4 +73,21 @@ angular.module('affordableCulture.services', [])
         }
       };
     })
-;
+.factory('NotificationService', ['$rootScope', function ($rootScope) {
+
+    var notificationService = {
+
+        information: function (message) {
+          $rootScope.$broadcast("notificationBroadcast", { "Message": message, "Type": 'information' });
+        },
+
+        success: function (message) {
+          $rootScope.$broadcast("notificationBroadcast", { "Message": message, "Type": 'success' });
+        },
+
+        error: function (message) {
+          $rootScope.$broadcast("notificationBroadcast", { "Message": message, "Type": 'error' });
+        }
+    };
+    return notificationService;
+}]);

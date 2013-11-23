@@ -972,3 +972,31 @@ border-color: #333333;
 
      width: 832px;
  }
+
+#notification {
+    position: fixed;
+    top: 0;
+    height: 45px;
+    z-index: 1100;
+    text-align: center;
+    width: 100%;
+}
+
+.notification {
+    display: none;
+    position: fixed;
+    cursor: pointer;
+    width: 100%;
+    background: #EFEFEF;
+    text-align: center;
+    z-index: 9999;
+    padding: 9px;
+    padding-left: 0px;
+}
+
+    .notification p {
+        font-size: 14pt;
+        font-family: 'Segoe UI','Arial';
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }

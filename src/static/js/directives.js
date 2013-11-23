@@ -1,18 +1,19 @@
 'use strict';
 
 angular.module('affordableCulture.directives', ['affordableCulture.services'])
-    .directive('attraction', function(Conf, AffordableCultureApi) {
+    .directive('attraction', function(Conf, AffordableCultureApi, NotificationService) {
       return {
         restrict: 'E',
         replace: true,
         scope: {
           item: '=',
           deleteAttraction: '&deleteAttraction',
-          updateAttractionPhoto: '&updateAttractionPhoto'
+          updateAttractionPhoto: '&updateAttractionPhoto',
+          renderSignInDialog: '&renderSignInDialog'
         },
         templateUrl: 'partials/attraction_new.html',
         link: function (scope, element, attrs) {
-          console.log('scope.item', scope.item);
+          //console.log('scope.item', scope.item);
 
           element.find('.voteButtonBeenThere').click(function(evt) {
                 if(scope.item.canVoteBeenThere && !scope.item.votedBeenThere) {
@@ -26,6 +27,8 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
                   });
                   AffordableCultureApi.voteAttractionBeenThere(scope.item.id)
                       .then(function(response) {});
+                } else {
+                    $('#myModalLogin').modal('show');
                 }
               });
 
@@ -41,17 +44,18 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
               });
               AffordableCultureApi.voteAttractionWantToGo(scope.item.id)
                   .then(function(response) {});
+            } else {
+                $('#myModalLogin').modal('show');
             }
           });
 
-          element.find('.remove')
-              .click(function() {
+          element.find('.remove').click(function() {
                 if (scope.item.canDelete) {
                   scope.deleteAttraction({attractionId: scope.item.id});
                 }
-              });
+          });
 
-            console.log('scope', scope);
+            //console.log('scope', scope);
 
           var options = {
             'clientid': Conf.clientId,
@@ -139,7 +143,7 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
         }
       }
     })
-.directive('helloMaps', function () {
+    .directive('helloMaps', function () {
             return {
         restrict: 'A',
         replace: true,
@@ -267,4 +271,15 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
     };
 
         } };
-    });
+    })
+    .directive('PostDataNotification', function () {
+
+        return function (scope, element, attrs) {
+            scope.$on('notificationBroadcast', function (event, args) {
+                scope.notificationMessage = args.Message;
+                $('.notification').miniNotification({ time: 3000 });
+            });
+        };
+
+})
+;
