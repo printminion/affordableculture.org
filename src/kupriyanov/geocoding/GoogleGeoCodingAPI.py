@@ -24,7 +24,7 @@ class GoogleGeoCodingAPI(object):
     def __repr__(self):
         return 'GoogleGeoCodingAPI'
 
-    @cached("geocode", time=3600)
+    @cached("geocode", time=86400) #24hours
     def doGeocode(self, location):
         logger.info('location:%s' % location)
 

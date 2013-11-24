@@ -914,11 +914,11 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
         return plus.moments().insert(userId='me', collection='vault',
                                      body=activity).execute()
 
-    @cached(time=3600)
+    @cached(time=86400) #24 hours
     def searchByAttractionId(self, attraction_id):
         return model.Attraction.get_by_id(attraction_id)
 
-    @cached(time=3600)
+    @cached(time=86400) #24 hours
     def searchByWantToGo(self, user_id):
         logging.info('searchByWantToGo:%s' % user_id)
 
