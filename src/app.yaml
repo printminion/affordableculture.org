@@ -1,5 +1,5 @@
 application: gcdc2013-affordable-culture
-version: 14
+version: 15
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -19,9 +19,11 @@ handlers:
 
 - url: /images
   static_dir: static/images
+  expiration: 1d
 
 - url: /img
   static_dir: static/images
+  expiration: 1d
 
 - url: /js
   static_dir: static/js
@@ -52,13 +54,13 @@ handlers:
   static_files: static/index_new.html
   upload: static/index_new.html
 
+- url: /admin
+  static_files: static/index_admin.html
+  upload: static/index_admin.html
+
 - url: /
   static_files: static/index_new.html
   upload: static/index_new.html
-
-- url: /admin/.*
-  script: handlers.app
-  login: admin
 
 - url: /.*
   script: handlers.app
