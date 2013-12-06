@@ -1,0 +1,68 @@
+application: gcdc2013-affordable-culture
+version: 15
+runtime: python27
+api_version: 1
+threadsafe: true
+
+builtins:
+- deferred: on
+- appstats: on
+
+libraries:
+- name: jinja2
+  version: latest
+
+handlers:
+- url: /favicon.ico
+  static_files: static/favicon.ico
+  upload: static/favicon.ico
+
+- url: /images
+  static_dir: static/images
+  expiration: 1d
+
+- url: /img
+  static_dir: static/images
+  expiration: 1d
+
+- url: /js
+  static_dir: static/js
+
+- url: /lib
+  static_dir: static/lib
+
+- url: /partials
+  static_dir: static/partials
+
+- url: /css
+  static_dir: static/css
+
+- url: /add_attraction_new.html
+  static_files: static/add_attraction_new.html
+  upload: static/add_attraction_new.html
+
+- url: /bootstrap
+  static_dir: static/bootstrap
+
+- url: /assets
+  static_dir: static/assets
+
+- url: /smicons
+  static_dir: static/smicons
+
+- url: /index.html
+  static_files: static/index_new.html
+  upload: static/index_new.html
+
+- url: /admin
+  static_files: static/index_admin.html
+  upload: static/index_admin.html
+
+- url: /
+  static_files: static/index_new.html
+  upload: static/index_new.html
+
+- url: /.*
+  script: handlers.app
+
+

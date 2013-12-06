@@ -1,0 +1,87 @@
+    <div id="rhs_block">
+        <div class="vk_rhsc kno-ec rhsvw">
+            <div class="kno-card">
+                <div class="kno-mrg" style="position:relative">
+                    <ol>
+                        <div class="kno-ibrg">
+                            <div class="img-brk">
+                                <div class="birrg">
+                                    <ul><!--m-->
+                                        <li class="bili bilik bilirk"
+                                            style="width: 422px;">
+                                            <div class="bicc"
+                                                 style="height:160px;width: 422px;">
+                                                <img ng-src="{{item.thumbnailUrl}}"
+                                                    alt="Photo of the {{item.name}} in {{item.city}}, {{item.country}}" align="middle" border="0" height="160" name="imgthumb16"
+                                                    class="th"
+                                                    title="Photo of the {{item.name}} in {{item.city}}, {{item.country}}"
+                                                    style="margin:0 -9px 0 0" width="422"></div>
+                                        </li>
+                                        <!--n--></ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </ol>
+                </div>
+            </div>
+            <div class="kno-card">
+                <div class="kno-ecr-t kno-ecr-t-w-st ">
+                    <div>
+                        <div class="kno-ecr-pt">{{item.name}}</div>
+                        <div class="kno-ecr-st"><span class="kno-ecr-st-val">{{item.categories.join(', ')}}</span></div>
+                    </div>
+                    <div class="" style="margin-top:13px">
+                        <div style="clear:both"></div>
+                        <div style="height:5px"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="kno-card">
+                <div>
+                    <div class="kno-f ">
+                        <span class="kno-fh">Address: </span>
+                        <span class="kno-fv">{{item.address}}</span>
+                    </div>
+                    <div class="kno-f ">
+                        <span class="kno-fh">Free admission: </span>
+                        <span class="kno-fv">{{item.freeTime}} {{item.donation}}</span>
+                    </div>
+                    <div class="kno-f ">
+                        <span class="kno-fh">Web: </span>
+                        <span class="kno-fv"><a href="{{item.website}}" target="_blank" >{{item.website | domain}}</a></span>
+                    </div>
+                </div>
+
+            </div>
+            <div style="clear:both;"><!-- --></div>
+
+
+            <div id="sharebar" class="kno-card container_12">
+
+              <span id="googleplus-share" class="g-interactivepost">
+                  <span class="icon">&nbsp;</span>
+                  <span class="glabel">Share</span>
+              </span>
+
+            <a id="facebook-share" class="facebook" href="#" onclick="javascript:void window.open('http://www.facebook.com/sharer/sharer.php?u={{item.attractionContentUrl}}','1361370515039','width=650,height=280,toolbar=0,menubar=0,location=0,status=0,scrollbars=0,resizable=1,left=0,top=0');return false;" target="_blank"><img class="facebook-icon" src="/img/fbshare_button.png"></a>
+            <a id="twitter-share" class="twitter" href="#" onclick="javascript:void window.open('http://twitter.com/share?text=' + encodeURIComponent('Having fun doesn’t require a lot of money! {{item.attractionContentUrl}} is just one of many hundreds of affordable attractions to explore.') ,'1361370074860','width=500,height=252,toolbar=0,menubar=0,location=0,status=1,scrollbars=0,resizable=1,left=0,top=0');return false;" target="_blank"><img class="twitter-icon" src="/img/tweet_button.png"></a>
+
+
+              <span id="wanttogo-share" class="googleplus-share wanttogo vote wanttogo-label voteButton voteButtonBeenThere" ng-class="item.voteClass" ngshow="item.canVoteBeenThere">
+                  <span class="icon">{{item.numVotesBeenThere}}</span>
+                  <span class="glabel">Been here</span>
+              </span>
+
+              <span id="beenhere-share" class="googleplus-share beenhere vote beenhere-label voteButton voteButtonWantToGo" ng-class="item.voteClass" ngshow="item.canVoteWantToGo">
+                  <span class="icon">{{item.numVotesWantToGo}}</span>
+                  <span class="glabel">Want to go</span>
+              </span>
+
+    </div>
+
+
+        </div>
+
+    </div>
+
