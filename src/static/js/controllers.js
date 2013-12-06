@@ -380,6 +380,10 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
       // Successfully authorized, create session
       AffordableCultureApi.signIn(authResult).then(function(response) {
         $scope.signedIn(response.data);
+      },function(response) {
+          console.log('signIn:failure:', response);
+          //hack to reload page after failure
+          $route.reload();
       });
     } else if (authResult['error']) {
       if (authResult['error'] == 'immediate_failed') {
