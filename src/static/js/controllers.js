@@ -59,9 +59,10 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
       }
   });
 
-  $scope.setLocationToSearch = function(location) {
-      console.log('setLocationToSearch', location);
+  $scope.setLocationToSearch = function(location, keywords) {
+      console.log('setLocationToSearch', location, keywords);
       $scope.locationToSearch = location;
+      $scope.keywords = keywords;
   };
 
   $scope.disconnect = function() {
