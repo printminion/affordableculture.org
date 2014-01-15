@@ -59,6 +59,11 @@ TOKEN_REVOKE_ENDPOINT = 'https://accounts.google.com/o/oauth2/revoke?token=%s'
 logging.getLogger().setLevel(logging.DEBUG)
 
 
+HTTP_HOST = os.environ['HTTP_HOST']
+HTTP_HOST = 'www.affordableculture.org'
+#logging.info('HTTP_HOST:%s' % HTTP_HOST)
+
+
 class SessionEnabledHandler(webapp2.RequestHandler):
     """Base type which ensures that derived types always have an HTTP session."""
     CURRENT_USER_SESSION_KEY = 'me'
@@ -137,10 +142,14 @@ class JsonRestHandler(webapp2.RequestHandler):
 
 def get_base_url():
     """Returns the base URL for this application."""
+    logging.debug('get_base_url:%s' % HTTP_HOST)
+
     base = get_default_version_hostname()
-    if "appspot.com" in base:
-        return "https://%s" % base
-    return "http://%s" % base
+
+    if "appspot.com" in HTTP_HOST:
+        return "https://%s" % HTTP_HOST
+
+    return "http://%s" % HTTP_HOST
 
 
 class ConnectHandler(JsonRestHandler, SessionEnabledHandler):
