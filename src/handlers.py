@@ -598,6 +598,22 @@ class AttractionsHandler(JsonRestHandler, SessionEnabledHandler,
         request)
         """
         try:
+
+            #check required arguments
+            parameters = ['search', 'attractionId', 'categoryId', 'll', 'z', 'q', 'userId', 'friends', 'wantToGo']
+            arguments = self.request.arguments()
+
+            found = False
+            for argument in arguments:
+                if argument in parameters:
+                    found = True
+                    break
+
+            if not found:
+                logging.fatal('No required parameters')
+                self.send_error(500, 'No required parameters')
+                return
+
             query = model.Attraction.all()
 
             search = self.request.get('search')
@@ -981,7 +997,7 @@ class InitHandler(JsonRestHandler, SessionEnabledHandler,
 
     This handler provides the /api/themes end-point, and exposes the following
     operations:
-      GET /api/categories
+      GET /api/init
     """
 
     def post(self):
