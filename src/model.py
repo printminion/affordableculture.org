@@ -120,6 +120,7 @@ class DirectedUserToUserEdge(db.Model, Jsonifiable):
 class Attraction(GeoModel, Jsonifiable):
     """Represents a user submitted Attraction."""
     jsonkind = 'affcult#attraction'
+
     DEFAULT_THUMBNAIL_SIZE = 400
     fullsize_url = None
     thumbnail_url = None
@@ -207,6 +208,27 @@ class Attraction(GeoModel, Jsonifiable):
         """Hide image_blob_key from JSON serialization."""
         properties = Jsonifiable.json_properties(self)
         properties.remove('image_blob_key')
+        properties.remove('approved')
+        properties.remove('owner_user_id')
+        properties.remove('owner_display_name')
+        properties.remove('owner_profile_url')
+        properties.remove('owner_profile_photo')
+        properties.remove('location_geocells')
+        properties.remove('url_android')
+        properties.remove('url_ios')
+        properties.remove('url_facebook')
+        properties.remove('url_wikipedia')
+        properties.remove('url_gpl')
+        properties.remove('url_tripadvisor')
+        properties.remove('url_twitter')
+        properties.remove('url_youtube')
+        properties.remove('url_instagram')
+        properties.remove('url_yelp')
+        properties.remove('country')
+        properties.remove('source')
+        properties.remove('created')
+        properties.remove('email')
+
         return properties
 
     def get_image_url(self, size=None):
@@ -248,10 +270,15 @@ class Category(db.Model, Jsonifiable):
     created = db.DateTimeProperty(auto_now_add=True)
     #start = db.DateTimeProperty()
     #preview_photo_id = db.IntegerProperty()
+
     @property
     def members(self):
         return Category.gql("WHERE category = :1", self.key())
 
+    def json_properties(self):
+        """Hide image_blob_key from JSON serialization."""
+        properties = Jsonifiable.json_properties(self)
+        properties.remove('created')
     # @staticmethod
     # def get_current_theme():
     #     """Query the current theme based on the date."""
@@ -297,6 +324,7 @@ class VoteBeenHere(db.Model, Jsonifiable):
     jsonkind = 'affcult#votebeenhere'
     owner_user_id = db.IntegerProperty()
     attraction_id = db.IntegerProperty()
+
 
 class Message(Jsonifiable):
     """Standard JSON type used to return success/error messages."""
