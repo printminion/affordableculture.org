@@ -1,6 +1,8 @@
 'use strict';
 
-function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $templateCache, Conf, AffordableCultureApi) {
+app.controller('AffordableCultureCtrl', function ($scope, $route, $http, $routeParams, $location, $templateCache, Conf, AffordableCultureApi) {
+
+//function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $templateCache, Conf, AffordableCultureApi) {
 
   $scope.$route = $route;
   $scope.$location = $location;
@@ -40,8 +42,20 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
 
   $scope.keywords = undefined;
 
+    $scope.$on("$routeChangeSuccess", function(){
+        //$scope.view = $route.current.action;
+        console.log('$routeChangeSuccess', $route.current.action);
+
+        if ($route.current.action == 'search') {
+            var search = $route.current.params.search.replace('+', ' ');
+            var location = $route.current.params.location.replace('@', '').split(',');
+            $scope.setLocationToSearch(location[0]+','+location[1], search);
+        }
+
+    });
+
   $scope.$on('$routeChangeStart', function(next, current) {
-    console.log('$routeChangeStart', next, current);
+    console.log('$routeChangeStart', next.params, current.params);
     //render();
   });
 
@@ -118,11 +132,14 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
 
   $scope.searchByLocation = function() {
     //$location.hash('!search/' + $scope.keywords);
-    console.log('$scope.searchByLocation', $scope.locationToSearch, $scope.$$phase);
+    console.log('$scope.searchByLocation', $scope.locationToSearch, $scope.keywords);
 
-    AffordableCultureApi.searchAttractionsByLocation($scope.locationToSearch).then(function(response) {
+      $scope.loading = true;
+
+    AffordableCultureApi.searchAttractionsByLocation($scope.locationToSearch, $scope.keywords).then(function(response) {
         //console.log('searchAttractionsByLocation', response);
         $scope.allAttractions = $scope.adaptAttractions(response.data);
+        $scope.loading = false;
 
         $scope.populateResults(response);
 
@@ -183,8 +200,6 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
       $scope.ordering = '-votes';
       $scope.popularButtonClasses = activeItemClasses;
       $scope.recentButtonClasses = [];
-    } else {
-      return 0;
     }
   };
 
@@ -300,8 +315,7 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
     if($location.search()['action'] == 'VOTEWANTTOGO') {
       AffordableCultureApi.votedWantToGo($location.search()['attractionId'])
           .then(function(response) {
-        var attraction = response.data;
-        $scope.highlightedAttraction = attraction;
+        $scope.highlightedAttraction = response.data;
         $scope.notification = 'Thanks for voting!';
       });
     }
@@ -457,7 +471,7 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
       }
 
 
-      if (false) {
+    if (false) {
       AffordableCultureApi.getCategories().then(function(response) {
       $scope.categories = response.data;
       $scope.selectedCategory = $scope.categories[0];
@@ -486,5 +500,12 @@ function AffordableCultureCtrl($scope, $route, $http, $routeParams, $location, $
   };
   
   $scope.start();
-  
-}
+});
+
+//app.controller('AffordableCultureCtrl', ['$scope', '$routeParams',
+//  function($scope, $routeParams) {
+//      console.log('$routeParams', $routeParams);
+//
+//
+//    //$scope.phoneId = $routeParams.phoneId;
+//}]);

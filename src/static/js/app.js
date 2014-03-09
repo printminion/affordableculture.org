@@ -1,25 +1,24 @@
 'use strict';
 
-angular.module('affordableCulture',
-    ['affordableCulture.services', 'affordableCulture.directives', 'affordableCulture.filters'],
-    function($routeProvider, $locationProvider) {
-        console.log('location', $routeProvider, $locationProvider);
+var app = angular.module('affordableCulture', ['ngRoute', 'affordableCulture.services', 'affordableCulture.directives', 'affordableCulture.filters']);
 
-        $routeProvider
-            .when('/search/:search', {
-            action: "contact.form"
-         })
-            .when('myCarousel', {
-         })
-            .when('#myCarousel', {
-         })
-            .when('%2Fsearch%2F:search', {
-            action: "contact.form"
-         })
+app.config(function ($routeProvider) {
+    $routeProvider
+        .when('/search/:search/:location/:data', {
+            //controller: 'MessageListController',
+            //templateUrl: 'partials/messages.html'
+            action: "search"
+        })
+        .when('myCarousel', {
 
-            .otherwise({
-         });
+        })
+        .when('#myCarousel', {
 
-      $locationProvider.html5Mode(true).hashPrefix('!');
-    }
-);
+        })
+        .when('%2Fsearch%2F:search', {
+            action: "search"
+        })
+        .otherwise({
+            //    redirectTo: '/messages'
+        });
+});

@@ -51,16 +51,22 @@ handlers:
   static_dir: static/smicons
 
 - url: /index.html
-  static_files: static/index_new.html
-  upload: static/index_new.html
+  static_files: static/index.html
+  upload: static/index.html
 
 - url: /admin
   static_files: static/index_admin.html
   upload: static/index_admin.html
+  login: admin
+
+- url: /search/.*
+  static_files: static/index.html
+  upload: static/index.html
 
 - url: /
-  static_files: static/index_new.html
-  upload: static/index_new.html
+  static_files: static/index.html
+  upload: static/index.html
+
 
 - url: /.*
   script: handlers.app

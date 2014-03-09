@@ -2,7 +2,6 @@ body {
     font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-
 .ts td {
     padding: 0
 }
@@ -272,8 +271,7 @@ span.malbstb a, div#tads span.malbstb a {
 }
 
 #hdtb.notl * {
-    outline-width: 0;
-    outline: none
+    outline: none 0;
 }
 
 .hdtbItm > label {
@@ -362,8 +360,7 @@ li {
     border: 0;
     font-size: 13px;
     line-height: 1.2;
-    margin: 0 0 4px;
-    margin-right: 8px;
+    margin: 0 8px 4px 0;
 }
 
 #leftnav .tbots a {
@@ -471,8 +468,6 @@ body {
 #wob_dp > div:last-child {
     margin-right: 10px
 }
-
-
 
 .lu_dis a {
     color: #878787 !important;
@@ -690,7 +685,6 @@ body {
     padding: 0.4em 0 0.4em 15px
 }
 
-
 .kno-ec {
     border: 1px solid #ebebeb;
     line-height: 1.24;
@@ -817,15 +811,15 @@ body {
 }
 
 #profileInfo {
-    -webkit-transition:width 300ms ease-in-out, height 300ms ease-in-out;
-    -moz-transition:width 300ms ease-in-out, height 300ms ease-in-out;
-    -o-transition:width 300ms ease-in-out, height 300ms ease-in-out;
-    transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    -webkit-transition: width 300ms ease-in-out, height 300ms ease-in-out;
+    -moz-transition: width 300ms ease-in-out, height 300ms ease-in-out;
+    -o-transition: width 300ms ease-in-out, height 300ms ease-in-out;
+    transition: width 300ms ease-in-out, height 300ms ease-in-out;
 }
 
 .navbar-brand {
     font-family: 'Roboto', sans-serif;
-    color: #ebebeb!important;
+    color: #ebebeb !important;
 }
 
 #profileInfo {
@@ -834,19 +828,18 @@ body {
     min-width: 145px;
 }
 
-
 #profileInfo #userProfile {
     min-width: 176px;
-        -webkit-transition:width 300ms ease-in-out, height 300ms ease-in-out;
-    -moz-transition:width 300ms ease-in-out, height 300ms ease-in-out;
-    -o-transition:width 300ms ease-in-out, height 300ms ease-in-out;
-    transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    -webkit-transition: width 300ms ease-in-out, height 300ms ease-in-out;
+    -moz-transition: width 300ms ease-in-out, height 300ms ease-in-out;
+    -o-transition: width 300ms ease-in-out, height 300ms ease-in-out;
+    transition: width 300ms ease-in-out, height 300ms ease-in-out;
 }
-
 
 #profileInfo .name {
     margin-right: 10px;
 }
+
 #profileInfo img {
     margin-right: 7px;
 }
@@ -866,14 +859,12 @@ body {
 }
 
 .carousel-indicators li {
-border-color: #333333;
+    border-color: #333333;
 }
 
-
-
-#sharebar{
-    height:40px;
-    line-height:42px;
+#sharebar {
+    height: 40px;
+    line-height: 42px;
     position: relative;
     margin-bottom: -10px;
     margin-top: 15px;
@@ -885,19 +876,18 @@ border-color: #333333;
 }
 
 .glyphicon-chevron-right, .glyphicon-chevron-left {
-    color: #101010!important;
+    color: #101010 !important;
 }
-
 
 #signin {
     margin-top: 9px;
     height: 33px;
     margin-right: 16px;
     line-height: 64px;
-        -webkit-transition:width 300ms ease-in-out, height 300ms ease-in-out;
-    -moz-transition:width 300ms ease-in-out, height 300ms ease-in-out;
-    -o-transition:width 300ms ease-in-out, height 300ms ease-in-out;
-    transition:width 300ms ease-in-out, height 300ms ease-in-out;
+    -webkit-transition: width 300ms ease-in-out, height 300ms ease-in-out;
+    -moz-transition: width 300ms ease-in-out, height 300ms ease-in-out;
+    -o-transition: width 300ms ease-in-out, height 300ms ease-in-out;
+    transition: width 300ms ease-in-out, height 300ms ease-in-out;
 
 }
 
@@ -910,68 +900,73 @@ border-color: #333333;
     border-radius: 4px;
     margin-right: 3px;
 
-  }
-  #googleplus-share .icon {
+}
+
+#googleplus-share .icon {
     width: 20px;
     height: 20px;
     display: inline-block;
     background: url('/img/btn_icons_sprite.png') transparent 0 -40px no-repeat;
-  }
-  #googleplus-share:hover, #googleplus-share:hover .glabel {
+}
+
+#googleplus-share:hover, #googleplus-share:hover .glabel {
     background-color: #cc3732;
     color: #fff;
-  }
-  #googleplus-share:hover .icon {
-    background: url('/img/btn_icons_sprite.png') transparent 0 0px no-repeat;
-  }
-  #googleplus-share .glabel {
-      color: #222;
-  }
+}
 
-  .googleplus-share {
-    padding-top: 2px;
-    padding-bottom: 2px;
-      padding-left: 5px;
-      padding-right: 5px;
+#googleplus-share:hover .icon {
+    background: url('/img/btn_icons_sprite.png') transparent 0 0px no-repeat;
+}
+
+#googleplus-share .glabel {
+    color: #222;
+}
+
+.googleplus-share {
+    padding: 2px 5px;
     background: #fff;
     cursor: pointer;
     line-height: 20px;
     border: 1px solid #e6e6e6;
     border-radius: 4px;
-      margin-right: 3px;
+    margin-right: 3px;
 
-  }
-  .googleplus-share .icon {
+}
+
+.googleplus-share .icon {
     width: 20px;
     height: 20px;
     display: inline-block;
     font-weight: bold;
-  }
-  .googleplus-share:hover {
+}
+
+.googleplus-share:hover {
     background-color: #cc3732;
     color: #fff;
     border: 1px solid #dd4b39;
-  }
-  .googleplus-share:hover .glabel {
+}
+
+.googleplus-share:hover .glabel {
     background-color: #cc3732;
     color: #fff;
-  }
+}
 
-  .googleplus-share:hover .icon {
+.googleplus-share:hover .icon {
 
-  }
-  .googleplus-share .glabel {
-      color: #222;
-  }
+}
 
-  #facebook-share img, #twitter-share img {
-      margin-top: -3px;
-  }
+.googleplus-share .glabel {
+    color: #222;
+}
 
- #myModal .modal-dialog {
+#facebook-share img, #twitter-share img {
+    margin-top: -3px;
+}
 
-     width: 832px;
- }
+#myModal .modal-dialog {
+
+    width: 832px;
+}
 
 #notification {
     position: fixed;
@@ -980,6 +975,7 @@ border-color: #333333;
     z-index: 1100;
     text-align: center;
     width: 100%;
+    display: none;
 }
 
 .notification {
@@ -990,13 +986,12 @@ border-color: #333333;
     background: #EFEFEF;
     text-align: center;
     z-index: 9999;
-    padding: 9px;
-    padding-left: 0px;
+    padding: 9px 9px 9px 0;
 }
 
-    .notification p {
-        font-size: 14pt;
-        font-family: 'Segoe UI','Arial';
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
+.notification p {
+    font-size: 14pt;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
