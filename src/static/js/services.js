@@ -70,6 +70,8 @@ angular.module('affordableCulture.services', [])
         searchAttractionsByLocation: function(location, search) {
             if (search) {
                 search = '&search=' + decodeURIComponent(search);
+            } else {
+                search = '';
             }
 
           return $http.get(Conf.apiBase + 'attractions?ll=' + location + search);

@@ -181,7 +181,7 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
     autocomplete.bindTo('bounds', map);
 
     google.maps.event.addListener(autocomplete, 'place_changed', function () {
-        console.log('place_changed', map.getZoom(), map.getCenter());
+        console.log('place_changed', autocomplete, map.getZoom(), map.getCenter());
 
 
         var place = autocomplete.getPlace();
@@ -193,10 +193,12 @@ angular.module('affordableCulture.directives', ['affordableCulture.services'])
         $('#myCarousel').hide();
 
         var location = place.geometry.location;
+        console.log('location', location);
+
         map.setCenter(location);
         //map.setZoom(13);  // Why 17? Because it looks good.
 
-        var search = 'z=' +  map.getZoom() + '&ll=' + location.ob + ',' + location.pb;
+        var search = 'z=' +  map.getZoom() + '&ll=' + location.d + ',' + location.e;
         console.log('search:place_changed', search);
 
         if (!dontCallSearch) {

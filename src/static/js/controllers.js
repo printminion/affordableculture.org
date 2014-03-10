@@ -130,7 +130,7 @@ app.controller('AffordableCultureCtrl', function ($scope, $route, $http, $routeP
   };
 
 
-  $scope.searchByLocation = function() {
+  $scope.searchByLocation = function(location) {
     //$location.hash('!search/' + $scope.keywords);
     console.log('$scope.searchByLocation', $scope.locationToSearch, $scope.keywords);
 
@@ -140,6 +140,11 @@ app.controller('AffordableCultureCtrl', function ($scope, $route, $http, $routeP
         //console.log('searchAttractionsByLocation', response);
         $scope.allAttractions = $scope.adaptAttractions(response.data);
         $scope.loading = false;
+
+        var keywords = encodeURIComponent($scope.keywords).replace(/%20/g, "+");
+        console.log('#/search/' + keywords + '/@' + $scope.locationToSearch + ',12z/data=');
+
+        //$location.path('/page1');
 
         $scope.populateResults(response);
 
@@ -273,13 +278,19 @@ app.controller('AffordableCultureCtrl', function ($scope, $route, $http, $routeP
   };
 
 
-  $scope.goHome = function() {
+    $scope.goHome = function () {
 
-    $scope.showCarousel = true;
+        console.log('goHome');
+        $scope.showCarousel = true;
 
-    $scope.userAttractions = null;
-    $scope.allAttractions = null;
-  };
+        $scope.userAttractions = null;
+        $scope.allAttractions = null;
+        $scope.keywords = null;
+
+
+        $location.path('');
+
+    };
 
 
   $scope.getUserAttractions = function() {

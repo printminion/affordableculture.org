@@ -63,7 +63,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="/" ng-click="goHome()">Affordable Culture</a>
+    <a class="navbar-brand" ng-click="goHome()">Affordable Culture</a>
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
@@ -72,8 +72,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <ul class="nav navbar-nav navbar-left">
 <li>
      <form class="navbar-form navbar-right" role="search">
-      <div class="form-group">
+      <div class="form-group" style="width: 357px;">
         <input id="search" type="text" class="form-control" ng-model="keywords" placeholder="Type in country or city name" style="width: 357px;"/>
+        <button class="close" ng-show="keywords && !loading" ng-click="goHome()">×</button>
+        <div class="loading" ng-show="loading"></div>
       </div>
       <button type="submit" class="btn btn-default" id="countryButton" ng-click="search()" title="Discover free admission attractions">Discover free attractions</button>
     </form>
